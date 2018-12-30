@@ -57,10 +57,23 @@ dependencies {
     implementation "com.facebook.stetho:stetho:$rootProject.stethoVersion"
     implementation "com.facebook.stetho:stetho-okhttp3:$rootProject.stethoVersion"
 
+    //Timber Log util tool
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+
     //Architecture Dependencies
     //Navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
     implementation "android.arch.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
+
+    //LifeCycle
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleVersion"
+
+    //Room
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+
+    //Paging
+    implementation "android.arch.paging:runtime:$rootProject.pagingVersion"
 
     //WorkManager
     implementation "android.arch.work:work-runtime-ktx:$rootProject.workManagerVersion"

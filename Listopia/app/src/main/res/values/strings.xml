@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Listopia</string>
+
+    <!--Errors-->
+    <string name="error_room">Error with Room operation.</string>
+    <string name="error_unknown">Unknown error.</string>
 </resources>

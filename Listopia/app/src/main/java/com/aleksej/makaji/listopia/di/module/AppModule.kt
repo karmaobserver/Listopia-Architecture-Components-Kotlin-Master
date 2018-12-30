@@ -12,7 +12,7 @@ import javax.inject.Singleton
 /**
  * Created by Aleksej Makaji on 12/30/18.
  */
-@Module(includes = [ViewModelModule::class])
+@Module(includes = [ApiModule::class, RepositoryModule::class, ViewModelModule::class])
 class AppModule {
 
     @Singleton

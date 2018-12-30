@@ -4,7 +4,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.aleksej.makaji.listopia.R
 import com.aleksej.makaji.listopia.di.Injectable
+import com.aleksej.makaji.listopia.error.*
 import javax.inject.Inject
 
 /**
@@ -31,5 +33,21 @@ open class BaseFragment : Fragment(), Injectable {
 
     fun showToastLong(resourceId: Int) {
         showToast(getString(resourceId))
+    }
+
+    open fun showError(error: ListopiaError) {
+        when(error){
+            is BackendError -> {
+                showToastLong(error.response.message)
+            }
+            is UnauthorizedError ->{
+            }
+            is RoomError -> {
+                showToast(R.string.error_room)
+            }
+            is ThrowableError -> {
+                showToast(R.string.error_unknown)
+            }
+        }
     }
 }
