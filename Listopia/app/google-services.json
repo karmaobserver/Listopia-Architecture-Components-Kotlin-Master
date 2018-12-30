@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "741557096557",
+    "firebase_url": "https://listopia-f7bba.firebaseio.com",
+    "project_id": "listopia-f7bba",
+    "storage_bucket": "listopia-f7bba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741557096557:android:cf44b3c13eb5f676",
+        "android_client_info": {
+          "package_name": "com.aleksej.makaji.listopia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "741557096557-8b4a1qhtd7612210rd7aevh7ncm553u7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aleksej.makaji.listopia",
+            "certificate_hash": "0936635bdb4bb8d2feb2528e2c592cb6ff0e20a2"
+          }
+        },
+        {
+          "client_id": "741557096557-19u3vmvjmipktfjqktuk62at185iit0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBufLdr2akQ5UhOOzYADZFa6chDum5yURE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "741557096557-19u3vmvjmipktfjqktuk62at185iit0j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

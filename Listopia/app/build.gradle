@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion rootProject.compileSdkVersion
     defaultConfig {
         applicationId "com.aleksej.makaji.listopia"
-        minSdkVersion 21
-        targetSdkVersion 28
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -24,10 +24,52 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
+
+    //Support and Design
+    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.supportLibraryVersion"
+
+    //Material Design
+    implementation "com.google.android.material:material:$rootProject.materialVersion"
+
+    //Kotlin
+    implementation "androidx.core:core-ktx:$rootProject.ktxVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlinVersion"
+
+    // Dagger dependencies
+    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger-android:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+
+    //Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
+
+    // Network libraries
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion" exclude module: 'httpclient'
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion" exclude module: 'httpclient'
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.okHttpVersion" exclude module: 'httpclient'
+
+    //Stetho
+    implementation "com.facebook.stetho:stetho:$rootProject.stethoVersion"
+    implementation "com.facebook.stetho:stetho-okhttp3:$rootProject.stethoVersion"
+
+    //Architecture Dependencies
+    //Navigation
+    implementation "android.arch.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
+    implementation "android.arch.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
+
+    //WorkManager
+    implementation "android.arch.work:work-runtime-ktx:$rootProject.workManagerVersion"
+
+
+    //Testing dependencies (not adding for rest components, since we will not write unit and integration tests)
+    testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
+apply plugin: 'com.google.gms.google-services'
