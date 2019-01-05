@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
+import androidx.databinding.DataBindingUtil
 import com.aleksej.makaji.listopia.R
 import com.aleksej.makaji.listopia.base.BaseFragment
-import com.aleksej.makaji.listopia.data.event.ErrorEvent
-import com.aleksej.makaji.listopia.data.event.LoadingEvent
-import com.aleksej.makaji.listopia.data.event.SuccessEvent
+import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
+import com.aleksej.makaji.listopia.data.event.State
+import com.aleksej.makaji.listopia.databinding.FragmentShoppingListBinding
+import com.aleksej.makaji.listopia.util.autoCleared
 import com.aleksej.makaji.listopia.util.observePeek
 import com.aleksej.makaji.listopia.util.viewModel
 import timber.log.Timber
@@ -20,8 +23,19 @@ class ShoppingListFragment: BaseFragment() {
 
     private lateinit var mShoppingListViewModel: ShoppingListViewModel
 
+    private var binding by autoCleared<FragmentShoppingListBinding>()
+    private var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_shopping_list, container, false)
+        val dataBinding = DataBindingUtil.inflate<FragmentShoppingListBinding>(
+                inflater,
+                R.layout.fragment_shopping_list,
+                container,
+                false,
+                dataBindingComponent
+        )
+        binding = dataBinding
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -29,23 +43,40 @@ class ShoppingListFragment: BaseFragment() {
         mShoppingListViewModel = viewModel(mViewModelFactory)
         initObservers()
 
-        showToast(mShoppingListViewModel.test)
+        /*binding.setLifecycleOwner(viewLifecycleOwner)
+        binding.shopLiveData = mShoppingListViewModel.shoppingListLiveData*/
     }
 
     private fun initObservers() {
         observeShoppingLists()
+        observeShoppingList()
     }
 
     private fun observeShoppingLists() {
-        observePeek(mShoppingListViewModel.shoppingListsEvent) {
+        observePeek(mShoppingListViewModel.shoppingListsLiveData) {
             when (it) {
-                is SuccessEvent -> {
+                is State.Success -> {
                     it.data?.let {
                         Timber.d("Size is: ${it.size}")
                     }
                 }
-                is LoadingEvent -> {}
-                is ErrorEvent -> {
+                is State.Error -> {
+                    showError(it.error)
+                }
+            }
+        }
+    }
+
+    private fun observeShoppingList() {
+        observePeek(mShoppingListViewModel.shoppingListLiveData) {
+            binding.stateShop = it
+            when (it) {
+                is State.Success -> {
+                    it.data?.let {
+                        binding.shoppingListModel = it
+                    }
+                }
+                is State.Error -> {
                     showError(it.error)
                 }
             }

@@ -5,11 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.aleksej.makaji.listopia.data.event.EventHandler
+import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.mapper.RoomModelMapper
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.room.ShoppingListDao
+import com.aleksej.makaji.listopia.error.RoomError
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,9 +25,11 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
         private const val PAGED_LIST_ENABLE_PLACEHOLDERS = true
     }
 
-    private val shoppingListLiveData = MutableLiveData<EventHandler<PagedList<ShoppingListModel>>>()
+    private val shoppingListsLiveData = MutableLiveData<StateHandler<PagedList<ShoppingListModel>>>()
 
-    override fun getShoppingLists(): LiveData<EventHandler<PagedList<ShoppingListModel>>> {
+    private val shoppingListLiveData = MutableLiveData<StateHandler<ShoppingListModel>>()
+
+    override fun getShoppingLists(): LiveData<StateHandler<PagedList<ShoppingListModel>>> {
         //Just for Testing to fill data first time
         /*async {
             mShoppingListDao.insertShoppingList(ShoppingList(1, "Name-1"))
@@ -34,6 +37,7 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
             mShoppingListDao.insertShoppingList(ShoppingList(3, "Name-3"))
             mShoppingListDao.insertShoppingList(ShoppingList(4, "Name-4"))
         }*/
+        shoppingListsLiveData.postValue(StateHandler.loading())
 
         val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(PAGED_LIST_ENABLE_PLACEHOLDERS)
@@ -46,8 +50,23 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
                 .build()
 
         return Transformations.switchMap(livePagedListOrder) {
-            shoppingListLiveData.postValue(EventHandler.success(it))
-            return@switchMap shoppingListLiveData
+            shoppingListsLiveData.postValue(StateHandler.success(it))
+            return@switchMap shoppingListsLiveData
         }
+    }
+
+    override fun getShoppingList(): LiveData<StateHandler<ShoppingListModel>> {
+        shoppingListLiveData.postValue(StateHandler.loading())
+        try {
+            return Transformations.switchMap(mShoppingListDao.getShoppingList()) {
+                it?.run {
+                    shoppingListLiveData.postValue(StateHandler.success(RoomModelMapper.mapShoppingList(it)))
+                }
+                return@switchMap shoppingListLiveData
+            }
+        } catch (e: Exception) {
+            shoppingListLiveData.postValue(StateHandler.error(RoomError))
+        }
+        return shoppingListLiveData
     }
 }

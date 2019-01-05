@@ -2,7 +2,7 @@ package com.aleksej.makaji.listopia.di.module
 
 import android.app.Application
 import androidx.room.Room
-import com.aleksej.makaji.listopia.data.ListopiaDatabase
+import com.aleksej.makaji.listopia.data.room.ListopiaDatabase
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
 import com.aleksej.makaji.listopia.data.repository.local.ShoppingListLocalDataSource
 import com.aleksej.makaji.listopia.data.repository.remote.ShoppingListRemoteDataSource

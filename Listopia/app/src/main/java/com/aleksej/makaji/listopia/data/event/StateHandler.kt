@@ -5,19 +5,19 @@ import com.aleksej.makaji.listopia.error.ListopiaError
 /**
  * Created by Aleksej Makaji on 12/30/18.
  */
-data class EventHandler<out T>(val event: Event<out T>) {
+data class StateHandler<out T>(val state: State<out T>) {
     //Static methods in case we want different syntax (We will see on long road which is better)
     companion object {
-        fun <T> success(data: T?): EventHandler<T> {
-            return EventHandler(SuccessEvent(data))
+        fun <T> success(data: T?): StateHandler<T> {
+            return StateHandler(State.Success(data))
         }
 
-        fun <T> error(error: ListopiaError): EventHandler<T> {
-            return EventHandler(ErrorEvent(error))
+        fun <T> error(error: ListopiaError): StateHandler<T> {
+            return StateHandler(State.Error(error))
         }
 
-        fun <T> loading(): EventHandler<T> {
-            return EventHandler(LoadingEvent())
+        fun <T> loading(): StateHandler<T> {
+            return StateHandler(State.Loading())
         }
     }
 
@@ -27,17 +27,17 @@ data class EventHandler<out T>(val event: Event<out T>) {
     /**
      * Returns the content and prevents its use again.
      */
-    fun getContentIfNotHandled(): EventHandler<T?>? {
+    fun getContentIfNotHandled(): StateHandler<T?>? {
         return if (hasBeenHandled) {
             null
         } else {
             hasBeenHandled = true
-            EventHandler(event)
+            StateHandler(state)
         }
     }
 
     /**
      * Returns the content, even if it's already been handled.
      */
-    fun peekContent(): EventHandler<T> = EventHandler(event)
+    fun peekContent(): StateHandler<T> = StateHandler(state)
 }

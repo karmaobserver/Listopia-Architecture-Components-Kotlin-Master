@@ -17,29 +17,28 @@ buildscript {
         retrofitVersion = '2.4.0'
         okHttpVersion = '3.11.0'
         stethoVersion = '1.5.0'
-        timberVersion = '4.5.1'
+        timberVersion = '4.7.1'
         materialVersion = '1.1.0-alpha02'
+        glideVersion = '4.8.0'
 
+        lifecycleVersion = '2.0.0'
         navigationVersion = '1.0.0-alpha09'
         workManagerVersion = '1.0.0-beta01'
         pagingVersion = '2.1.0-rc01'
+        roomVersion = '2.1.0-alpha03'
 
         ktxVersion = '1.0.1'
         runnerVersion = '1.0.1'
         junitVersion = '4.12'
 
-        //Will be in usage, updated versions
-
+        // Will be in usage, updated versions
         googleServiceVersion = '4.2.0'
-        roomVersion = '2.1.0-alpha03'
-        lifecycleVersion = '2.0.0'
 
-        //Check If I need to update
+        // Check If I need to update
         firebaseCoreVersion = '16.0.4'
         firebaseMessagingVersion = '17.3.4'
         firebaseDatebaseVersion = '16.0.4'
         circularimageviewVersion = '3.2.0'
-        glideVersion = '4.8.0'
         gsonVersion = '2.8.2'
     }
     repositories {
@@ -66,3 +65,4 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

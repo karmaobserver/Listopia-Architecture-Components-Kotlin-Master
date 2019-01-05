@@ -1,5 +1,6 @@
 package com.aleksej.makaji.listopia.data.room
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
@@ -18,4 +19,7 @@ interface ShoppingListDao {
 
     @Query("SELECT * FROM shopping_list")
     fun getShoppingLists(): DataSource.Factory<Int, ShoppingList>
+
+    @Query("SELECT * FROM shopping_list")
+    fun getShoppingList(): LiveData<ShoppingList>
 }

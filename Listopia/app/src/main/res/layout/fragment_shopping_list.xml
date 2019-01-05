@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/textView"
+    <data>
+
+        <!--<import type="com.aleksej.makaji.listopia.data.event.StateHandler"/>
+        <import type="com.aleksej.makaji.listopia.data.event.State"/>
+        <import type="androidx.lifecycle.LiveData"/>
+        <variable
+            name="shopLiveData"
+            type="LiveData&lt;com.aleksej.makaji.listopia.data.event.StateHandler&lt;com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel>>"/>-->
+
+        <import type="com.aleksej.makaji.listopia.data.event.StateHandler"/>
+        <variable
+            name="shoppingListModel"
+            type="com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel"/>
+        <variable
+            name="stateShop"
+            type="com.aleksej.makaji.listopia.data.event.State"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Hello from fragment" />
-</LinearLayout>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{shoppingListModel.name}" />
+        </LinearLayout>
+
+        <include
+            layout="@layout/view_loading_state"
+            app:state="@{stateShop}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
