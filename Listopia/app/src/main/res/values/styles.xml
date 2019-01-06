@@ -1,11 +1,162 @@
 <resources>
+    <style name="AppTheme" parent="BaseAppTheme"/>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionModeOverlay">true</item>
+        <!--Highlight color-->
+        <item name="android:colorControlHighlight">@color/colorAccentLight</item>
+
+        <!--Animations for fragment and activity transitions-->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowSharedElementsUseOverlay">false</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+    </style>
+
+    <style name="ThemeOverlayAppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
+
+    <style name="ThemeOverlayLight" parent="ThemeOverlay.MaterialComponents.Light" />
+
+    <style name="ToolbarLight" parent="@style/AppTheme">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
+    <!--<style name="ButtonPrimary" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>-->
+
+    <!--Text View-->
+    <style name="TextViewAppearanceHeadline1" parent="@style/TextAppearance.MaterialComponents.Headline1">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="TextViewAppearanceHeadline1.Primary">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="TextViewAppearanceHeadline1.Primary.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextViewAppearanceHeadline1.Primary.Bold.Margin16Start">
+        <item name="android:layout_marginStart">@dimen/margin_16</item>
+    </style>
+
+    <style name="TextViewAppearanceHeadline1.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextViewAppearanceBody1" parent="@style/TextAppearance.MaterialComponents.Body1">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="TextViewAppearanceBody1.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextViewAppearanceBody1.White.Margin20">
+        <item name="android:layout_margin">@dimen/margin_20</item>
+    </style>
+
+    <style name="TextViewAppearanceBody1.White.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextViewAppearanceBody1.White.Bold.Margin20Left10Bottom">
+        <item name="android:layout_marginStart">@dimen/margin_20</item>
+        <item name="android:layout_marginBottom">@dimen/margin_10</item>
+    </style>
+
+    <style name="TextViewAppearanceBody2" parent="@style/TextAppearance.MaterialComponents.Body2">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="TextViewAppearanceBody2.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextViewAppearanceBody2.White.Margin20">
+        <item name="android:layout_margin">@dimen/margin_20</item>
+    </style>
+
+    <!--TextInput styles-->
+    <style name="TextInputMaterial" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    </style>
+
+    <!--EditTextMaterial styles-->
+    <style name="EditTextMaterial" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+    </style>
+
+    <!--EditText styles-->
+    <style name="EditText">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="EditText.MaxLine1">
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <!--Buttons-->
+    <style name="ButtonMaterial" parent="Widget.MaterialComponents.Button">
+    </style>
+
+    <style name="ButtonMaterial.Padding30StartEnd15TopBottom" parent="Widget.MaterialComponents.Button">
+        <item name="android:paddingStart">@dimen/padding_30</item>
+        <item name="android:paddingEnd">@dimen/padding_30</item>
+        <item name="android:paddingTop">@dimen/padding_15</item>
+        <item name="android:paddingBottom">@dimen/padding_15</item>
+    </style>
+
+    <style name="ButtonMaterial.Corner16">
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <style name="ButtonTextMaterial" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <style name="ButtonMaterial.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ButtonTextMaterial.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ButtonMaterial.White.Background">
+        <item name="backgroundTint">@color/button_colored_background</item>
+    </style>
+
+    <style name="ButtonMaterial.White.Background.Disabled">
+        <item name="android:enabled">false</item>
+    </style>
+
+    <!--CardView-->
+    <style name="CardViewMaterial" parent="Widget.MaterialComponents.CardView">
+    </style>
+
+    <!--ImageView styles-->
+    <style name="ImageView" parent="@style/AppTheme">
+    </style>
+
+    <style name="ImageView.Size64">
+        <item name="android:layout_width">@dimen/image_64</item>
+        <item name="android:layout_height">@dimen/image_64</item>
+    </style>
+
+    <style name="ImageView.Size64.Margin20">
+        <item name="android:layout_margin">@dimen/margin_20</item>
     </style>
 
 </resources>

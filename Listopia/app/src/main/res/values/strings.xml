@@ -1,7 +1,38 @@
 <resources>
     <string name="app_name">Listopia</string>
 
+    <!--Navigation drawer-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_trash">Trash section has been clicked.</string>
+    <string name="navigation_help">Help section has been clicked.</string>
+    <string name="navigation_feedback">Feedback section has been clicked.</string>
+    <string name="navigation_recommend">Recommend section has been clicked.</string>
+    <string name="navigation_settings">Settings section has been clicked.</string>
+    <string name="navigation_something_els">Something els has been clicked.</string>
+
+    <!--Titles-->
+    <string name="title_shopping_list">My Lists</string>
+    <string name="title_products">Products</string>
+
+    <!--submenu_shopping_list_options-->
+    <string name="submenu_shopping_list_options_delete_all">Delete all shopping lists</string>
+
+    <!--Header drawer-->
+    <string name="header_sign_in_sign_up">Sign in or sign up</string>
+
+    <!--Labels-->
+    <string name="label_sign_in_and_sync">To sync and share your lists</string>
+
     <!--Errors-->
     <string name="error_room">Error with Room operation.</string>
     <string name="error_unknown">Unknown error.</string>
+
+    <!--Navigation labels-->
+    <string name="label_trash">Trash</string>
+    <string name="label_help">Help</string>
+    <string name="label_send_feedback">Send Feedback</string>
+    <string name="label_recommend_listopia">Recommend Listopia</string>
+    <string name="label_settings">Settings</string>
+    <string name="label_sign_out">Sign Out</string>
 </resources>

@@ -1,9 +1,7 @@
 package com.aleksej.makaji.listopia.ui.shoppinglist
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import com.aleksej.makaji.listopia.R
@@ -34,8 +32,9 @@ class ShoppingListFragment: BaseFragment() {
                 false,
                 dataBindingComponent
         )
+        setHasOptionsMenu(true)
         binding = dataBinding
-        return binding.root
+        return dataBinding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -45,6 +44,20 @@ class ShoppingListFragment: BaseFragment() {
 
         /*binding.setLifecycleOwner(viewLifecycleOwner)
         binding.shopLiveData = mShoppingListViewModel.shoppingListLiveData*/
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_fragment_shopping_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.submenu_options_delete_all -> {
+                showToastLong("DELETE")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun initObservers() {
