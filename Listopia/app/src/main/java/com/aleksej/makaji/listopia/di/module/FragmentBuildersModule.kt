@@ -1,6 +1,6 @@
 package com.aleksej.makaji.listopia.di.module
 
-import com.aleksej.makaji.listopia.ui.shoppinglist.ShoppingListFragment
+import com.aleksej.makaji.listopia.screen.shoppinglist.ShoppingListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

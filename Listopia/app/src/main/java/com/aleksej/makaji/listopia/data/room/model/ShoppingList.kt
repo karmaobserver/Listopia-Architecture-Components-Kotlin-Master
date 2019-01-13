@@ -10,5 +10,6 @@ import androidx.room.PrimaryKey
 data class ShoppingList(
         @PrimaryKey(autoGenerate = true)
         val id: Long,
-        val name: String
+        val name: String,
+        val ownerUid: String
 )

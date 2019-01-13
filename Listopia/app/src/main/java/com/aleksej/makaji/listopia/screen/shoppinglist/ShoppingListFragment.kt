@@ -1,10 +1,13 @@
-package com.aleksej.makaji.listopia.ui.shoppinglist
+package com.aleksej.makaji.listopia.screen.shoppinglist
 
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.aleksej.makaji.listopia.R
+import com.aleksej.makaji.listopia.adapter.ShoppingListAdapter
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
 import com.aleksej.makaji.listopia.data.event.State
@@ -12,7 +15,6 @@ import com.aleksej.makaji.listopia.databinding.FragmentShoppingListBinding
 import com.aleksej.makaji.listopia.util.autoCleared
 import com.aleksej.makaji.listopia.util.observePeek
 import com.aleksej.makaji.listopia.util.viewModel
-import timber.log.Timber
 
 /**
  * Created by Aleksej Makaji on 12/30/18.
@@ -22,7 +24,8 @@ class ShoppingListFragment: BaseFragment() {
     private lateinit var mShoppingListViewModel: ShoppingListViewModel
 
     private var binding by autoCleared<FragmentShoppingListBinding>()
-    private var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private var mShoppingListAdapter by autoCleared<ShoppingListAdapter>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val dataBinding = DataBindingUtil.inflate<FragmentShoppingListBinding>(
@@ -30,7 +33,7 @@ class ShoppingListFragment: BaseFragment() {
                 R.layout.fragment_shopping_list,
                 container,
                 false,
-                dataBindingComponent
+                mDataBindingComponent
         )
         setHasOptionsMenu(true)
         binding = dataBinding
@@ -40,10 +43,12 @@ class ShoppingListFragment: BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mShoppingListViewModel = viewModel(mViewModelFactory)
+        initRecyclerView()
         initObservers()
 
         /*binding.setLifecycleOwner(viewLifecycleOwner)
         binding.shopLiveData = mShoppingListViewModel.shoppingListLiveData*/
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -60,33 +65,27 @@ class ShoppingListFragment: BaseFragment() {
         }
     }
 
+    private fun initRecyclerView() {
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.orientation = RecyclerView.VERTICAL
+        binding.recyclerViewShoppingList.layoutManager = layoutManager
+        binding.recyclerViewShoppingList.setHasFixedSize(false)
+
+        mShoppingListAdapter = ShoppingListAdapter(mDataBindingComponent)
+        binding.recyclerViewShoppingList.adapter = mShoppingListAdapter
+    }
+
     private fun initObservers() {
         observeShoppingLists()
-        observeShoppingList()
     }
 
     private fun observeShoppingLists() {
         observePeek(mShoppingListViewModel.shoppingListsLiveData) {
-            when (it) {
-                is State.Success -> {
-                    it.data?.let {
-                        Timber.d("Size is: ${it.size}")
-                    }
-                }
-                is State.Error -> {
-                    showError(it.error)
-                }
-            }
-        }
-    }
-
-    private fun observeShoppingList() {
-        observePeek(mShoppingListViewModel.shoppingListLiveData) {
             binding.stateShop = it
             when (it) {
                 is State.Success -> {
                     it.data?.let {
-                        binding.shoppingListModel = it
+                        mShoppingListAdapter.submitList(it)
                     }
                 }
                 is State.Error -> {

@@ -1,5 +1,6 @@
 package com.aleksej.makaji.listopia
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -9,10 +10,25 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.*
 import com.aleksej.makaji.listopia.base.BaseActivity
+import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.databinding.ActivityHomeBinding
 import com.aleksej.makaji.listopia.databinding.HeaderDrawerBinding
+import com.aleksej.makaji.listopia.util.SharedPreferenceManager
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import java.util.*
+import javax.inject.Inject
 
 class HomeActivity : BaseActivity() {
+
+    companion object {
+        private const val REQUEST_CODE_SIGN_IN = 100
+    }
+
+    @Inject
+    lateinit var mSharedPreferenceManager: SharedPreferenceManager
 
     private lateinit var binding: ActivityHomeBinding
 
@@ -60,6 +76,29 @@ class HomeActivity : BaseActivity() {
         mNavController.removeOnDestinationChangedListener(mNavigationListener)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SIGN_IN) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            if (resultCode == RESULT_OK) {
+                // Successfully signed in
+                val user = FirebaseAuth.getInstance().currentUser
+                user?.let {
+                    handleViewForLoggedUser(it)
+                }
+
+                // ...
+            } else {
+                // Sign in failed. If response is null the user canceled the
+                // sign-in flow using the back button. Otherwise check
+                // response.getError().getErrorCode() and handle the error.
+                // ...
+            }
+            checkIfUserLoggedIn()
+        }
+    }
+
     private fun setupNavigationDrawerMenu() {
         headerBinding = HeaderDrawerBinding.bind(binding.navigationView.getHeaderView(0))
         checkIfUserLoggedIn()
@@ -96,6 +135,10 @@ class HomeActivity : BaseActivity() {
                     showToast(R.string.navigation_settings)
                     true
                 }
+                R.id.navigation_sign_out -> {
+                    signOut()
+                    true
+                }
                 else -> {
                     showToast(R.string.navigation_something_els)
                     true
@@ -116,16 +159,45 @@ class HomeActivity : BaseActivity() {
 
     private fun initClickListener() {
         headerBinding.buttonSignInUp.setOnClickListener {
+            // Choose authentication providers
+            val providers = Arrays.asList(
+                    AuthUI.IdpConfig.EmailBuilder().build(),
+                    AuthUI.IdpConfig.GoogleBuilder().build())
+
+            // Create and launch sign-in intent
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(providers)
+                            .setLogo(R.drawable.ic_favorites)
+                            .build(),
+                    REQUEST_CODE_SIGN_IN)
         }
     }
 
     private fun checkIfUserLoggedIn() {
-        if (true) {
+        if (mSharedPreferenceManager.token != "") {
             headerBinding.groupSignedIn.visibility = View.VISIBLE
             headerBinding.groupSignedOut.visibility = View.GONE
         } else {
             headerBinding.groupSignedIn.visibility = View.GONE
             headerBinding.groupSignedOut.visibility = View.VISIBLE
         }
+    }
+
+    private fun handleViewForLoggedUser(user: FirebaseUser) {
+        mSharedPreferenceManager.token = user.uid
+        val userModel = UserModel(user.uid, user.displayName, user.email, user.photoUrl)
+        headerBinding.userModel = userModel
+    }
+
+    private fun signOut() {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener {
+                    mSharedPreferenceManager.token = ""
+                    checkIfUserLoggedIn()
+                    showToast("Successfully Signed Out")
+                }
     }
 }

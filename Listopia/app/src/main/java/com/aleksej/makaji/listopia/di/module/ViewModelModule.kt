@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.aleksej.makaji.listopia.di.annotation.ViewModelKey
 import com.aleksej.makaji.listopia.factory.ViewModelFactory
-import com.aleksej.makaji.listopia.ui.shoppinglist.ShoppingListViewModel
+import com.aleksej.makaji.listopia.screen.shoppinglist.ShoppingListViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

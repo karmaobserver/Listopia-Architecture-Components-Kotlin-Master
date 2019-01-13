@@ -78,6 +78,9 @@ dependencies {
     //Circle image view
     implementation "com.mikhaellopez:circularimageview:$rootProject.circularimageviewVersion"
 
+    //Firebase
+    implementation "com.firebaseui:firebase-ui-auth:$rootProject.firebaseUiAuthVersion"
+
     // Architecture Dependencies
     // Navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"

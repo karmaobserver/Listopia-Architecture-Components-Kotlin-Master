@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="userModel"
+            type="com.aleksej.makaji.listopia.data.repository.model.UserModel"/>
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,7 +21,7 @@
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/avatar"
             style="@style/ImageView.Size64.Margin20"
-            android:src="@drawable/photo_male"
+            app:imageUrl="@{userModel.avatar}"
             app:civ_border_width="2dp"
             app:civ_shadow="true"
             app:civ_shadow_radius="0"
@@ -25,7 +32,7 @@
             android:id="@+id/text_view_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="makso.the.one@gmail.com"
+            android:text="@{userModel.email}"
             style="@style/TextViewAppearanceBody2.White.Margin20"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -34,7 +41,7 @@
             android:id="@+id/text_view_name"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:text="Aleksej Makaji"
+            android:text="@{userModel.name}"
             style="@style/TextViewAppearanceBody1.White.Bold.Margin20Left10Bottom"
             app:layout_constraintBottom_toTopOf="@+id/text_view_email"
             app:layout_constraintStart_toStartOf="parent" />

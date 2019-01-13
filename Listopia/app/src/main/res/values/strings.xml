@@ -35,4 +35,8 @@
     <string name="label_recommend_listopia">Recommend Listopia</string>
     <string name="label_settings">Settings</string>
     <string name="label_sign_out">Sign Out</string>
+    <string name="label_slash">/</string>
+
+
+    <string name="test">https://i.ebayimg.com/images/g/DIAAAOSw3Mpatq1U/s-l640.jpg</string>
 </resources>

@@ -26,7 +26,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_shopping_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey_10"
+            tools:listitem="@layout/item_shopping_list">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <!--<LinearLayout
             android:orientation="vertical" android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -35,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{shoppingListModel.name}" />
-        </LinearLayout>
+        </LinearLayout>-->
 
         <include
             layout="@layout/view_loading_state"

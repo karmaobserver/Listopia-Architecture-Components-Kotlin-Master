@@ -1,5 +1,6 @@
 package com.aleksej.makaji.listopia.binding
 
+import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -15,9 +16,15 @@ object BindingAdapters {
         view.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    @JvmStatic
+    @BindingAdapter("imageUrl")
+    fun bindImage(imageView: ImageView, url: Uri?) {
+        Glide.with(imageView).load(url).into(imageView)
+    }
+}
+
     /*@JvmStatic
     @BindingAdapter("imageUrl")
     fun ImageView.setImageUrl(url: String?) {
         Glide.with(context).load(url).into(this)
     }*/
-}

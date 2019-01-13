@@ -7,6 +7,6 @@
 
     <fragment
         android:id="@+id/fragment_shopping_list"
-        android:name="com.aleksej.makaji.listopia.ui.shoppinglist.ShoppingListFragment"
+        android:name="com.aleksej.makaji.listopia.screen.shoppinglist.ShoppingListFragment"
         android:label="FragmentShoppingList" />
 </navigation>

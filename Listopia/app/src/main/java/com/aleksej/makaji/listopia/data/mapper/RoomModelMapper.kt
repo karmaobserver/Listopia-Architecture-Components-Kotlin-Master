@@ -9,6 +9,7 @@ import com.aleksej.makaji.listopia.data.room.model.ShoppingList
 object RoomModelMapper {
     fun mapShoppingList(shoppingList: ShoppingList): ShoppingListModel {
         return ShoppingListModel(shoppingList.id,
-                shoppingList.name)
+                shoppingList.name,
+                shoppingList.ownerUid)
     }
 }
