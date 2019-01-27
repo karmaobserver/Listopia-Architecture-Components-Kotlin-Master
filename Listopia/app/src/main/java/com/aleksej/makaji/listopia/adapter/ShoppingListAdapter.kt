@@ -12,7 +12,7 @@ import com.aleksej.makaji.listopia.databinding.ItemShoppingListBinding
 /**
  * Created by Aleksej Makaji on 1/8/19.
  */
-class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponent) : DataBoundPagedListAdapter<ShoppingListModel, ItemShoppingListBinding>(
+class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponent, val mShoppingListAdapterEvents: (ShoppingListAdapterEvents) -> Unit) : DataBoundPagedListAdapter<ShoppingListModel, ItemShoppingListBinding>(
         diffCallback = object : DiffUtil.ItemCallback<ShoppingListModel>() {
             override fun areItemsTheSame(oldItem: ShoppingListModel, newItem: ShoppingListModel): Boolean {
                 return oldItem.id == newItem.id
@@ -33,6 +33,11 @@ class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponen
                 false,
                 mDataBindingComponent
         )
+        binding.root.setOnClickListener {
+            binding.shoppingListModel?.let {
+                mShoppingListAdapterEvents.invoke(ShoppingListAdapterEvents.ShoppingListClick(it.id))
+            }
+        }
         return binding
     }
 

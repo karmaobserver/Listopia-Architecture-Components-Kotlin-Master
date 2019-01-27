@@ -5,7 +5,7 @@
         android:id="@+id/options"
         android:icon="@drawable/ic_options"
         app:showAsAction="always"
-        android:title="options">
+        android:title="@string/label_options">
         <menu>
             <item
                 android:id="@+id/submenu_options_delete_all"

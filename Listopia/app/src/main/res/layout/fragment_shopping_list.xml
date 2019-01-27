@@ -20,6 +20,9 @@
         <variable
             name="stateShop"
             type="com.aleksej.makaji.listopia.data.event.State"/>
+        <variable
+            name="shoppingListViewModel"
+            type="com.aleksej.makaji.listopia.screen.shoppinglist.ShoppingListViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,21 +33,20 @@
             android:id="@+id/recycler_view_shopping_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/grey_10"
+            style="@style/RecyclerView.BackgroundGray10"
             tools:listitem="@layout/item_shopping_list">
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <!--<LinearLayout
-            android:orientation="vertical" android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{shoppingListModel.name}" />
-        </LinearLayout>-->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_button_add_shopping_list"
+            style="@style/FloatingActionButton.Secondary.SizeNormal.Margin16EndBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_black"
+            android:onClick="@{() -> shoppingListViewModel.addShoppingListEvent()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <include
             layout="@layout/view_loading_state"

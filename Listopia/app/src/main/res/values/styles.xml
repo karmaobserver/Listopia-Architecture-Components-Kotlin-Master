@@ -113,6 +113,17 @@
     <style name="TextInputMaterial" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
     </style>
 
+    <style name="TextInputMaterial.Margin16">
+        <item name="android:layout_margin">@dimen/margin_16</item>
+    </style>
+
+    <style name="TextInputMaterial.Margin16EndTopBottom8Start">
+        <item name="android:layout_marginStart">@dimen/margin_8</item>
+        <item name="android:layout_marginEnd">@dimen/margin_16</item>
+        <item name="android:layout_marginBottom">@dimen/margin_16</item>
+        <item name="android:layout_marginTop">@dimen/margin_16</item>
+    </style>
+
     <!--EditTextMaterial styles-->
     <style name="EditTextMaterial" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
     </style>
@@ -125,6 +136,22 @@
     <style name="EditText.MaxLine1">
         <item name="android:maxLines">1</item>
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="EditText.MaxLine1.maxLength200">
+        <item name="android:maxLength">200</item>
+    </style>
+
+    <style name="EditText.MaxLine1.maxLength20">
+        <item name="android:maxLength">20</item>
+    </style>
+
+    <style name="EditText.MaxLine1.maxLength5">
+        <item name="android:maxLength">5</item>
+    </style>
+
+    <style name="EditText.MaxLine1.maxLength20.NumbersDecimalOnly">
+        <item name="android:inputType">numberDecimal</item>
     </style>
 
     <!--Buttons-->
@@ -146,6 +173,16 @@
         <item name="cornerRadius">16dp</item>
     </style>
 
+    <style name="ButtonTextMaterial.Margin16">
+        <item name="android:layout_margin">@dimen/margin_16</item>
+    </style>
+
+    <style name="ButtonTextMaterial.Margin16NoTop">
+        <item name="android:layout_marginBottom">@dimen/margin_16</item>
+        <item name="android:layout_marginStart">@dimen/margin_16</item>
+        <item name="android:layout_marginEnd">@dimen/margin_16</item>
+    </style>
+
     <style name="ButtonMaterial.White">
         <item name="android:textColor">@color/white</item>
     </style>
@@ -164,6 +201,24 @@
 
     <!--ImageView styles-->
     <style name="ImageView" parent="@style/AppTheme">
+    </style>
+
+    <style name="ImageView.Size24">
+        <item name="android:layout_width">@dimen/image_24</item>
+        <item name="android:layout_height">@dimen/image_24</item>
+    </style>
+
+    <style name="ImageView.Size24.FitCenter">
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="ImageView.Size24.FitCenter.Margin16Start">
+        <item name="android:layout_marginStart">@dimen/margin_16</item>
+    </style>
+
+    <style name="ImageView.Size24.FitCenter.Margin16Start20Top">
+        <item name="android:layout_marginStart">@dimen/margin_16</item>
+        <item name="android:layout_marginTop">@dimen/margin_20</item>
     </style>
 
     <style name="ImageView.Size64">
@@ -225,6 +280,31 @@
 
     <!--ProgressBar styles-->
     <style name="ProgressBarMaterial" parent="Widget.MaterialProgressBar.ProgressBar.Horizontal">
+    </style>
+
+    <!--FloatingActionButton-->
+    <style name="FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+    </style>
+
+    <style name="FloatingActionButton.Secondary">
+        <item name="backgroundTint">@color/colorSecondary</item>
+    </style>
+
+    <style name="FloatingActionButton.Secondary.SizeNormal">
+        <item name="fabSize">normal</item>
+    </style>
+
+    <style name="FloatingActionButton.Secondary.SizeNormal.Margin16EndBottom">
+        <item name="android:layout_marginEnd">@dimen/margin_16</item>
+        <item name="android:layout_marginBottom">@dimen/margin_16</item>
+    </style>
+
+    <!--RecyclerView styles-->
+    <style name="RecyclerView" parent="@style/AppTheme">
+    </style>
+
+    <style name="RecyclerView.BackgroundGray10">
+        <item name="background">@color/grey_10</item>
     </style>
 
 </resources>

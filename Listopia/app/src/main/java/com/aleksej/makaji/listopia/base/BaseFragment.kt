@@ -17,8 +17,6 @@ open class BaseFragment : Fragment(), Injectable {
     @Inject
     lateinit var mViewModelFactory: ViewModelProvider.Factory
 
-    fun navigationController() = findNavController()
-
     fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }

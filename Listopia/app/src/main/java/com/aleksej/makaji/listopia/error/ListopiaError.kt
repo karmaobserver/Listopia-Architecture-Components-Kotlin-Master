@@ -13,3 +13,6 @@ object RoomDeletingError: ListopiaError()
 data class ThrowableError(val throwable: Throwable) : ListopiaError()
 data class BackendError(val response: ErrorResponse) : ListopiaError()
 object UnauthorizedError : ListopiaError()
+
+//View Errors
+data class ListNameError(val resourceId : Int) : ListopiaError()

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.aleksej.makaji.listopia.data.event.StateHandler"/>
+        <variable
+            name="shoppingListModel"
+            type="com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel"/>
+        <variable
+            name="state"
+            type="com.aleksej.makaji.listopia.data.event.State"/>
+        <variable
+            name="productViewModel"
+            type="com.aleksej.makaji.listopia.screen.productlist.ProductListViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_product"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey_10"
+            tools:listitem="@layout/item_product">
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_button_add_product"
+            style="@style/FloatingActionButton.Secondary.SizeNormal.Margin16EndBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_black"
+            android:onClick="@{() -> productViewModel.addProductEvent()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <include
+            layout="@layout/view_loading_state"
+            app:state="@{state}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

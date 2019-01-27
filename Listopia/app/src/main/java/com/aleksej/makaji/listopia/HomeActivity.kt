@@ -14,6 +14,7 @@ import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.databinding.ActivityHomeBinding
 import com.aleksej.makaji.listopia.databinding.HeaderDrawerBinding
 import com.aleksej.makaji.listopia.util.SharedPreferenceManager
+import com.aleksej.makaji.listopia.util.putVisibleOrGone
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
@@ -103,13 +104,9 @@ class HomeActivity : BaseActivity() {
         headerBinding = HeaderDrawerBinding.bind(binding.navigationView.getHeaderView(0))
         checkIfUserLoggedIn()
         binding.navigationView.itemIconTintList = null
-        val actionBarDrawerToggle = object : ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            override fun onDrawerOpened(drawerView: View) {
-                super.onDrawerOpened(drawerView)
-            }
-        }
+        /*val actionBarDrawerToggle = object : ActionBarDrawerToggle(this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {}
         binding.drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
+        actionBarDrawerToggle.syncState()*/
         binding.navigationView.setNavigationItemSelectedListener {
             //If we want to highlight selected item
             //it.isCheckable = true
@@ -176,17 +173,17 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun checkIfUserLoggedIn() {
-        if (mSharedPreferenceManager.token != "") {
-            headerBinding.groupSignedIn.visibility = View.VISIBLE
-            headerBinding.groupSignedOut.visibility = View.GONE
+        if (mSharedPreferenceManager.userUid != "") {
+            headerBinding.groupSignedIn.putVisibleOrGone(true)
+            headerBinding.groupSignedOut.putVisibleOrGone(false)
         } else {
-            headerBinding.groupSignedIn.visibility = View.GONE
-            headerBinding.groupSignedOut.visibility = View.VISIBLE
+            headerBinding.groupSignedIn.putVisibleOrGone(false)
+            headerBinding.groupSignedOut.putVisibleOrGone(true)
         }
     }
 
     private fun handleViewForLoggedUser(user: FirebaseUser) {
-        mSharedPreferenceManager.token = user.uid
+        mSharedPreferenceManager.userUid = user.uid
         val userModel = UserModel(user.uid, user.displayName, user.email, user.photoUrl)
         headerBinding.userModel = userModel
     }
@@ -195,7 +192,7 @@ class HomeActivity : BaseActivity() {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener {
-                    mSharedPreferenceManager.token = ""
+                    mSharedPreferenceManager.userUid = ""
                     checkIfUserLoggedIn()
                     showToast("Successfully Signed Out")
                 }

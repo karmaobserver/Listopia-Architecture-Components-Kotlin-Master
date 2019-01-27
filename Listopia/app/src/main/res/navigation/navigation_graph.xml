@@ -8,5 +8,35 @@
     <fragment
         android:id="@+id/fragment_shopping_list"
         android:name="com.aleksej.makaji.listopia.screen.shoppinglist.ShoppingListFragment"
-        android:label="FragmentShoppingList" />
+        android:label="@string/title_shopping_list">
+        <action
+            android:id="@+id/action_fragment_shopping_list_to_fragment_shopping_list_add"
+            app:destination="@id/fragment_shopping_list_add" />
+        <action
+            android:id="@+id/action_fragment_shopping_list_to_fragment_product_list"
+            app:destination="@id/fragment_product_list" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_shopping_list_add"
+        android:name="com.aleksej.makaji.listopia.screen.shoppinglistadd.ShoppingListAddFragment"
+        android:label="@string/title_create_list" />
+    <fragment
+        android:id="@+id/fragment_product_list"
+        android:name="com.aleksej.makaji.listopia.screen.productlist.ProductListFragment"
+        android:label="@string/title_products" >
+        <argument
+            android:name="shoppingListId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_fragment_product_list_to_fragment_product_add"
+            app:destination="@id/fragment_product_add" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_product_add"
+        android:name="com.aleksej.makaji.listopia.screen.productadd.ProductAddFragment"
+        android:label="@string/title_add_product" >
+        <argument
+            android:name="shoppingListId"
+            app:argType="long" />
+    </fragment>
 </navigation>
