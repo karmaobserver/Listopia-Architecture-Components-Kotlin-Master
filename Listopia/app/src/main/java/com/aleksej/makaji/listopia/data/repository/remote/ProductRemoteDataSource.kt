@@ -7,6 +7,7 @@ import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.ProductDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
+import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
 import kotlinx.coroutines.Deferred
@@ -18,6 +19,10 @@ import javax.inject.Singleton
  */
 @Singleton
 class ProductRemoteDataSource @Inject constructor() : ProductDataSource {
+
+    override fun getProductById(productValue: ProductValue): LiveData<StateHandler<ProductModel>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun getProductsByShoppingListId(productsValue: ProductsValue): LiveData<StateHandler<PagedList<ProductModel>>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -32,6 +37,10 @@ class ProductRemoteDataSource @Inject constructor() : ProductDataSource {
     }
 
     override suspend fun updateProduct(productModel: ProductModel): Deferred<State<Int>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun deleteProductById(productValue: ProductValue): Deferred<State<Int>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

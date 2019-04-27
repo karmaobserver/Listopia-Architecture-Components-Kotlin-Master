@@ -1,4 +1,4 @@
-package com.aleksej.makaji.listopia.screen.shoppinglistedit
+package com.aleksej.makaji.listopia.view.shoppinglist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +15,7 @@ import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.databinding.FragmentShoppingListEditBinding
 import com.aleksej.makaji.listopia.error.ListNameError
 import com.aleksej.makaji.listopia.util.*
+import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 
 /**
  * Created by Aleksej Makaji on 1/27/19.
@@ -22,7 +23,7 @@ import com.aleksej.makaji.listopia.util.*
 
 class ShoppingListEditFragment: BaseFragment() {
 
-    private lateinit var mShoppingListEditViewModel: ShoppingListEditViewModel
+    private lateinit var mShoppingListViewModel: ShoppingListViewModel
 
     private var binding by autoCleared<FragmentShoppingListEditBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
@@ -43,20 +44,20 @@ class ShoppingListEditFragment: BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mShoppingListEditViewModel = viewModel(mViewModelFactory)
+        mShoppingListViewModel = viewModel(mViewModelFactory)
         initData()
         initObservers()
         showKeyboard()
     }
 
     private fun initData() {
-        binding.shoppingListEditViewModel = mShoppingListEditViewModel
+        binding.shoppingListViewModel = mShoppingListViewModel
         arguments?.let {
             mShoppingListId = ShoppingListEditFragmentArgs.fromBundle(it).shoppingListId
-            if (mShoppingListEditViewModel.reloadEditData) {
-                mShoppingListEditViewModel.reloadEditData = true
+            if (mShoppingListViewModel.reloadEditData) {
+                mShoppingListViewModel.reloadEditData = true
                 mShoppingListId?.let {
-                    mShoppingListEditViewModel.getShoppingListById(ShoppingListByIdValue(it))
+                    mShoppingListViewModel.getShoppingListById(ShoppingListByIdValue(it))
 
                 }
             }
@@ -69,7 +70,7 @@ class ShoppingListEditFragment: BaseFragment() {
     }
 
     private fun observeEditShoppingList() {
-        observeSingle(mShoppingListEditViewModel.updateShoppingListLiveData) {
+        observeSingle(mShoppingListViewModel.updateShoppingListLiveData) {
             binding.state = it
             when (it) {
                 is State.Success -> {
@@ -79,7 +80,7 @@ class ShoppingListEditFragment: BaseFragment() {
                 }
                 is State.Error -> {
                     when (it.error) {
-                        is ListNameError -> binding.textInputLayoutListName.error = getString(R.string.error_list_name)
+                        is ListNameError -> binding.textInputLayoutListName.error = getString(it.error.resourceId)
                         else -> showError(it.error)
                     }
                 }
@@ -88,7 +89,7 @@ class ShoppingListEditFragment: BaseFragment() {
     }
 
     private fun observeGetShoppingListById() {
-        observeSingle(mShoppingListEditViewModel.getShoppingListByIdLiveData) {
+        observeSingle(mShoppingListViewModel.getShoppingListByIdLiveData) {
             binding.state = it
             when (it) {
                 is State.Success -> {

@@ -14,7 +14,7 @@
             type="com.aleksej.makaji.listopia.data.event.State"/>
         <variable
             name="productViewModel"
-            type="com.aleksej.makaji.listopia.screen.productlist.ProductListViewModel"/>
+            type="com.aleksej.makaji.listopia.viewmodel.ProductViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

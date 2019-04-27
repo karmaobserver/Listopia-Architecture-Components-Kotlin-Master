@@ -1,4 +1,4 @@
-package com.aleksej.makaji.listopia.screen.productadd
+package com.aleksej.makaji.listopia.view.product
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,10 @@ import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
 import com.aleksej.makaji.listopia.databinding.FragmentProductAddBinding
+import com.aleksej.makaji.listopia.error.ListNameError
+import com.aleksej.makaji.listopia.error.ProductNameError
 import com.aleksej.makaji.listopia.util.*
+import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
 import kotlinx.android.synthetic.main.fragment_product_add.*
 
 /**
@@ -21,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_product_add.*
  */
 class ProductAddFragment: BaseFragment() {
 
-    private lateinit var mProductAddViewModel: ProductAddViewModel
+    private lateinit var mProductViewModel: ProductViewModel
 
     private var binding by autoCleared<FragmentProductAddBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
@@ -42,7 +45,7 @@ class ProductAddFragment: BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mProductAddViewModel = viewModel(mViewModelFactory)
+        mProductViewModel = viewModel(mViewModelFactory)
         initData()
         initListeners()
         initObservers()
@@ -60,7 +63,7 @@ class ProductAddFragment: BaseFragment() {
     }
 
     private fun observeSaveShoppingList() {
-        observeSingle(mProductAddViewModel.addProductLiveData) {
+        observeSingle(mProductViewModel.addProductLiveData) {
             binding.state = it
             when(it) {
                 is State.Success -> {
@@ -69,7 +72,10 @@ class ProductAddFragment: BaseFragment() {
                     findNavController().navigateUp()
                 }
                 is State.Error -> {
-                    showError(it.error)
+                    when (it.error) {
+                        is ProductNameError -> binding.textInputLayoutProductName.error = getString(it.error.resourceId)
+                        else -> showError(it.error)
+                    }
                 }
             }
         }
@@ -83,7 +89,7 @@ class ProductAddFragment: BaseFragment() {
 
     private fun addProduct() {
         mShoppingListId?.let {
-            mProductAddViewModel.addProduct(SaveProductValue(binding.editTextProductName.text(),
+            mProductViewModel.addProduct(SaveProductValue(binding.editTextProductName.text(),
                     binding.editTextQuantity.textDouble(),
                     binding.editTextUnit.text(),
                     binding.editTextPrice.textDouble(),

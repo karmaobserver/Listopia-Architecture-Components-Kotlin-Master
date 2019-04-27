@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.ProductRepository
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
+import com.aleksej.makaji.listopia.util.Validator
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +18,10 @@ class UpdateProductUseCase @Inject constructor(private val mProductRepository: P
     private val mUseCaseLiveData = MutableLiveData<StateHandler<Int>>()
 
     override fun invoke(value: ProductModel): LiveData<StateHandler<Int>> {
+        Validator.validateProductName(value.name)?.let {
+            mUseCaseLiveData.postValue(StateHandler.error(it))
+            return mUseCaseLiveData
+        }
         GlobalScope.launch {
             mUseCaseLiveData.postValue(StateHandler.loading())
             val updateProductResponse = mProductRepository.updateProduct(value).await()

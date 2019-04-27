@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.ProductRepository
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
+import com.aleksej.makaji.listopia.util.Validator
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +18,10 @@ class SaveProductUseCase @Inject constructor(private val mProductRepository: Pro
     private val saveProductLiveData = MutableLiveData<StateHandler<Long>>()
 
     override fun invoke(value: SaveProductValue): LiveData<StateHandler<Long>> {
+        Validator.validateProductName(value.name)?.let {
+            saveProductLiveData.postValue(StateHandler.error(it))
+            return saveProductLiveData
+        }
         GlobalScope.launch {
             saveProductLiveData.postValue(StateHandler.loading())
             val saveProductResponse = mProductRepository.saveProduct(value).await()

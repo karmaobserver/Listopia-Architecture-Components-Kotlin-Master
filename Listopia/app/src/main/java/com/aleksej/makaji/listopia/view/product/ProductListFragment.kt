@@ -1,4 +1,4 @@
-package com.aleksej.makaji.listopia.screen.productlist
+package com.aleksej.makaji.listopia.view.product
 
 import android.os.Bundle
 import android.view.*
@@ -8,15 +8,18 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.aleksej.makaji.listopia.HomeActivity
 import com.aleksej.makaji.listopia.R
 import com.aleksej.makaji.listopia.adapter.ProductAdapter
 import com.aleksej.makaji.listopia.adapter.ProductAdapterEvents
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
 import com.aleksej.makaji.listopia.data.event.State
+import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
 import com.aleksej.makaji.listopia.databinding.FragmentProductListBinding
 import com.aleksej.makaji.listopia.util.*
+import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
 import javax.inject.Inject
 
 /**
@@ -27,7 +30,7 @@ class ProductListFragment: BaseFragment() {
     @Inject
     lateinit var mSharedPreferenceManager: SharedPreferenceManager
 
-    private lateinit var mProductListViewModel: ProductListViewModel
+    private lateinit var mProductViewModel: ProductViewModel
 
     private var binding by autoCleared<FragmentProductListBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
@@ -50,8 +53,8 @@ class ProductListFragment: BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mProductListViewModel = viewModel(mViewModelFactory)
-        binding.productViewModel = mProductListViewModel
+        mProductViewModel = viewModel(mViewModelFactory)
+        binding.productViewModel = mProductViewModel
         initData()
         initRecyclerView()
         initObservers()
@@ -75,8 +78,9 @@ class ProductListFragment: BaseFragment() {
         arguments?.let {
             mShoppingListId = ProductListFragmentArgs.fromBundle(it).shoppingListId
             mShoppingListId?.let {
-                mProductListViewModel.getProductsByShoppingId(ProductsValue(it))
+                mProductViewModel.getProductsByShoppingId(ProductsValue(it))
             }
+            (activity as? HomeActivity)?.supportActionBar?.title = ProductListFragmentArgs.fromBundle(it).shoppingListName
         }
     }
 
@@ -89,9 +93,11 @@ class ProductListFragment: BaseFragment() {
         mProductAdapter = ProductAdapter(mDataBindingComponent, mSharedPreferenceManager) {
             when (it) {
                 is ProductAdapterEvents.ProductClick -> {
-                    mProductListViewModel.updateProduct(it.productModel)
+                    mProductViewModel.updateProduct(it.productModel)
                 }
-                is ProductAdapterEvents.EditClick -> {}
+                is ProductAdapterEvents.OptionsClick -> {
+                    setupOptionsPopupMenu(it.view, it.productId)
+                }
             }
         }
         binding.recyclerViewProduct.adapter = mProductAdapter
@@ -101,10 +107,25 @@ class ProductListFragment: BaseFragment() {
         observeProducts()
         observeAddProduct()
         observeUpdateProduct()
+        observeDeleteProductById()
+    }
+
+    private fun observeDeleteProductById() {
+        observeSingle(mProductViewModel.deleteProductByIdLiveData) {
+            binding.state = it
+            when (it) {
+                is State.Success -> {
+                    showToastLong(R.string.success_product_delete)
+                }
+                is State.Error -> {
+                    showError(it.error)
+                }
+            }
+        }
     }
 
     private fun observeUpdateProduct() {
-        observeSingle(mProductListViewModel.updateProductLiveData) {
+        observeSingle(mProductViewModel.updateProductLiveData) {
             when (it) {
                 is State.Error -> showError(it.error)
             }
@@ -112,7 +133,7 @@ class ProductListFragment: BaseFragment() {
     }
 
     private fun observeAddProduct() {
-        observeSingle(mProductListViewModel.addProductEvent) {
+        observeSingle(mProductViewModel.addProductEvent) {
             mShoppingListId?.let {
                 findNavController().navigate(ProductListFragmentDirections.actionFragmentProductListToFragmentProductAdd(it))
             }
@@ -120,7 +141,7 @@ class ProductListFragment: BaseFragment() {
     }
 
     private fun observeProducts() {
-        observePeek(mProductListViewModel.productsByShoppingIdLiveData) {
+        observePeek(mProductViewModel.productsByShoppingIdLiveData) {
             binding.state = it
             when (it) {
                 is State.Success -> {
@@ -128,21 +149,22 @@ class ProductListFragment: BaseFragment() {
                         mProductAdapter.submitList(it)
                     }
                 }
+                is State.Error -> showError(it.error)
             }
         }
     }
 
-    private fun setupOptionsPopupMenu(view: View, shoppingListId: Long) {
+    private fun setupOptionsPopupMenu(view: View, productId: Long) {
         context?.let {
             val popup = PopupMenu(it, view)
-            popup.inflate(R.menu.popup_menu_shopping_list)
+            popup.inflate(R.menu.popup_menu_product_list)
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.popup_menu_edit_product_list -> {
-                        findNavController().navigate(ShoppingListFragmentDirections.actionFragmentShoppingListToFragmentShoppingListEdit(shoppingListId))
+                        findNavController().navigate(ProductListFragmentDirections.actionFragmentProductListToFragmentProductEdit(productId))
                     }
                     R.id.popup_menu_delete_product_list -> {
-                        mShoppingListViewModel.deleteShoppingListById(DeleteShoppingListValue(shoppingListId))
+                        mProductViewModel.deleteProductById(ProductValue(productId))
                     }
                 }
                 false

@@ -4,11 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.aleksej.makaji.listopia.di.annotation.ViewModelKey
 import com.aleksej.makaji.listopia.factory.ViewModelFactory
-import com.aleksej.makaji.listopia.screen.productadd.ProductAddViewModel
-import com.aleksej.makaji.listopia.screen.productlist.ProductListViewModel
-import com.aleksej.makaji.listopia.screen.shoppinglist.ShoppingListViewModel
-import com.aleksej.makaji.listopia.screen.shoppinglistadd.ShoppingListAddViewModel
-import com.aleksej.makaji.listopia.screen.shoppinglistedit.ShoppingListEditViewModel
+import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
+import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -26,23 +23,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ShoppingListAddViewModel::class)
-    abstract fun bindShoppingListAddViewModel(shoppingListAddViewModel: ShoppingListAddViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ProductListViewModel::class)
-    abstract fun bindProductListViewModel(productListViewModel: ProductListViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ProductAddViewModel::class)
-    abstract fun bindProductAddViewModel(productAddViewModel: ProductAddViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ShoppingListEditViewModel::class)
-    abstract fun bindShoppingListEditViewModel(shoppingListEditViewModel: ShoppingListEditViewModel): ViewModel
+    @ViewModelKey(ProductViewModel::class)
+    abstract fun bindProductViewModel(productViewModel: ProductViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

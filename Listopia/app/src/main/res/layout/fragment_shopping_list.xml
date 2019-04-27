@@ -22,7 +22,7 @@
             type="com.aleksej.makaji.listopia.data.event.State"/>
         <variable
             name="shoppingListViewModel"
-            type="com.aleksej.makaji.listopia.screen.shoppinglist.ShoppingListViewModel"/>
+            type="com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

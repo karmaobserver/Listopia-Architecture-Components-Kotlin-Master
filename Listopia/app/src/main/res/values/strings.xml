@@ -17,6 +17,7 @@
     <string name="title_shopping_list_edit">Edit List</string>
     <string name="title_products">Products</string>
     <string name="title_product_add">Add Product</string>
+    <string name="title_product_edit">Edit Product</string>
 
     <!--Sub menu_options-->
     <string name="submenu_shopping_list_options_delete_all">Delete all shopping lists</string>
@@ -50,16 +51,20 @@
     <string name="success_shopping_list_edit">Successfully edited shopping list.</string>
     <string name="success_shopping_list_delete">Successfully deleted shopping list.</string>
     <string name="success_product_add">Successfully added product.</string>
+    <string name="success_product_edit">Successfully edited product.</string>
+    <string name="success_product_delete">Successfully deleted product.</string>
 
     <!--Errors-->
     <string name="error_room">Error with Room operation.</string>
     <string name="error_unknown">Unknown error.</string>
     <string name="error_list_name">List name can not be empty.</string>
+    <string name="error_product_name">Product name can not be empty.</string>
 
     <!--Actions-->
     <string name="action_create">Create</string>
     <string name="action_add">Add</string>
     <string name="action_save">Save</string>
+    <string name="action_edit">Edit</string>
 
     <!--Navigation labels-->
     <string name="label_trash">Trash</string>

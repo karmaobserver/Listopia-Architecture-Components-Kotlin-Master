@@ -14,6 +14,7 @@ import com.aleksej.makaji.listopia.data.repository.ProductDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
 import com.aleksej.makaji.listopia.data.room.ProductDao
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
+import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
 import com.aleksej.makaji.listopia.error.RoomDeleteError
@@ -39,6 +40,8 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
     }
 
     private val productsLiveData = MutableLiveData<StateHandler<PagedList<ProductModel>>>()
+
+    private val productLiveData = MutableLiveData<StateHandler<ProductModel>>()
 
     override val coroutineContext: CoroutineContext
         get() = Job()
@@ -88,6 +91,31 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
                 State.Success(mProductDao.updateProduct(ModelToRoomMapper.mapProduct(productModel)))
             } catch (e: Exception){
                 State.Error<Int>(RoomUpdateError)
+            }
+        }
+    }
+
+    override fun getProductById(productValue: ProductValue): LiveData<StateHandler<ProductModel>> {
+        productLiveData.postValue(StateHandler.loading())
+        try {
+            return Transformations.switchMap(mProductDao.getProductById(productValue.productId)) {
+                it?.run {
+                    productLiveData.postValue(StateHandler.success(RoomToModelMapper.mapProduct(it)))
+                }
+                return@switchMap productLiveData
+            }
+        } catch (e: Exception) {
+            productLiveData.postValue(StateHandler.error(RoomError))
+        }
+        return productLiveData
+    }
+
+    override suspend fun deleteProductById(productValue: ProductValue): Deferred<State<Int>> {
+        return async {
+            try {
+                State.Success(mProductDao.deleteProductById(productValue.productId))
+            } catch (e: Exception){
+                State.Error<Int>(RoomDeleteError)
             }
         }
     }

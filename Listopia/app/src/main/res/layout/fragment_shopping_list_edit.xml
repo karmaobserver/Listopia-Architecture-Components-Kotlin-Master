@@ -12,8 +12,8 @@
             name="shoppingListModel"
             type="com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel"/>
         <variable
-            name="shoppingListEditViewModel"
-            type="com.aleksej.makaji.listopia.screen.shoppinglistedit.ShoppingListEditViewModel"/>
+            name="shoppingListViewModel"
+            type="com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,7 +48,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_edit_list"
             style="@style/ButtonTextMaterial.Margin16NoTop"
-            android:onClick="@{() -> shoppingListEditViewModel.updateShoppingList(shoppingListModel)}"
+            android:onClick="@{() -> shoppingListViewModel.updateShoppingList(shoppingListModel)}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/action_save"

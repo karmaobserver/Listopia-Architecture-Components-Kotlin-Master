@@ -1,4 +1,4 @@
-package com.aleksej.makaji.listopia.screen.shoppinglist
+package com.aleksej.makaji.listopia.view.shoppinglist
 
 import android.os.Bundle
 import android.view.*
@@ -20,6 +20,7 @@ import com.aleksej.makaji.listopia.util.autoCleared
 import com.aleksej.makaji.listopia.util.observePeek
 import com.aleksej.makaji.listopia.util.observeSingle
 import com.aleksej.makaji.listopia.util.viewModel
+import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 
 /**
  * Created by Aleksej Makaji on 12/30/18.
@@ -48,9 +49,9 @@ class ShoppingListFragment: BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mShoppingListViewModel = viewModel(mViewModelFactory)
-        initData()
         initRecyclerView()
         initObservers()
+        initData()
 
         /*binding.setLifecycleOwner(viewLifecycleOwner)
         binding.shopLiveData = mShoppingListViewModel.shoppingListLiveData*/
@@ -72,6 +73,7 @@ class ShoppingListFragment: BaseFragment() {
 
     private fun initData() {
         binding.shoppingListViewModel = mShoppingListViewModel
+        mShoppingListViewModel.getShoppingLists()
     }
 
     private fun initRecyclerView() {
@@ -83,7 +85,7 @@ class ShoppingListFragment: BaseFragment() {
         mShoppingListAdapter = ShoppingListAdapter(mDataBindingComponent) {
             when (it) {
                 is ShoppingListAdapterEvents.ShoppingListClick ->{
-                    findNavController().navigate(ShoppingListFragmentDirections.actionFragmentShoppingListToFragmentProductList(it.shoppingListId))
+                    findNavController().navigate(ShoppingListFragmentDirections.actionFragmentShoppingListToFragmentProductList(it.shoppingListId, it.shoppingListName))
                 }
                 is ShoppingListAdapterEvents.OptionsClick -> {
                     setupOptionsPopupMenu(it.view, it.shoppingListId)
@@ -100,7 +102,7 @@ class ShoppingListFragment: BaseFragment() {
     }
 
     private fun observeShoppingLists() {
-        observePeek(mShoppingListViewModel.shoppingListsLiveData) {
+        observePeek(mShoppingListViewModel.getShoppingListsLiveData) {
             binding.state = it
             when (it) {
                 is State.Success -> {

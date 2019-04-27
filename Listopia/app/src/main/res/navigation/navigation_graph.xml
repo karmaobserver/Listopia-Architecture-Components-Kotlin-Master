@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/fragment_shopping_list"
-        android:name="com.aleksej.makaji.listopia.screen.shoppinglist.ShoppingListFragment"
+        android:name="com.aleksej.makaji.listopia.view.shoppinglist.ShoppingListFragment"
         android:label="@string/title_shopping_list">
         <action
             android:id="@+id/action_fragment_shopping_list_to_fragment_shopping_list_add"
             app:destination="@id/fragment_shopping_list_add" />
         <action
-            android:id="@+id/action_fragment_shopping_list_to_fragment_product_list"
-            app:destination="@id/fragment_product_list" />
-        <action
             android:id="@+id/action_fragment_shopping_list_to_fragment_shopping_list_edit"
             app:destination="@id/fragment_shopping_list_edit" />
+        <action
+            android:id="@+id/action_fragment_shopping_list_to_fragment_product_list"
+            app:destination="@id/fragment_product_list" />
     </fragment>
     <fragment
         android:id="@+id/fragment_shopping_list_add"
-        android:name="com.aleksej.makaji.listopia.screen.shoppinglistadd.ShoppingListAddFragment"
+        android:name="com.aleksej.makaji.listopia.view.shoppinglist.ShoppingListAddFragment"
         android:label="@string/title_shopping_list_create" />
     <fragment
         android:id="@+id/fragment_product_list"
-        android:name="com.aleksej.makaji.listopia.screen.productlist.ProductListFragment"
+        android:name="com.aleksej.makaji.listopia.view.product.ProductListFragment"
         android:label="@string/title_products" >
         <argument
             android:name="shoppingListId"
@@ -33,10 +33,16 @@
         <action
             android:id="@+id/action_fragment_product_list_to_fragment_product_add"
             app:destination="@id/fragment_product_add" />
+        <action
+            android:id="@+id/action_fragment_product_list_to_fragment_product_edit"
+            app:destination="@id/fragment_product_edit" />
+        <argument
+            android:name="shoppingListName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/fragment_product_add"
-        android:name="com.aleksej.makaji.listopia.screen.productadd.ProductAddFragment"
+        android:name="com.aleksej.makaji.listopia.view.product.ProductAddFragment"
         android:label="@string/title_product_add" >
         <argument
             android:name="shoppingListId"
@@ -44,10 +50,18 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_shopping_list_edit"
-        android:name="com.aleksej.makaji.listopia.screen.shoppinglistedit.ShoppingListEditFragment"
+        android:name="com.aleksej.makaji.listopia.view.shoppinglist.ShoppingListEditFragment"
         android:label="@string/title_shopping_list_edit" >
         <argument
             android:name="shoppingListId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_product_edit"
+        android:name="com.aleksej.makaji.listopia.view.product.ProductEditFragment"
+        android:label="@string/title_product_edit">
+        <argument
+            android:name="productId"
             app:argType="long" />
     </fragment>
 </navigation>

@@ -17,3 +17,4 @@ object UnauthorizedError : ListopiaError()
 
 //View Errors
 data class ListNameError(val resourceId : Int) : ListopiaError()
+data class ProductNameError(val resourceId : Int) : ListopiaError()

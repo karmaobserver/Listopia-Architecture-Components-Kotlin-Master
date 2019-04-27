@@ -55,6 +55,11 @@ class ProductAdapter(private val mDataBindingComponent: DataBindingComponent,
                 mProductAdapterEvents.invoke(ProductAdapterEvents.ProductClick(it))
             }
         }
+        binding.imageButtonProductOptions.setOnClickListener { view ->
+            binding.productModel?.let {
+                mProductAdapterEvents.invoke(ProductAdapterEvents.OptionsClick(view, it.id))
+            }
+        }
         return binding
     }
 

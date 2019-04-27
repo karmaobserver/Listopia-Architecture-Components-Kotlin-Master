@@ -1,4 +1,4 @@
-package com.aleksej.makaji.listopia.screen.shoppinglistadd
+package com.aleksej.makaji.listopia.view.shoppinglist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +15,7 @@ import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.databinding.FragmentShoppingListAddBinding
 import com.aleksej.makaji.listopia.error.ListNameError
 import com.aleksej.makaji.listopia.util.*
+import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 import kotlinx.android.synthetic.main.fragment_shopping_list_add.*
 import javax.inject.Inject
 
@@ -26,7 +27,7 @@ class ShoppingListAddFragment: BaseFragment() {
     @Inject
     lateinit var mSharedPreferenceManager: SharedPreferenceManager
 
-    private lateinit var mShoppingListAddViewModel: ShoppingListAddViewModel
+    private lateinit var mShoppingListViewModel: ShoppingListViewModel
 
     private var binding by autoCleared<FragmentShoppingListAddBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
@@ -45,7 +46,7 @@ class ShoppingListAddFragment: BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mShoppingListAddViewModel = viewModel(mViewModelFactory)
+        mShoppingListViewModel = viewModel(mViewModelFactory)
         initListeners()
         initObservers()
         showKeyboard()
@@ -56,7 +57,7 @@ class ShoppingListAddFragment: BaseFragment() {
     }
 
     private fun observeSaveShoppingList() {
-        observeSingle(mShoppingListAddViewModel.saveShoppingListLiveData) {
+        observeSingle(mShoppingListViewModel.saveShoppingListLiveData) {
             binding.state = it
             when(it) {
                 is State.Success -> {
@@ -66,7 +67,7 @@ class ShoppingListAddFragment: BaseFragment() {
                 }
                 is State.Error -> {
                     when (it.error) {
-                        is ListNameError -> binding.textInputLayoutListName.error = getString(R.string.error_list_name)
+                        is ListNameError -> binding.textInputLayoutListName.error = getString(it.error.resourceId)
                         else -> showError(it.error)
                     }
                 }
@@ -84,6 +85,6 @@ class ShoppingListAddFragment: BaseFragment() {
     }
 
     private fun createShoppingList() {
-        mShoppingListAddViewModel.createShoppingList(SaveShoppingListValue(binding.editTextListName.text(), mSharedPreferenceManager.userUid))
+        mShoppingListViewModel.createShoppingList(SaveShoppingListValue(binding.editTextListName.text(), mSharedPreferenceManager.userUid))
     }
 }

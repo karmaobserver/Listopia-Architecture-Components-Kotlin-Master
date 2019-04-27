@@ -6,6 +6,7 @@ import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
+import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
 import com.aleksej.makaji.listopia.di.annotation.Local
@@ -33,5 +34,13 @@ class ProductRepository @Inject constructor(@Remote private val mRemoteProductDa
 
     override suspend fun updateProduct(productModel: ProductModel): Deferred<State<Int>> {
         return mLocalProductDataSource.updateProduct(productModel)
+    }
+
+    override fun getProductById(productValue: ProductValue): LiveData<StateHandler<ProductModel>> {
+        return mLocalProductDataSource.getProductById(productValue)
+    }
+
+    override suspend fun deleteProductById(productValue: ProductValue): Deferred<State<Int>> {
+        return mLocalProductDataSource.deleteProductById(productValue)
     }
 }

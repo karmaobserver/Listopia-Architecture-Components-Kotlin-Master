@@ -35,7 +35,7 @@ class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponen
         )
         binding.root.setOnClickListener {
             binding.shoppingListModel?.let {
-                mShoppingListAdapterEvents.invoke(ShoppingListAdapterEvents.ShoppingListClick(it.id))
+                mShoppingListAdapterEvents.invoke(ShoppingListAdapterEvents.ShoppingListClick(it.id, it.name))
             }
         }
         binding.imageButtonShoppingListOptions.setOnClickListener { view ->
