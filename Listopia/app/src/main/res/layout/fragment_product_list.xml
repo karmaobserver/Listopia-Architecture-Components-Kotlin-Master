@@ -23,15 +23,65 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_product"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/grey_10"
-            tools:listitem="@layout/item_product">
-        </androidx.recyclerview.widget.RecyclerView>
+            app:layout_constraintBottom_toTopOf="@+id/view_background_bottom_info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_product" />
+
+        <View
+            android:id="@+id/view_background_bottom_info"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintTop_toTopOf="@+id/text_view_cart_total_label"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_cart_total_label"
+            style="@style/TextViewAppearanceBody1.Bold.Margin8StartEnd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_cart_total"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_cart_total"
+            style="@style/TextViewAppearanceBody1.Bold.Margin8StartEnd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="0.0"
+            app:layout_constraintStart_toEndOf="@+id/text_view_cart_total_label"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="289.2"/>
+
+        <TextView
+            android:id="@+id/text_view_list_total"
+            style="@style/TextViewAppearanceBody1.Bold.Margin8StartEnd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="399.9"/>
+
+        <TextView
+            android:id="@+id/text_view_list_total_label"
+            style="@style/TextViewAppearanceBody1.Bold.Margin8StartEnd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_list_total"
+            app:layout_constraintEnd_toStartOf="@+id/text_view_list_total"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floating_button_add_product"
-            style="@style/FloatingActionButton.Secondary.SizeNormal.Margin16EndBottom"
+            style="@style/FloatingActionButton.Accent.SizeNormal.Margin16EndBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_black"

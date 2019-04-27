@@ -5,6 +5,9 @@ import androidx.paging.PagedList
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
 import kotlinx.coroutines.Deferred
 
@@ -13,7 +16,9 @@ import kotlinx.coroutines.Deferred
  */
 interface ShoppingListDataSource {
     fun getShoppingLists() : LiveData<StateHandler<PagedList<ShoppingListModel>>>
-    fun getShoppingList() : LiveData<StateHandler<ShoppingListModel>>
-    suspend fun saveShoppingList(shoppingListValue: ShoppingListValue): Deferred<State<Long>>
+    fun getShoppingListById(shoppingListByIdValue: ShoppingListByIdValue) : LiveData<StateHandler<ShoppingListModel>>
+    suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): Deferred<State<Long>>
     suspend fun deleteAllShoppingLists(): Deferred<State<Int>>
+    suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): Deferred<State<Int>>
+    suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): Deferred<State<Int>>
 }

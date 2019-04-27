@@ -5,6 +5,9 @@ import androidx.paging.PagedList
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
 import com.aleksej.makaji.listopia.di.annotation.Local
 import com.aleksej.makaji.listopia.di.annotation.Remote
@@ -21,15 +24,23 @@ class ShoppingListRepository @Inject constructor(@Remote private val mRemoteShop
         return mLocalShoppingListDataSource.getShoppingLists()
     }
 
-    override fun getShoppingList(): LiveData<StateHandler<ShoppingListModel>> {
-        return mLocalShoppingListDataSource.getShoppingList()
+    override fun getShoppingListById(shoppingListByIdValue: ShoppingListByIdValue): LiveData<StateHandler<ShoppingListModel>> {
+        return mLocalShoppingListDataSource.getShoppingListById(shoppingListByIdValue)
     }
 
-    override suspend fun saveShoppingList(shoppingListValue: ShoppingListValue): Deferred<State<Long>> {
-        return mLocalShoppingListDataSource.saveShoppingList(shoppingListValue)
+    override suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): Deferred<State<Long>> {
+        return mLocalShoppingListDataSource.saveShoppingList(saveShoppingListValue)
     }
 
     override suspend fun deleteAllShoppingLists(): Deferred<State<Int>> {
         return mLocalShoppingListDataSource.deleteAllShoppingLists()
+    }
+
+    override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): Deferred<State<Int>> {
+        return mLocalShoppingListDataSource.updateShoppingList(shoppingListValue)
+    }
+
+    override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): Deferred<State<Int>> {
+        return mLocalShoppingListDataSource.deleteShoppingListById(deleteShoppingListValue)
     }
 }

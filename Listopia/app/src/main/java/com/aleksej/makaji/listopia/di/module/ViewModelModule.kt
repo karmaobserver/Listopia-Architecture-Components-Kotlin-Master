@@ -8,6 +8,7 @@ import com.aleksej.makaji.listopia.screen.productadd.ProductAddViewModel
 import com.aleksej.makaji.listopia.screen.productlist.ProductListViewModel
 import com.aleksej.makaji.listopia.screen.shoppinglist.ShoppingListViewModel
 import com.aleksej.makaji.listopia.screen.shoppinglistadd.ShoppingListAddViewModel
+import com.aleksej.makaji.listopia.screen.shoppinglistedit.ShoppingListEditViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -37,6 +38,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ProductAddViewModel::class)
     abstract fun bindProductAddViewModel(productAddViewModel: ProductAddViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ShoppingListEditViewModel::class)
+    abstract fun bindShoppingListEditViewModel(shoppingListEditViewModel: ShoppingListEditViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

@@ -13,13 +13,22 @@
 
     <!--Titles-->
     <string name="title_shopping_list">My Lists</string>
+    <string name="title_shopping_list_create">Create List</string>
+    <string name="title_shopping_list_edit">Edit List</string>
     <string name="title_products">Products</string>
-    <string name="title_create_list">Create List</string>
-    <string name="title_add_product">Add Product</string>
+    <string name="title_product_add">Add Product</string>
 
-    <!--submenu_options-->
+    <!--Sub menu_options-->
     <string name="submenu_shopping_list_options_delete_all">Delete all shopping lists</string>
     <string name="submenu_product_options_delete_all">Delete all products</string>
+
+    <!--Popup menu options-->
+    <string name="popup_menu_rename_shopping_list">Rename</string>
+    <string name="popup_menu_delete_shopping_list">Delete</string>
+    <string name="popup_menu_share_shopping_list">Share</string>
+    <string name="popup_menu_copy_shopping_list">Copy</string>
+    <string name="popup_menu_edit_product_list">Edit</string>
+    <string name="popup_menu_delete_product_list">Delete</string>
 
     <!--Header drawer-->
     <string name="header_sign_in_sign_up">Sign in or sign up</string>
@@ -33,10 +42,14 @@
     <string name="label_price">Price</string>
     <string name="label_unit">Unit</string>
     <string name="label_notes">Notes</string>
+    <string name="label_cart_total">Cart total:</string>
+    <string name="label_list_total">List total:</string>
 
     <!--Messages-->
-    <string name="success_create_shopping_list">Successfully created shopping list.</string>
-    <string name="success_add_product">Successfully added product.</string>
+    <string name="success_shopping_list_create">Successfully created shopping list.</string>
+    <string name="success_shopping_list_edit">Successfully edited shopping list.</string>
+    <string name="success_shopping_list_delete">Successfully deleted shopping list.</string>
+    <string name="success_product_add">Successfully added product.</string>
 
     <!--Errors-->
     <string name="error_room">Error with Room operation.</string>

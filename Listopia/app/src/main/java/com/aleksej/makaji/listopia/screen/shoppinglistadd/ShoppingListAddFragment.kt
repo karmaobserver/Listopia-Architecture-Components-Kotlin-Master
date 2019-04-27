@@ -11,7 +11,7 @@ import com.aleksej.makaji.listopia.R
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
 import com.aleksej.makaji.listopia.data.event.State
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.databinding.FragmentShoppingListAddBinding
 import com.aleksej.makaji.listopia.error.ListNameError
 import com.aleksej.makaji.listopia.util.*
@@ -60,7 +60,8 @@ class ShoppingListAddFragment: BaseFragment() {
             binding.state = it
             when(it) {
                 is State.Success -> {
-                    showToastLong(R.string.success_create_shopping_list)
+                    hideKeyboard()
+                    showToastLong(R.string.success_shopping_list_create)
                     findNavController().navigateUp()
                 }
                 is State.Error -> {
@@ -76,15 +77,13 @@ class ShoppingListAddFragment: BaseFragment() {
     private fun initListeners() {
         button_create_list.setOnClickListener {
             createShoppingList()
-            hideKeyboard()
         }
         edit_text_list_name.onSubmit {
             createShoppingList()
-            hideKeyboard()
         }
     }
 
     private fun createShoppingList() {
-        mShoppingListAddViewModel.createShoppingList(ShoppingListValue(binding.editTextListName.text(), mSharedPreferenceManager.userUid))
+        mShoppingListAddViewModel.createShoppingList(SaveShoppingListValue(binding.editTextListName.text(), mSharedPreferenceManager.userUid))
     }
 }

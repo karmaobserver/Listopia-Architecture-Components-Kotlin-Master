@@ -4,6 +4,8 @@ import com.aleksej.makaji.listopia.screen.productadd.ProductAddFragment
 import com.aleksej.makaji.listopia.screen.productlist.ProductListFragment
 import com.aleksej.makaji.listopia.screen.shoppinglist.ShoppingListFragment
 import com.aleksej.makaji.listopia.screen.shoppinglistadd.ShoppingListAddFragment
+import com.aleksej.makaji.listopia.screen.shoppinglistedit.ShoppingListEditFragment
+import com.aleksej.makaji.listopia.screen.shoppinglistedit.ShoppingListEditViewModel
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -24,4 +26,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeProductAddFragment(): ProductAddFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeShoppingListEditFragment(): ShoppingListEditFragment
 }

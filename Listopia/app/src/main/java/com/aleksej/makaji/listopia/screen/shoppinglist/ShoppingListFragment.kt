@@ -2,6 +2,7 @@ package com.aleksej.makaji.listopia.screen.shoppinglist
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
@@ -13,6 +14,7 @@ import com.aleksej.makaji.listopia.adapter.ShoppingListAdapterEvents
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
 import com.aleksej.makaji.listopia.data.event.State
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.databinding.FragmentShoppingListBinding
 import com.aleksej.makaji.listopia.util.autoCleared
 import com.aleksej.makaji.listopia.util.observePeek
@@ -46,7 +48,7 @@ class ShoppingListFragment: BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mShoppingListViewModel = viewModel(mViewModelFactory)
-        binding.shoppingListViewModel = mShoppingListViewModel
+        initData()
         initRecyclerView()
         initObservers()
 
@@ -68,6 +70,10 @@ class ShoppingListFragment: BaseFragment() {
         }
     }
 
+    private fun initData() {
+        binding.shoppingListViewModel = mShoppingListViewModel
+    }
+
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL
@@ -79,6 +85,9 @@ class ShoppingListFragment: BaseFragment() {
                 is ShoppingListAdapterEvents.ShoppingListClick ->{
                     findNavController().navigate(ShoppingListFragmentDirections.actionFragmentShoppingListToFragmentProductList(it.shoppingListId))
                 }
+                is ShoppingListAdapterEvents.OptionsClick -> {
+                    setupOptionsPopupMenu(it.view, it.shoppingListId)
+                }
             }
         }
         binding.recyclerViewShoppingList.adapter = mShoppingListAdapter
@@ -87,11 +96,12 @@ class ShoppingListFragment: BaseFragment() {
     private fun initObservers() {
         observeShoppingLists()
         observeAddShoppingList()
+        observeDeleteShoppingListById()
     }
 
     private fun observeShoppingLists() {
         observePeek(mShoppingListViewModel.shoppingListsLiveData) {
-            binding.stateShop = it
+            binding.state = it
             when (it) {
                 is State.Success -> {
                     it.data?.let {
@@ -108,6 +118,41 @@ class ShoppingListFragment: BaseFragment() {
     private fun observeAddShoppingList() {
         observeSingle(mShoppingListViewModel.addShoppingListEvent) {
             findNavController().navigate(R.id.action_fragment_shopping_list_to_fragment_shopping_list_add)
+        }
+    }
+
+    private fun observeDeleteShoppingListById() {
+        observeSingle(mShoppingListViewModel.deleteShoppingListByIdLiveData) {
+            binding.state = it
+            when (it) {
+                is State.Success -> {
+                    showToastLong(R.string.success_shopping_list_delete)
+                }
+                is State.Error -> {
+                    showError(it.error)
+                }
+            }
+        }
+    }
+
+    private fun setupOptionsPopupMenu(view: View, shoppingListId: Long) {
+        context?.let {
+            val popup = PopupMenu(it, view)
+            popup.inflate(R.menu.popup_menu_shopping_list)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.popup_menu_rename_shopping_list -> {
+                        findNavController().navigate(ShoppingListFragmentDirections.actionFragmentShoppingListToFragmentShoppingListEdit(shoppingListId))
+                    }
+                    R.id.popup_menu_delete_shopping_list -> {
+                        mShoppingListViewModel.deleteShoppingListById(DeleteShoppingListValue(shoppingListId))
+                    }
+                    R.id.popup_menu_share_shopping_list -> {}
+                    R.id.popup_menu_copy_shopping_list -> {}
+                }
+                false
+            }
+            popup.show()
         }
     }
 }

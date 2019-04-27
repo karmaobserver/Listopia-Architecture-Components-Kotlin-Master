@@ -14,6 +14,7 @@ import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.databinding.ActivityHomeBinding
 import com.aleksej.makaji.listopia.databinding.HeaderDrawerBinding
 import com.aleksej.makaji.listopia.util.SharedPreferenceManager
+import com.aleksej.makaji.listopia.util.hideKeyboard
 import com.aleksej.makaji.listopia.util.putVisibleOrGone
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
@@ -61,6 +62,7 @@ class HomeActivity : BaseActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        hideKeyboard()
         return mNavController.navigateUp(mAppBarConfiguration) || super.onSupportNavigateUp()
     }
 
@@ -145,7 +147,7 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun setupNavigationListener() {
-        mNavigationListener = NavController.OnDestinationChangedListener { controller, destination, bundle ->
+        mNavigationListener = NavController.OnDestinationChangedListener { controller, destination, _bundle ->
             when (destination.id) {
                 R.id.fragment_shopping_list -> supportActionBar?.setTitle(R.string.title_shopping_list)
                 else -> {}

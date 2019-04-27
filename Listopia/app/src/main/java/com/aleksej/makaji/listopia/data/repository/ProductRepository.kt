@@ -30,4 +30,8 @@ class ProductRepository @Inject constructor(@Remote private val mRemoteProductDa
     override suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): Deferred<State<Int>> {
         return mLocalProductDataSource.deleteProductsByShoppingList(deleteProductValue)
     }
+
+    override suspend fun updateProduct(productModel: ProductModel): Deferred<State<Int>> {
+        return mLocalProductDataSource.updateProduct(productModel)
+    }
 }

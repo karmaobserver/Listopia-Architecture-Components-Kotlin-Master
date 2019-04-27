@@ -10,6 +10,7 @@ class SharedPreferenceManager constructor(private val sharedPreferences: SharedP
     companion object {
         private const val TOKEN = "TOKEN"
         private const val USER_UID = "USER_UID"
+        private const val CURRENCY = "CURRENCY"
     }
 
     var token: String
@@ -19,4 +20,8 @@ class SharedPreferenceManager constructor(private val sharedPreferences: SharedP
     var userUid: String
         get() = sharedPreferences.getString(USER_UID, "").orEmpty()
         set(userUid) = sharedPreferences.edit().putString(USER_UID, userUid).apply()
+
+    var currency: String
+        get() = sharedPreferences.getString(CURRENCY, "$").orEmpty()
+        set(currency) = sharedPreferences.edit().putString(CURRENCY, currency).apply()
 }

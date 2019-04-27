@@ -18,7 +18,7 @@
             name="shoppingListModel"
             type="com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel"/>
         <variable
-            name="stateShop"
+            name="state"
             type="com.aleksej.makaji.listopia.data.event.State"/>
         <variable
             name="shoppingListViewModel"
@@ -40,7 +40,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floating_button_add_shopping_list"
-            style="@style/FloatingActionButton.Secondary.SizeNormal.Margin16EndBottom"
+            style="@style/FloatingActionButton.Accent.SizeNormal.Margin16EndBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_black"
@@ -50,7 +50,7 @@
 
         <include
             layout="@layout/view_loading_state"
-            app:state="@{stateShop}"
+            app:state="@{state}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

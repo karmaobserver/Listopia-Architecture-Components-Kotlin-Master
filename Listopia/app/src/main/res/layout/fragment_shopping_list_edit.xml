@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="com.aleksej.makaji.listopia.data.event.StateHandler"/>
+        <variable
+            name="state"
+            type="com.aleksej.makaji.listopia.data.event.State"/>
+        <variable
+            name="shoppingListModel"
+            type="com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel"/>
+        <variable
+            name="shoppingListEditViewModel"
+            type="com.aleksej.makaji.listopia.screen.shoppinglistedit.ShoppingListEditViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image_view_list_name"
+            style="@style/ImageView.Size24.FitCenter.Margin16Start20Top"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_input_layout_list_name"
+            app:srcCompat="@drawable/ic_shopping_list" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_list_name"
+            style="@style/TextInputMaterial.Margin16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_view_list_name"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_list_name"
+                style="@style/EditText.MaxLine1.maxLength200"
+                android:hint="@string/label_list_name"
+                android:text="@={shoppingListModel.name}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_edit_list"
+            style="@style/ButtonTextMaterial.Margin16NoTop"
+            android:onClick="@{() -> shoppingListEditViewModel.updateShoppingList(shoppingListModel)}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/action_save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_list_name" />
+
+        <include
+            layout="@layout/view_loading_state"
+            app:state="@{state}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

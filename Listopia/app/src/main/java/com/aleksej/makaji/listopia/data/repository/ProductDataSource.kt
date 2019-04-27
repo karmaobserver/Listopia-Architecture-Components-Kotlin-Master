@@ -16,5 +16,6 @@ import kotlinx.coroutines.Deferred
 interface ProductDataSource {
     fun getProductsByShoppingListId(productsValue: ProductsValue) : LiveData<StateHandler<PagedList<ProductModel>>>
     suspend fun saveProduct(saveProductValue: SaveProductValue): Deferred<State<Long>>
+    suspend fun updateProduct(productModel: ProductModel): Deferred<State<Int>>
     suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): Deferred<State<Int>>
 }

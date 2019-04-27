@@ -64,7 +64,8 @@ class ProductAddFragment: BaseFragment() {
             binding.state = it
             when(it) {
                 is State.Success -> {
-                    showToastLong(R.string.success_add_product)
+                    hideKeyboard()
+                    showToastLong(R.string.success_product_add)
                     findNavController().navigateUp()
                 }
                 is State.Error -> {
@@ -89,6 +90,5 @@ class ProductAddFragment: BaseFragment() {
                     binding.editTextNotes.text(),
                     it))
         }
-        hideKeyboard()
     }
 }

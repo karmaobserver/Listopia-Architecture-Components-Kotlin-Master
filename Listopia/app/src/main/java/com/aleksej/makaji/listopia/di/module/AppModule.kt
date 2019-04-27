@@ -24,7 +24,7 @@ class AppModule {
     @Singleton
     @Provides
     fun provideSharedPreferences(application: Application): SharedPreferences {
-        return application.getSharedPreferences("com.aleksej.makaji.listopia.android.shop.prefs", Context.MODE_PRIVATE)
+        return application.getSharedPreferences("com.aleksej.makaji.listopia.prefs", Context.MODE_PRIVATE)
     }
 
     @Singleton

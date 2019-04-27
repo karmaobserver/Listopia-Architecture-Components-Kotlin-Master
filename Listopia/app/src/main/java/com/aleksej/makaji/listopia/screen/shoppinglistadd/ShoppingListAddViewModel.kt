@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.aleksej.makaji.listopia.data.usecase.SaveShoppingListUseCase
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import javax.inject.Inject
 
 /**
@@ -12,12 +12,12 @@ import javax.inject.Inject
  */
 class ShoppingListAddViewModel @Inject constructor(private val mSaveShoppingListUseCase: SaveShoppingListUseCase) : ViewModel() {
 
-    private val _saveShoppingList = MutableLiveData<ShoppingListValue>()
+    private val _saveShoppingList = MutableLiveData<SaveShoppingListValue>()
     val saveShoppingListLiveData = Transformations.switchMap(_saveShoppingList) {
         mSaveShoppingListUseCase.invoke(it)
     }
 
-    fun createShoppingList(shoppingListValue: ShoppingListValue) {
-        _saveShoppingList.postValue(shoppingListValue)
+    fun createShoppingList(saveShoppingListValue: SaveShoppingListValue) {
+        _saveShoppingList.postValue(saveShoppingListValue)
     }
 }

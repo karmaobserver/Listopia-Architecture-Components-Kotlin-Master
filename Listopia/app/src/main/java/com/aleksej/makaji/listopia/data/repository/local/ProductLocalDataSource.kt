@@ -7,6 +7,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.mapper.ModelToRoomMapper
 import com.aleksej.makaji.listopia.data.mapper.RoomToModelMapper
 import com.aleksej.makaji.listopia.data.mapper.ValueToRoomMapper
 import com.aleksej.makaji.listopia.data.repository.ProductDataSource
@@ -15,8 +16,9 @@ import com.aleksej.makaji.listopia.data.room.ProductDao
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
-import com.aleksej.makaji.listopia.error.RoomDeletingError
+import com.aleksej.makaji.listopia.error.RoomDeleteError
 import com.aleksej.makaji.listopia.error.RoomError
+import com.aleksej.makaji.listopia.error.RoomUpdateError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
@@ -75,7 +77,17 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
             try {
                 State.Success(mProductDao.deleteProductsByShoppingList(deleteProductValue.shoppingListId))
             } catch (e: Exception){
-                State.Error<Int>(RoomDeletingError)
+                State.Error<Int>(RoomDeleteError)
+            }
+        }
+    }
+
+    override suspend fun updateProduct(productModel: ProductModel): Deferred<State<Int>> {
+        return async {
+            try {
+                State.Success(mProductDao.updateProduct(ModelToRoomMapper.mapProduct(productModel)))
+            } catch (e: Exception){
+                State.Error<Int>(RoomUpdateError)
             }
         }
     }

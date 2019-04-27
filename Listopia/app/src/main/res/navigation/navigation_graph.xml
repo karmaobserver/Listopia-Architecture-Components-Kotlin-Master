@@ -15,11 +15,14 @@
         <action
             android:id="@+id/action_fragment_shopping_list_to_fragment_product_list"
             app:destination="@id/fragment_product_list" />
+        <action
+            android:id="@+id/action_fragment_shopping_list_to_fragment_shopping_list_edit"
+            app:destination="@id/fragment_shopping_list_edit" />
     </fragment>
     <fragment
         android:id="@+id/fragment_shopping_list_add"
         android:name="com.aleksej.makaji.listopia.screen.shoppinglistadd.ShoppingListAddFragment"
-        android:label="@string/title_create_list" />
+        android:label="@string/title_shopping_list_create" />
     <fragment
         android:id="@+id/fragment_product_list"
         android:name="com.aleksej.makaji.listopia.screen.productlist.ProductListFragment"
@@ -34,7 +37,15 @@
     <fragment
         android:id="@+id/fragment_product_add"
         android:name="com.aleksej.makaji.listopia.screen.productadd.ProductAddFragment"
-        android:label="@string/title_add_product" >
+        android:label="@string/title_product_add" >
+        <argument
+            android:name="shoppingListId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_shopping_list_edit"
+        android:name="com.aleksej.makaji.listopia.screen.shoppinglistedit.ShoppingListEditFragment"
+        android:label="@string/title_shopping_list_edit" >
         <argument
             android:name="shoppingListId"
             app:argType="long" />

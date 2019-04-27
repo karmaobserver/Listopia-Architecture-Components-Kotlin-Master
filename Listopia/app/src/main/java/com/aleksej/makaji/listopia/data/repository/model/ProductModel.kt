@@ -9,5 +9,5 @@ data class ProductModel(val id: Long,
                         val unit: String,
                         val price: Double,
                         val notes: String,
-                        val isChecked: Boolean,
+                        var isChecked: Boolean,
                         val shoppingListId: Long)

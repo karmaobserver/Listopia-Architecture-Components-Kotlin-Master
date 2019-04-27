@@ -1,10 +1,7 @@
 package com.aleksej.makaji.listopia.data.room
 
 import androidx.paging.DataSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.aleksej.makaji.listopia.data.room.model.Product
 
 /**
@@ -14,6 +11,9 @@ import com.aleksej.makaji.listopia.data.room.model.Product
 interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveProduct(product: Product): Long
+
+    @Update
+    fun updateProduct(product: Product): Int
 
     @Query("SELECT * FROM product WHERE shoppingListId = :shoppingListId")
     fun getProductsByShoppingListId(shoppingListId: Long): DataSource.Factory<Int, Product>

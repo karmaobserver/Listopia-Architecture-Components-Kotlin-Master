@@ -1,9 +1,9 @@
 package com.aleksej.makaji.listopia.data.mapper
 
-import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.room.model.Product
 import com.aleksej.makaji.listopia.data.room.model.ShoppingList
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
 
 /**
@@ -11,9 +11,15 @@ import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
  */
 object ValueToRoomMapper {
     fun mapShoppingList(shoppingListValue: ShoppingListValue): ShoppingList {
-        return ShoppingList(0,
+        return ShoppingList(shoppingListValue.id,
                 shoppingListValue.name,
                 shoppingListValue.ownerUid)
+    }
+
+    fun mapSaveShoppingList(saveShoppingListValue: SaveShoppingListValue): ShoppingList {
+        return ShoppingList(0,
+                saveShoppingListValue.name,
+                saveShoppingListValue.ownerUid)
     }
 
     fun mapProduct(saveProductValue: SaveProductValue): Product {

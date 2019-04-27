@@ -8,7 +8,8 @@ sealed class ListopiaError
 object UnknownError : ListopiaError()
 //DATABASE ERROR
 object RoomError: ListopiaError()
-object RoomDeletingError: ListopiaError()
+object RoomDeleteError: ListopiaError()
+object RoomUpdateError: ListopiaError()
 //API ERROR
 data class ThrowableError(val throwable: Throwable) : ListopiaError()
 data class BackendError(val response: ErrorResponse) : ListopiaError()

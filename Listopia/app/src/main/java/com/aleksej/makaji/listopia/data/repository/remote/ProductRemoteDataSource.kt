@@ -31,4 +31,7 @@ class ProductRemoteDataSource @Inject constructor() : ProductDataSource {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override suspend fun updateProduct(productModel: ProductModel): Deferred<State<Int>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

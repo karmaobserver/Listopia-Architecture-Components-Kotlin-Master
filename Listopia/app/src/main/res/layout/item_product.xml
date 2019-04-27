@@ -6,6 +6,9 @@
         <variable
             name="productModel"
             type="com.aleksej.makaji.listopia.data.repository.model.ProductModel"/>
+        <variable
+            name="currency"
+            type="String"/>
     </data>
     <androidx.cardview.widget.CardView
         style="@style/CardViewMaterial.BackgroundRipple.Margin4"
@@ -14,17 +17,105 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground">
 
             <TextView
                 android:id="@+id/text_view_product_name"
-                style="@style/TextViewAppearanceBody1.Margin8"
+                style="@style/TextViewAppearanceBody1.Bold.Margin8NoBottom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{productModel.name}"
+                app:layout_constraintBottom_toTopOf="@+id/text_view_product_notes"
+                app:layout_constraintEnd_toStartOf="@+id/view_line_image_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Shopping list name" />
+                app:strikeThrough="@{productModel.isChecked}"
+                tools:text="Product Name" />
+
+            <TextView
+                android:id="@+id/text_view_product_notes"
+                style="@style/TextViewAppearanceBody1.Grey.Margin8StartEnd"
+                visibleGone="@{!productModel.notes.trim().isEmpty()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{productModel.notes}"
+                app:layout_constraintBottom_toTopOf="@+id/text_view_product_quantity"
+                app:layout_constraintEnd_toStartOf="@+id/view_line_image_button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_product_name"
+                app:strikeThrough="@{productModel.isChecked}"
+                tools:text="Product Notes" />
+
+            <TextView
+                android:id="@+id/text_view_product_quantity"
+                style="@style/TextViewAppearanceBody1.Margin8NoTop"
+                visibleGone="@{productModel.quantity != 0.0}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{productModel.quantity}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_product_notes"
+                app:strikeThrough="@{productModel.isChecked}"
+                tools:text="Quantity" />
+
+            <TextView
+                android:id="@+id/text_view_product_unit"
+                style="@style/TextViewAppearanceBody1.Italic.Margin2StartMargin8Bottom"
+                visibleGone="@{!productModel.unit.trim().isEmpty()}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{productModel.unit}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/text_view_product_quantity"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_product_notes"
+                app:strikeThrough="@{productModel.isChecked}"
+                tools:text="Unit" />
+
+            <TextView
+                android:id="@+id/text_view_product_price"
+                style="@style/TextViewAppearanceBody1.Primary.Bold.Margin8NoTop"
+                visibleGone="@{productModel.price != 0.0}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{productModel.price}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/view_line_image_button"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_product_notes"
+                app:strikeThrough="@{productModel.isChecked}"
+                tools:text="Price" />
+
+            <TextView
+                android:id="@+id/text_view_currency"
+                style="@style/TextViewAppearanceBody1.Primary.Bold"
+                visibleGone="@{productModel.price != 0.0}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{currency}"
+                app:layout_constraintBottom_toBottomOf="@+id/text_view_product_price"
+                app:layout_constraintEnd_toStartOf="@+id/text_view_product_price"
+                app:layout_constraintTop_toTopOf="@+id/text_view_product_price"
+                app:strikeThrough="@{productModel.isChecked}"
+                tools:text="$" />
+
+            <View
+                android:id="@+id/view_line_image_button"
+                android:layout_height="0dp"
+                style="@style/ViewLine.Width1dp.Primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/image_button_shopping_list_options"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/image_button_shopping_list_options"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="@drawable/button_selector_transparent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_edit_black" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
