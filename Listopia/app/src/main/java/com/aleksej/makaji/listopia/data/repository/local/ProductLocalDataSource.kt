@@ -21,7 +21,6 @@ import com.aleksej.makaji.listopia.error.RoomDeleteError
 import com.aleksej.makaji.listopia.error.RoomError
 import com.aleksej.makaji.listopia.error.RoomUpdateError
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import javax.inject.Inject
@@ -65,33 +64,27 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
         }
     }
 
-    override suspend fun saveProduct(saveProductValue: SaveProductValue): Deferred<State<Long>> {
-        return async {
-            try {
-                State.Success(mProductDao.saveProduct(ValueToRoomMapper.mapProduct(saveProductValue)))
-            } catch (e: Exception){
-                State.Error<Long>(RoomError)
-            }
+    override suspend fun saveProduct(saveProductValue: SaveProductValue): State<Long> {
+        return try {
+            State.Success(mProductDao.saveProduct(ValueToRoomMapper.mapProduct(saveProductValue)))
+        }catch (e: Exception){
+            State.Error(RoomError)
         }
     }
 
-    override suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): Deferred<State<Int>> {
-        return async {
-            try {
-                State.Success(mProductDao.deleteProductsByShoppingList(deleteProductValue.shoppingListId))
-            } catch (e: Exception){
-                State.Error<Int>(RoomDeleteError)
-            }
+    override suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): State<Int> {
+        return try {
+            State.Success(mProductDao.deleteProductsByShoppingList(deleteProductValue.shoppingListId))
+        }catch (e: Exception){
+            State.Error(RoomDeleteError)
         }
     }
 
-    override suspend fun updateProduct(productModel: ProductModel): Deferred<State<Int>> {
-        return async {
-            try {
-                State.Success(mProductDao.updateProduct(ModelToRoomMapper.mapProduct(productModel)))
-            } catch (e: Exception){
-                State.Error<Int>(RoomUpdateError)
-            }
+    override suspend fun updateProduct(productModel: ProductModel): State<Int> {
+        return try {
+            State.Success(mProductDao.updateProduct(ModelToRoomMapper.mapProduct(productModel)))
+        }catch (e: Exception){
+            State.Error(RoomUpdateError)
         }
     }
 
@@ -110,13 +103,11 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
         return productLiveData
     }
 
-    override suspend fun deleteProductById(productValue: ProductValue): Deferred<State<Int>> {
-        return async {
-            try {
-                State.Success(mProductDao.deleteProductById(productValue.productId))
-            } catch (e: Exception){
-                State.Error<Int>(RoomDeleteError)
-            }
+    override suspend fun deleteProductById(productValue: ProductValue): State<Int> {
+        return try {
+            State.Success(mProductDao.deleteProductById(productValue.productId))
+        }catch (e: Exception){
+            State.Error(RoomDeleteError)
         }
     }
 }

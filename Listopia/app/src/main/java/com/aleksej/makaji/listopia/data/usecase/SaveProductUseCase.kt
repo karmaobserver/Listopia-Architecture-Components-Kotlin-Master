@@ -24,7 +24,7 @@ class SaveProductUseCase @Inject constructor(private val mProductRepository: Pro
         }
         GlobalScope.launch {
             saveProductLiveData.postValue(StateHandler.loading())
-            val saveProductResponse = mProductRepository.saveProduct(value).await()
+            val saveProductResponse = mProductRepository.saveProduct(value)
             saveProductLiveData.postValue(StateHandler(saveProductResponse))
         }
         return saveProductLiveData

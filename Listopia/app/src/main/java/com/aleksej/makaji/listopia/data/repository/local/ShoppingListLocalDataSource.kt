@@ -86,43 +86,35 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
         return shoppingListLiveData
     }
 
-    override suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): Deferred<State<Long>> {
-        return async {
-            try {
-                State.Success(mShoppingListDao.saveShoppingList(ValueToRoomMapper.mapSaveShoppingList(saveShoppingListValue)))
-            } catch (e: Exception){
-                State.Error<Long>(RoomError)
-            }
+    override suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): State<Long> {
+        return try {
+            State.Success(mShoppingListDao.saveShoppingList(ValueToRoomMapper.mapSaveShoppingList(saveShoppingListValue)))
+        }catch (e: Exception){
+            State.Error(RoomError)
         }
     }
 
-    override suspend fun deleteAllShoppingLists(): Deferred<State<Int>> {
-        return async {
-            try {
-                State.Success(mShoppingListDao.deleteAllShoppingLists())
-            } catch (e: Exception){
-                State.Error<Int>(RoomDeleteError)
-            }
+    override suspend fun deleteAllShoppingLists(): State<Int> {
+        return try {
+            State.Success(mShoppingListDao.deleteAllShoppingLists())
+        }catch (e: Exception){
+            State.Error(RoomDeleteError)
         }
     }
 
-    override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): Deferred<State<Int>> {
-        return async {
-            try {
-                State.Success(mShoppingListDao.updateShoppingList(ValueToRoomMapper.mapShoppingList(shoppingListValue)))
-            } catch (e: Exception){
-                State.Error<Int>(RoomUpdateError)
-            }
+    override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int> {
+        return try {
+            State.Success(mShoppingListDao.updateShoppingList(ValueToRoomMapper.mapShoppingList(shoppingListValue)))
+        }catch (e: Exception){
+            State.Error(RoomUpdateError)
         }
     }
 
-    override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): Deferred<State<Int>> {
-        return async {
-            try {
-                State.Success(mShoppingListDao.deleteShoppingListById(deleteShoppingListValue.id))
-            } catch (e: Exception){
-                State.Error<Int>(RoomDeleteError)
-            }
+    override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {
+        return try {
+            State.Success(mShoppingListDao.deleteShoppingListById(deleteShoppingListValue.id))
+        }catch (e: Exception){
+            State.Error(RoomDeleteError)
         }
     }
 }

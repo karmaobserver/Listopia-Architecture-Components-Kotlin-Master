@@ -28,19 +28,19 @@ class ShoppingListRepository @Inject constructor(@Remote private val mRemoteShop
         return mLocalShoppingListDataSource.getShoppingListById(shoppingListByIdValue)
     }
 
-    override suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): Deferred<State<Long>> {
+    override suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): State<Long> {
         return mLocalShoppingListDataSource.saveShoppingList(saveShoppingListValue)
     }
 
-    override suspend fun deleteAllShoppingLists(): Deferred<State<Int>> {
+    override suspend fun deleteAllShoppingLists(): State<Int> {
         return mLocalShoppingListDataSource.deleteAllShoppingLists()
     }
 
-    override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): Deferred<State<Int>> {
+    override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int> {
         return mLocalShoppingListDataSource.updateShoppingList(shoppingListValue)
     }
 
-    override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): Deferred<State<Int>> {
+    override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {
         return mLocalShoppingListDataSource.deleteShoppingListById(deleteShoppingListValue)
     }
 }

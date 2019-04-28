@@ -10,7 +10,6 @@ import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
-import kotlinx.coroutines.Deferred
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,19 +27,19 @@ class ProductRemoteDataSource @Inject constructor() : ProductDataSource {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun saveProduct(saveProductValue: SaveProductValue): Deferred<State<Long>> {
+    override suspend fun saveProduct(saveProductValue: SaveProductValue): State<Long> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): Deferred<State<Int>> {
+    override suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): State<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun updateProduct(productModel: ProductModel): Deferred<State<Int>> {
+    override suspend fun updateProduct(productModel: ProductModel): State<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun deleteProductById(productValue: ProductValue): Deferred<State<Int>> {
+    override suspend fun deleteProductById(productValue: ProductValue): State<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

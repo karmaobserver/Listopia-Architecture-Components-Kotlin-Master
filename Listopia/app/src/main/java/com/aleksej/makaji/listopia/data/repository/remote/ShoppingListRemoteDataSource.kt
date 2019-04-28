@@ -28,19 +28,19 @@ class ShoppingListRemoteDataSource @Inject constructor() : ShoppingListDataSourc
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): Deferred<State<Long>> {
+    override suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): State<Long> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun deleteAllShoppingLists(): Deferred<State<Int>> {
+    override suspend fun deleteAllShoppingLists(): State<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): Deferred<State<Int>> {
+    override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): Deferred<State<Int>> {
+    override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

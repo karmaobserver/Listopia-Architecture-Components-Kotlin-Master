@@ -24,7 +24,7 @@ class UpdateShoppingListUseCase @Inject constructor(private val mShoppingListRep
         }
         GlobalScope.launch {
             useCaseLiveData.postValue(StateHandler.loading())
-            val shoppingListResponse = mShoppingListRepository.updateShoppingList(value).await()
+            val shoppingListResponse = mShoppingListRepository.updateShoppingList(value)
             useCaseLiveData.postValue(StateHandler(shoppingListResponse))
         }
         return useCaseLiveData

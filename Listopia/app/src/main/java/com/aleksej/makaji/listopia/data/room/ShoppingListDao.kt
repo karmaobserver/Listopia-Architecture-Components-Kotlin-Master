@@ -12,10 +12,10 @@ import com.aleksej.makaji.listopia.data.room.model.ShoppingList
 interface ShoppingListDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveShoppingList(shoppingList: ShoppingList): Long
+    suspend fun saveShoppingList(shoppingList: ShoppingList): Long
 
     @Update
-    fun updateShoppingList(shoppingList: ShoppingList): Int
+    suspend fun updateShoppingList(shoppingList: ShoppingList): Int
 
     @Query("SELECT * FROM shopping_list")
     fun getShoppingLists(): DataSource.Factory<Int, ShoppingList>
@@ -24,8 +24,8 @@ interface ShoppingListDao {
     fun getShoppingListById(id: Long): LiveData<ShoppingList>
 
     @Query("DELETE FROM shopping_list")
-    fun deleteAllShoppingLists(): Int
+    suspend fun deleteAllShoppingLists(): Int
 
     @Query("DELETE FROM shopping_list WHERE id = :id")
-    fun deleteShoppingListById(id: Long): Int
+    suspend fun deleteShoppingListById(id: Long): Int
 }

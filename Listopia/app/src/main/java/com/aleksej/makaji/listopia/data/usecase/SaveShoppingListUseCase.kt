@@ -24,7 +24,7 @@ class SaveShoppingListUseCase @Inject constructor(private val mShoppingListRepos
         }
         GlobalScope.launch {
             saveLiveData.postValue(StateHandler.loading())
-            val saveShoppingListResponse = mShoppingListRepository.saveShoppingList(valueSave).await()
+            val saveShoppingListResponse = mShoppingListRepository.saveShoppingList(valueSave)
             saveLiveData.postValue(StateHandler(saveShoppingListResponse))
         }
         return saveLiveData

@@ -24,7 +24,7 @@ class UpdateProductUseCase @Inject constructor(private val mProductRepository: P
         }
         GlobalScope.launch {
             mUseCaseLiveData.postValue(StateHandler.loading())
-            val updateProductResponse = mProductRepository.updateProduct(value).await()
+            val updateProductResponse = mProductRepository.updateProduct(value)
             mUseCaseLiveData.postValue(StateHandler(updateProductResponse))
         }
         return mUseCaseLiveData

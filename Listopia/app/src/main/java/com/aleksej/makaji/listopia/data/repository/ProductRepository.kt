@@ -11,7 +11,6 @@ import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
 import com.aleksej.makaji.listopia.di.annotation.Local
 import com.aleksej.makaji.listopia.di.annotation.Remote
-import kotlinx.coroutines.Deferred
 import javax.inject.Inject
 
 /**
@@ -24,15 +23,15 @@ class ProductRepository @Inject constructor(@Remote private val mRemoteProductDa
         return mLocalProductDataSource.getProductsByShoppingListId(productsValue)
     }
 
-    override suspend fun saveProduct(saveProductValue: SaveProductValue): Deferred<State<Long>> {
+    override suspend fun saveProduct(saveProductValue: SaveProductValue): State<Long> {
         return mLocalProductDataSource.saveProduct(saveProductValue)
     }
 
-    override suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): Deferred<State<Int>> {
+    override suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): State<Int> {
         return mLocalProductDataSource.deleteProductsByShoppingList(deleteProductValue)
     }
 
-    override suspend fun updateProduct(productModel: ProductModel): Deferred<State<Int>> {
+    override suspend fun updateProduct(productModel: ProductModel): State<Int> {
         return mLocalProductDataSource.updateProduct(productModel)
     }
 
@@ -40,7 +39,7 @@ class ProductRepository @Inject constructor(@Remote private val mRemoteProductDa
         return mLocalProductDataSource.getProductById(productValue)
     }
 
-    override suspend fun deleteProductById(productValue: ProductValue): Deferred<State<Int>> {
+    override suspend fun deleteProductById(productValue: ProductValue): State<Int> {
         return mLocalProductDataSource.deleteProductById(productValue)
     }
 }

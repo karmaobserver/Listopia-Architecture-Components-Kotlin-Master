@@ -17,8 +17,8 @@ import kotlinx.coroutines.Deferred
 interface ShoppingListDataSource {
     fun getShoppingLists() : LiveData<StateHandler<PagedList<ShoppingListModel>>>
     fun getShoppingListById(shoppingListByIdValue: ShoppingListByIdValue) : LiveData<StateHandler<ShoppingListModel>>
-    suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): Deferred<State<Long>>
-    suspend fun deleteAllShoppingLists(): Deferred<State<Int>>
-    suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): Deferred<State<Int>>
-    suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): Deferred<State<Int>>
+    suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): State<Long>
+    suspend fun deleteAllShoppingLists(): State<Int>
+    suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int>
+    suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int>
 }

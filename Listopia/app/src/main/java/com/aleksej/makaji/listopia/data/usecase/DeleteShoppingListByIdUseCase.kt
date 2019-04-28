@@ -19,7 +19,7 @@ class DeleteShoppingListByIdUseCase @Inject constructor(private val mShoppingLis
     override fun invoke(value: DeleteShoppingListValue): LiveData<StateHandler<Int>> {
         GlobalScope.launch {
             useCaseLiveData.postValue(StateHandler.loading())
-            val deleteShoppingListResponse = mShoppingListRepository.deleteShoppingListById(value).await()
+            val deleteShoppingListResponse = mShoppingListRepository.deleteShoppingListById(value)
             useCaseLiveData.postValue(StateHandler(deleteShoppingListResponse))
         }
         return useCaseLiveData
