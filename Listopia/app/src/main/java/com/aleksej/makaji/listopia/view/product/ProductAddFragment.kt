@@ -63,22 +63,16 @@ class ProductAddFragment: BaseFragment() {
     }
 
     private fun observeSaveShoppingList() {
-        observeSingle(mProductViewModel.addProductLiveData) {
-            binding.state = it
-            when(it) {
-                is State.Success -> {
-                    hideKeyboard()
-                    showToastLong(R.string.success_product_add)
-                    findNavController().navigateUp()
-                }
-                is State.Error -> {
-                    when (it.error) {
-                        is ProductNameError -> binding.textInputLayoutProductName.error = getString(it.error.resourceId)
-                        else -> showError(it.error)
-                    }
-                }
+        observeSingle(mProductViewModel.addProductLiveData, {
+            hideKeyboard()
+            showToastLong(R.string.success_product_add)
+            findNavController().navigateUp()
+        }, onError = {
+            when (it) {
+                is ProductNameError -> binding.textInputLayoutProductName.error = getString(it.resourceId)
+                else -> showError(it)
             }
-        }
+        })
     }
 
     private fun initListeners() {

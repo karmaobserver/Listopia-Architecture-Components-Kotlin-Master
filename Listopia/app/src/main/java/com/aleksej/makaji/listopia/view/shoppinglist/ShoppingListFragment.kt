@@ -16,10 +16,7 @@ import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.databinding.FragmentShoppingListBinding
-import com.aleksej.makaji.listopia.util.autoCleared
-import com.aleksej.makaji.listopia.util.observePeek
-import com.aleksej.makaji.listopia.util.observeSingle
-import com.aleksej.makaji.listopia.util.viewModel
+import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 
 /**
@@ -102,39 +99,25 @@ class ShoppingListFragment: BaseFragment() {
     }
 
     private fun observeShoppingLists() {
-        observePeek(mShoppingListViewModel.getShoppingListsLiveData) {
-            binding.state = it
-            when (it) {
-                is State.Success -> {
-                    it.data?.let {
-                        mShoppingListAdapter.submitList(it)
-                    }
-                }
-                is State.Error -> {
-                    showError(it.error)
-                }
-            }
-        }
+        observePeek(mShoppingListViewModel.getShoppingListsLiveData, {
+                mShoppingListAdapter.submitList(it)
+        }, onError = {
+            showError(it)
+        })
     }
 
     private fun observeAddShoppingList() {
-        observeSingle(mShoppingListViewModel.addShoppingListEvent) {
+        observeSingle(mShoppingListViewModel.addShoppingListEvent, {
             findNavController().navigate(R.id.action_fragment_shopping_list_to_fragment_shopping_list_add)
-        }
+        })
     }
 
     private fun observeDeleteShoppingListById() {
-        observeSingle(mShoppingListViewModel.deleteShoppingListByIdLiveData) {
-            binding.state = it
-            when (it) {
-                is State.Success -> {
-                    showToastLong(R.string.success_shopping_list_delete)
-                }
-                is State.Error -> {
-                    showError(it.error)
-                }
-            }
-        }
+        observeSingle(mShoppingListViewModel.deleteShoppingListByIdLiveData, {
+            showToastLong(R.string.success_shopping_list_delete)
+        }, onError = {
+            showError(it)
+        })
     }
 
     private fun setupOptionsPopupMenu(view: View, shoppingListId: Long) {

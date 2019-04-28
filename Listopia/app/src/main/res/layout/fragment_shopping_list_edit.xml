@@ -4,10 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <import type="com.aleksej.makaji.listopia.data.event.StateHandler"/>
-        <variable
-            name="state"
-            type="com.aleksej.makaji.listopia.data.event.State"/>
         <variable
             name="shoppingListModel"
             type="com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel"/>
@@ -55,14 +51,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_input_layout_list_name" />
 
-        <include
-            layout="@layout/view_loading_state"
-            app:state="@{state}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

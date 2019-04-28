@@ -26,34 +26,6 @@ inline fun <reified T : ViewModel> FragmentActivity.viewModel(factory: ViewModel
     return ViewModelProviders.of(this, factory).get(T::class.java)
 }
 
-fun <T : Any, L : LiveData<StateHandler<T>>> LifecycleOwner.observePeekFromActivity(liveData: L, body: (State<out T?>) -> Unit) =
-        liveData.observe(this, Observer {
-            it?.peekContent()?.let {
-                body(it.state)
-            }
-        })
-
-fun <T : Any, L : LiveData<StateHandler<T>>> LifecycleOwner.observeSingleFromActivity(liveData: L, body: (State<out T?>) -> Unit) =
-        liveData.observe(this, Observer {
-            it?.getContentIfNotHandled()?.let {
-                body(it.state)
-            }
-        })
-
-fun <T : Any, L : LiveData<StateHandler<T>>> Fragment.observePeek(liveData: L, body: (State<out T?>) -> Unit) =
-        liveData.observe(viewLifecycleOwner,  Observer {
-            it?.peekContent()?.let {
-                body(it.state)
-            }
-        })
-
-fun <T : Any, L : LiveData<StateHandler<T>>> Fragment.observeSingle(liveData: L, body: (State<out T?>) -> Unit) =
-        liveData.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let {
-                body(it.state)
-            }
-        })
-
 fun View.putVisibleOrInvisible(value: Boolean) {
     this.visibility = if (value) View.VISIBLE else View.INVISIBLE
 }
@@ -126,3 +98,9 @@ inline fun <reified T : ViewGroup.LayoutParams> View.layoutParams(block: T.() ->
 
 fun View.dpToPx(dp: Float): Int = context.dpToPx(dp)
 fun Context.dpToPx(dp: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
+
+fun Any?.isNull(onNull: () -> Unit) {
+    if (this == null) {
+        onNull.invoke()
+    }
+}

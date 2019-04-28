@@ -58,7 +58,6 @@ class ShoppingListEditFragment: BaseFragment() {
                 mShoppingListViewModel.reloadEditData = true
                 mShoppingListId?.let {
                     mShoppingListViewModel.getShoppingListById(ShoppingListByIdValue(it))
-
                 }
             }
         }
@@ -70,36 +69,24 @@ class ShoppingListEditFragment: BaseFragment() {
     }
 
     private fun observeEditShoppingList() {
-        observeSingle(mShoppingListViewModel.updateShoppingListLiveData) {
-            binding.state = it
+        observeSingle(mShoppingListViewModel.updateShoppingListLiveData, {
+            hideKeyboard()
+            showToastLong(R.string.success_shopping_list_edit)
+            findNavController().navigateUp()
+        }, onError = {
             when (it) {
-                is State.Success -> {
-                    hideKeyboard()
-                    showToastLong(R.string.success_shopping_list_edit)
-                    findNavController().navigateUp()
-                }
-                is State.Error -> {
-                    when (it.error) {
-                        is ListNameError -> binding.textInputLayoutListName.error = getString(it.error.resourceId)
-                        else -> showError(it.error)
-                    }
-                }
+                is ListNameError -> binding.textInputLayoutListName.error = getString(it.resourceId)
+                else -> showError(it)
             }
-        }
+        })
     }
 
     private fun observeGetShoppingListById() {
-        observeSingle(mShoppingListViewModel.getShoppingListByIdLiveData) {
-            binding.state = it
-            when (it) {
-                is State.Success -> {
-                    binding.shoppingListModel = it.data
-                    binding.executePendingBindings()
-                }
-                is State.Error -> {
-                    showError(it.error)
-                }
-            }
-        }
+        observeSingle(mShoppingListViewModel.getShoppingListByIdLiveData, {
+            binding.shoppingListModel = it
+            binding.executePendingBindings()
+        }, onError = {
+            showError(it)
+        })
     }
 }

@@ -69,37 +69,25 @@ class ProductEditFragment: BaseFragment() {
     }
 
     private fun observeEditProduct() {
-        observeSingle(mProductViewModel.updateProductLiveData) {
-            binding.state = it
+        observeSingle(mProductViewModel.updateProductLiveData, {
+            hideKeyboard()
+            showToastLong(R.string.success_product_edit)
+            findNavController().navigateUp()
+        }, onError = {
+            hideKeyboard()
             when (it) {
-                is State.Success -> {
-                    hideKeyboard()
-                    showToastLong(R.string.success_product_edit)
-                    findNavController().navigateUp()
-                }
-                is State.Error -> {
-                    hideKeyboard()
-                    when (it.error) {
-                        is ProductNameError -> binding.textInputLayoutProductName.error = getString(it.error.resourceId)
-                        else -> showError(it.error)
-                    }
-                }
+                is ProductNameError -> binding.textInputLayoutProductName.error = getString(it.resourceId)
+                else -> showError(it)
             }
-        }
+        })
     }
 
     private fun observeGetProductById() {
-        observeSingle(mProductViewModel.getProductByIdLiveData) {
-            binding.state = it
-            when (it) {
-                is State.Success -> {
-                    binding.productModel = it.data
-                    binding.executePendingBindings()
-                }
-                is State.Error -> {
-                    showError(it.error)
-                }
-            }
-        }
+        observeSingle(mProductViewModel.getProductByIdLiveData, {
+            binding.productModel = it
+            binding.executePendingBindings()
+        }, onError = {
+            showError(it)
+        })
     }
 }

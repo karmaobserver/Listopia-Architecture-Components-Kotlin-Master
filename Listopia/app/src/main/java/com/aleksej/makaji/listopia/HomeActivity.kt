@@ -3,12 +3,14 @@ package com.aleksej.makaji.listopia
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.ui.*
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.aleksej.makaji.listopia.base.BaseActivity
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.databinding.ActivityHomeBinding
@@ -20,6 +22,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_home.*
 import java.util.*
 import javax.inject.Inject
 
@@ -198,5 +201,13 @@ class HomeActivity : BaseActivity() {
                     checkIfUserLoggedIn()
                     showToast("Successfully Signed Out")
                 }
+    }
+
+    fun showProgress(){
+        progress_bar.visibility = View.VISIBLE
+    }
+
+    fun hideProgress(){
+        progress_bar.visibility = View.INVISIBLE
     }
 }

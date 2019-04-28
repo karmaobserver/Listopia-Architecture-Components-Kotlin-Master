@@ -111,47 +111,34 @@ class ProductListFragment: BaseFragment() {
     }
 
     private fun observeDeleteProductById() {
-        observeSingle(mProductViewModel.deleteProductByIdLiveData) {
-            binding.state = it
-            when (it) {
-                is State.Success -> {
-                    showToastLong(R.string.success_product_delete)
-                }
-                is State.Error -> {
-                    showError(it.error)
-                }
-            }
-        }
+        observeSingle(mProductViewModel.deleteProductByIdLiveData, {
+            showToastLong(R.string.success_product_delete)
+        }, onError = {
+            showError(it)
+        })
     }
 
     private fun observeUpdateProduct() {
-        observeSingle(mProductViewModel.updateProductLiveData) {
-            when (it) {
-                is State.Error -> showError(it.error)
-            }
-        }
+        observeSingle(mProductViewModel.updateProductLiveData, {
+        }, onError = {
+            showError(it)
+        })
     }
 
     private fun observeAddProduct() {
-        observeSingle(mProductViewModel.addProductEvent) {
+        observeSingle(mProductViewModel.addProductEvent, {
             mShoppingListId?.let {
                 findNavController().navigate(ProductListFragmentDirections.actionFragmentProductListToFragmentProductAdd(it))
             }
-        }
+        })
     }
 
     private fun observeProducts() {
-        observePeek(mProductViewModel.productsByShoppingIdLiveData) {
-            binding.state = it
-            when (it) {
-                is State.Success -> {
-                    it.data?.let {
-                        mProductAdapter.submitList(it)
-                    }
-                }
-                is State.Error -> showError(it.error)
-            }
-        }
+        observePeek(mProductViewModel.productsByShoppingIdLiveData, {
+            mProductAdapter.submitList(it)
+        }, onError = {
+            showError(it)
+        })
     }
 
     private fun setupOptionsPopupMenu(view: View, productId: Long) {

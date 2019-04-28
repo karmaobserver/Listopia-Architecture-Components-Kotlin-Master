@@ -3,7 +3,7 @@ package com.aleksej.makaji.listopia.base
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import com.aleksej.makaji.listopia.HomeActivity
 import com.aleksej.makaji.listopia.R
 import com.aleksej.makaji.listopia.di.Injectable
 import com.aleksej.makaji.listopia.error.*
@@ -47,5 +47,13 @@ open class BaseFragment : Fragment(), Injectable {
                 showToast(R.string.error_unknown)
             }
         }
+    }
+
+    open fun showLoading() {
+        (activity as? HomeActivity)?.showProgress()
+    }
+
+    open fun hideLoading() {
+        (activity as? HomeActivity)?.hideProgress()
     }
 }
