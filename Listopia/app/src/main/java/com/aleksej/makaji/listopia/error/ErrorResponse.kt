@@ -6,14 +6,11 @@ package com.aleksej.makaji.listopia.error
 data class ErrorResponse(
         var errorCodes: List<String>,
         var message: String,
-        val data: ErrorData?
+        var errorType: String?,
+        var data: String?
+        //val data: ErrorData?
 )
 
+/*
 data class ErrorData(var dialogType: String?,
-                     var info: DialogTypeInfo?)
-
-data class DialogTypeInfo(
-        var mailTo: String?,
-        var subject: String?,
-        var plainTextContent: String?
-)
+                     var info: String?)*/

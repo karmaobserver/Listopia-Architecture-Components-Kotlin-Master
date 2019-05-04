@@ -26,9 +26,15 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".dev"
+            //buildConfigField "String", "BASE_URL", "\"http://localhost:5000/listopia-f7bba/us-central1/app/\""
+            buildConfigField "String", "BASE_URL", "\"https://us-central1-listopia-f7bba.cloudfunctions.net/app/\""
+        }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", "\"http://localhost:5000/listopia-f7bba/us-central1/app/\""
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
@@ -60,8 +66,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
 
     // Network libraries
-    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion" exclude module: 'httpclient'
-    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion" exclude module: 'httpclient'
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitSnaphotVersion" exclude module: 'httpclient'
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitSnaphotVersion" exclude module: 'httpclient'
     implementation "com.squareup.okhttp3:okhttp:$rootProject.okHttpVersion" exclude module: 'httpclient'
 
     // Stetho

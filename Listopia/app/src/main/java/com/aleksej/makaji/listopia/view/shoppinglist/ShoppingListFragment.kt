@@ -73,6 +73,10 @@ class ShoppingListFragment: BaseFragment() {
         mShoppingListViewModel.getShoppingLists()
     }
 
+    private fun test() {
+        mShoppingListViewModel.test()
+    }
+
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL

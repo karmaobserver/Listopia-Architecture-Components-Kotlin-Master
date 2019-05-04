@@ -9,7 +9,6 @@ import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
-import kotlinx.coroutines.Deferred
 
 /**
  * Created by Aleksej Makaji on 12/30/18.
@@ -21,4 +20,6 @@ interface ShoppingListDataSource {
     suspend fun deleteAllShoppingLists(): State<Int>
     suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int>
     suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int>
+    suspend fun fetchShoppingLists(): State<Unit>
+
 }

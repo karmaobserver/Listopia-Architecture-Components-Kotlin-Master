@@ -93,9 +93,8 @@ class HomeActivity : BaseActivity() {
                 user?.let {
                     handleViewForLoggedUser(it)
                 }
-
-                // ...
             } else {
+                showToast(response?.error?.message.toString())
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
@@ -189,6 +188,11 @@ class HomeActivity : BaseActivity() {
 
     private fun handleViewForLoggedUser(user: FirebaseUser) {
         mSharedPreferenceManager.userUid = user.uid
+        user.getIdToken(true).addOnSuccessListener {
+            it.token?.let {
+                mSharedPreferenceManager.token = it
+            }
+        }
         val userModel = UserModel(user.uid, user.displayName, user.email, user.photoUrl)
         headerBinding.userModel = userModel
     }
@@ -198,6 +202,7 @@ class HomeActivity : BaseActivity() {
                 .signOut(this)
                 .addOnCompleteListener {
                     mSharedPreferenceManager.userUid = ""
+                    mSharedPreferenceManager.token = ""
                     checkIfUserLoggedIn()
                     showToast("Successfully Signed Out")
                 }

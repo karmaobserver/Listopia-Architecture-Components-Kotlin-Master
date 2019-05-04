@@ -6,6 +6,7 @@ package com.aleksej.makaji.listopia.error
 sealed class ListopiaError
 //GLOBAL ERROR
 object UnknownError : ListopiaError()
+data class ExceptionError(val exception: Exception) : ListopiaError()
 //DATABASE ERROR
 object RoomError: ListopiaError()
 object RoomDeleteError: ListopiaError()

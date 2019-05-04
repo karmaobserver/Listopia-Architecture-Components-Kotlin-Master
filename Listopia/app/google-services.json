@@ -33,20 +33,50 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "741557096557-19u3vmvjmipktfjqktuk62at185iit0j.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741557096557:android:18194bfde8fde46c",
+        "android_client_info": {
+          "package_name": "com.aleksej.makaji.listopia.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "741557096557-nc90hhhgi4fg3b1cigo7v033vdphec9f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aleksej.makaji.listopia.dev",
+            "certificate_hash": "0936635bdb4bb8d2feb2528e2c592cb6ff0e20a2"
+          }
         },
-        "ads_service": {
-          "status": 2
+        {
+          "client_id": "741557096557-19u3vmvjmipktfjqktuk62at185iit0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBufLdr2akQ5UhOOzYADZFa6chDum5yURE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "741557096557-19u3vmvjmipktfjqktuk62at185iit0j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

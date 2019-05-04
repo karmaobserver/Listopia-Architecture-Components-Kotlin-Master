@@ -20,7 +20,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
         'Make sure you authorize your request by providing the following HTTP header:',
         'Authorization: Bearer <Firebase ID Token>',
         'or by passing a "__session" cookie.');
-    res.status(403).send('Unauthorized');
+    res.status(401).send(parseError("Unauthorized", "TokenError", "nema tokena bre"));
     return;
   }
 
@@ -35,7 +35,8 @@ const validateFirebaseIdToken = async (req, res, next) => {
     idToken = req.cookies.__session;
   } else {
     // No cookie
-    res.status(403).send('Unauthorized');
+    console.log("No cookie ERROR");
+    res.status(401).send('Unauthorized');
     return;
   }
 
@@ -47,17 +48,37 @@ const validateFirebaseIdToken = async (req, res, next) => {
     return;
   } catch (error) {
     console.error('Error while verifying Firebase ID token:', error);
-    res.status(403).send('Unauthorized');
+    res.status(401).send(parseError("Unauthorized"));
     return;
   }
 };
 
 app.use(cors);
 app.use(cookieParser);
+app.disable('etag');
 app.use(validateFirebaseIdToken);
 app.get('/hello', (req, res) => {
-  res.send(`Hello ${req.user.name}`);
+  var testObject = {
+    test: "Test"
+  }
+   console.error('Success', "Yey");
+  res.json(testObject);
+   //res.send(`Hellow ${req.user.name}`);
 });
+
+interface ErrorResponse {
+  message: String;
+  errorType: String;
+  data: String;
+}
+
+function parseError(text: String = null, errorType: String = null, data: String = null) : ErrorResponse {
+  return {
+      message: text,
+      errorType: errorType,
+      data: data
+  };
+};
 
 // This HTTPS endpoint can only be accessed by your Firebase Users.
 // Requests need to be authorized by providing an `Authorization` HTTP header

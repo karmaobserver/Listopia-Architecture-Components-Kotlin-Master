@@ -20,9 +20,7 @@ import com.aleksej.makaji.listopia.error.RoomDeleteError
 import com.aleksej.makaji.listopia.error.RoomUpdateError
 import com.aleksej.makaji.listopia.error.RoomError
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -116,5 +114,9 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
         }catch (e: Exception){
             State.Error(RoomDeleteError)
         }
+    }
+
+    override suspend fun fetchShoppingLists(): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

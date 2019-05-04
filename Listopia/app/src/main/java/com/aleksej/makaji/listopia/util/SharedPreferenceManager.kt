@@ -11,6 +11,7 @@ class SharedPreferenceManager constructor(private val sharedPreferences: SharedP
         private const val TOKEN = "TOKEN"
         private const val USER_UID = "USER_UID"
         private const val CURRENCY = "CURRENCY"
+        private const val LANGUAGE_CODE = "LANGUAGE_CODE"
     }
 
     var token: String
@@ -24,4 +25,8 @@ class SharedPreferenceManager constructor(private val sharedPreferences: SharedP
     var currency: String
         get() = sharedPreferences.getString(CURRENCY, "$").orEmpty()
         set(currency) = sharedPreferences.edit().putString(CURRENCY, currency).apply()
+
+    var languageCode: String
+        get() = sharedPreferences.getString(LANGUAGE_CODE, "en").orEmpty()
+        set(languageCode) = sharedPreferences.edit().putString(LANGUAGE_CODE, languageCode).apply()
 }

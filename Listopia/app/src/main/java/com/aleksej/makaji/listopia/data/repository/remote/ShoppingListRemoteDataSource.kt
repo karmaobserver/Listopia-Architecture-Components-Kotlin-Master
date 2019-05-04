@@ -2,6 +2,8 @@ package com.aleksej.makaji.listopia.data.repository.remote
 
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
+import com.aleksej.makaji.listopia.data.api.ListopiaApi
+import com.aleksej.makaji.listopia.data.api.callback.CoroutineAdapter
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
@@ -10,7 +12,8 @@ import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
-import kotlinx.coroutines.Deferred
+import com.aleksej.makaji.listopia.error.ExceptionError
+import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +21,7 @@ import javax.inject.Singleton
  * Created by Aleksej Makaji on 12/30/18.
  */
 @Singleton
-class ShoppingListRemoteDataSource @Inject constructor() : ShoppingListDataSource {
+class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi: ListopiaApi, private val mRetrofit: Retrofit) : ShoppingListDataSource {
 
     override fun getShoppingListById(shoppingListByIdValue: ShoppingListByIdValue): LiveData<StateHandler<ShoppingListModel>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -42,5 +45,13 @@ class ShoppingListRemoteDataSource @Inject constructor() : ShoppingListDataSourc
 
     override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun fetchShoppingLists(): State<Unit> {
+        return try {
+            CoroutineAdapter(mListopiaApi.testCloudFunction(), mRetrofit)()
+        } catch (e: Exception) {
+            State.Error(ExceptionError(e))
+        }
     }
 }

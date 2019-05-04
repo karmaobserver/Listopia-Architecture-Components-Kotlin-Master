@@ -2,6 +2,7 @@ package com.aleksej.makaji.listopia.di.module
 
 import android.app.Application
 import androidx.room.Room
+import com.aleksej.makaji.listopia.data.api.ListopiaApi
 import com.aleksej.makaji.listopia.data.repository.ProductDataSource
 import com.aleksej.makaji.listopia.data.room.ListopiaDatabase
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
@@ -11,10 +12,12 @@ import com.aleksej.makaji.listopia.data.repository.remote.ProductRemoteDataSourc
 import com.aleksej.makaji.listopia.data.repository.remote.ShoppingListRemoteDataSource
 import com.aleksej.makaji.listopia.data.room.ProductDao
 import com.aleksej.makaji.listopia.data.room.ShoppingListDao
+import com.aleksej.makaji.listopia.di.annotation.Listopia
 import com.aleksej.makaji.listopia.di.annotation.Local
 import com.aleksej.makaji.listopia.di.annotation.Remote
 import dagger.Module
 import dagger.Provides
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 /**
@@ -41,8 +44,8 @@ class RepositoryModule {
     @Singleton
     @Provides
     @Remote
-    fun bindShoppingListRemoteDataSource(): ShoppingListDataSource {
-        return ShoppingListRemoteDataSource()
+    fun bindShoppingListRemoteDataSource(listopiaApi: ListopiaApi, @Listopia retrofit: Retrofit): ShoppingListDataSource {
+        return ShoppingListRemoteDataSource(listopiaApi, retrofit)
     }
 
     @Singleton

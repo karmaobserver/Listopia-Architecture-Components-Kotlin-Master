@@ -11,7 +11,6 @@ import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
 import com.aleksej.makaji.listopia.di.annotation.Local
 import com.aleksej.makaji.listopia.di.annotation.Remote
-import kotlinx.coroutines.Deferred
 import javax.inject.Inject
 
 /**
@@ -42,5 +41,9 @@ class ShoppingListRepository @Inject constructor(@Remote private val mRemoteShop
 
     override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {
         return mLocalShoppingListDataSource.deleteShoppingListById(deleteShoppingListValue)
+    }
+
+    override suspend fun fetchShoppingLists(): State<Unit> {
+        return mRemoteShoppingListDataSource.fetchShoppingLists()
     }
 }

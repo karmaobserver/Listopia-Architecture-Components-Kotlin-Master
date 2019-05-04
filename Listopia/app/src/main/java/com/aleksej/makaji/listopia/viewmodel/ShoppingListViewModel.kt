@@ -1,17 +1,22 @@
 package com.aleksej.makaji.listopia.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.mapper.ModelToValueMapper
+import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.usecase.*
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -21,7 +26,8 @@ class ShoppingListViewModel @Inject constructor(private val mGetShoppingListsUse
                                                 private val mDeleteShoppingListByIdUseCase: DeleteShoppingListByIdUseCase,
                                                 private val mSaveShoppingListUseCase: SaveShoppingListUseCase,
                                                 private val mUpdateShoppingListUseCase: UpdateShoppingListUseCase,
-                                                private val mGetShoppingListByIdUseCase: GetShoppingListByIdUseCase) : ViewModel() {
+                                                private val mGetShoppingListByIdUseCase: GetShoppingListByIdUseCase,
+                                                private val mShoppingListRepository: ShoppingListRepository) : ViewModel() {
 
     var reloadEditData = true
 
@@ -72,9 +78,24 @@ class ShoppingListViewModel @Inject constructor(private val mGetShoppingListsUse
 
     fun addShoppingListEvent() {
         _addShoppingListEvent.postValue(StateHandler.success(Unit))
+        test()
     }
 
     fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue) {
         _deleteShoppingListById.postValue(deleteShoppingListValue)
+    }
+
+    fun test() {
+        GlobalScope.launch {
+            val result = mShoppingListRepository.fetchShoppingLists()
+            when (result) {
+                is State.Success -> {
+                    Log.d("RETRO", "SUCCESS")
+                }
+                is State.Error -> {
+                    Log.d("RETRO", "ERROR" + result.error)
+                }
+            }
+        }
     }
 }

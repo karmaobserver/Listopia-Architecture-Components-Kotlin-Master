@@ -38,7 +38,11 @@ open class BaseFragment : Fragment(), Injectable {
             is BackendError -> {
                 showToastLong(error.response.message)
             }
+            is ExceptionError -> {
+                showToast(error.exception.localizedMessage)
+            }
             is UnauthorizedError ->{
+                showToast("Unauthorized")
             }
             is RoomError -> {
                 showToast(R.string.error_room)
