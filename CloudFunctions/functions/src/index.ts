@@ -3,6 +3,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 const express = require('express');
+const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')();
 const cors = require('cors')({origin: true});
 const app = express();
@@ -57,13 +58,22 @@ app.use(cors);
 app.use(cookieParser);
 app.disable('etag');
 app.use(validateFirebaseIdToken);
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 app.get('/hello', (req, res) => {
-  var testObject = {
+  const testObject = {
     test: "Test"
   }
    console.error('Success', "Yey");
   res.json(testObject);
    //res.send(`Hellow ${req.user.name}`);
+});
+
+app.post('/user/save', (req, res) => {
+  console.log(req.body);
+  res.status(204).end();
 });
 
 interface ErrorResponse {

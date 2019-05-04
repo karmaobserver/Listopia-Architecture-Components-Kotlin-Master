@@ -21,5 +21,4 @@ interface ShoppingListDataSource {
     suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int>
     suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int>
     suspend fun fetchShoppingLists(): State<Unit>
-
 }

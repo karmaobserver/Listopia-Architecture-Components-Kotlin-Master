@@ -7,7 +7,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
-import com.aleksej.makaji.listopia.data.mapper.ModelToValueMapper
+import com.aleksej.makaji.listopia.data.mapper.mapToShoppingListValue
 import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.usecase.*
@@ -65,7 +65,7 @@ class ShoppingListViewModel @Inject constructor(private val mGetShoppingListsUse
     }
 
     fun updateShoppingList(shoppingListModel: ShoppingListModel) {
-        _updateShoppingList.postValue(ModelToValueMapper.mapShoppingList(shoppingListModel))
+        _updateShoppingList.postValue(shoppingListModel.mapToShoppingListValue())
     }
 
     fun getShoppingListById(shoppingListByIdValue: ShoppingListByIdValue) {

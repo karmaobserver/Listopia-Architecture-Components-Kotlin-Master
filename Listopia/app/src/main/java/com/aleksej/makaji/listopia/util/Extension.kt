@@ -14,6 +14,7 @@ import androidx.lifecycle.*
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.GsonBuilder
 
 /**
  * Created by Aleksej Makaji on 12/30/18.
@@ -104,3 +105,12 @@ fun Any?.isNull(onNull: () -> Unit) {
         onNull.invoke()
     }
 }
+
+/**
+ * Use to map object ot another object
+ */
+
+inline fun <reified T : Any> Any.mapTo(): T =
+        GsonBuilder().create().run {
+            toJson(this@mapTo).let { fromJson(it, T::class.java) }
+        }

@@ -6,6 +6,7 @@ import com.aleksej.makaji.listopia.di.annotation.ViewModelKey
 import com.aleksej.makaji.listopia.factory.ViewModelFactory
 import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
+import com.aleksej.makaji.listopia.viewmodel.UserViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -25,6 +26,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ProductViewModel::class)
     abstract fun bindProductViewModel(productViewModel: ProductViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UserViewModel::class)
+    abstract fun bindUserViewModel(userViewModel: UserViewModel): ViewModel
 
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory

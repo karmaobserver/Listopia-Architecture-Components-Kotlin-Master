@@ -2,27 +2,17 @@ package com.aleksej.makaji.listopia.data.mapper
 
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
+import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.data.room.model.Product
 import com.aleksej.makaji.listopia.data.room.model.ShoppingList
+import com.aleksej.makaji.listopia.data.room.model.User
+import com.aleksej.makaji.listopia.util.mapTo
 
 /**
  * Created by Aleksej Makaji on 12/30/18.
  */
-object RoomToModelMapper {
-    fun mapShoppingList(shoppingList: ShoppingList): ShoppingListModel {
-        return ShoppingListModel(shoppingList.id,
-                shoppingList.name,
-                shoppingList.ownerUid)
-    }
+fun ShoppingList.mapToShoppingListModel(): ShoppingListModel = mapTo<ShoppingListModel>().copy()
 
-    fun mapProduct(product: Product): ProductModel {
-        return ProductModel(product.id,
-                product.name,
-                product.quantity,
-                product.unit,
-                product.price,
-                product.notes,
-                product.isChecked,
-                product.shoppingListId)
-    }
-}
+fun Product.mapToProductModel(): ProductModel = mapTo<ProductModel>().copy()
+
+fun User.mapToUserModel(): UserModel = mapTo<UserModel>().copy()

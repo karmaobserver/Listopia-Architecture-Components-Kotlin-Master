@@ -7,9 +7,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
-import com.aleksej.makaji.listopia.data.mapper.ModelToRoomMapper
-import com.aleksej.makaji.listopia.data.mapper.RoomToModelMapper
-import com.aleksej.makaji.listopia.data.mapper.ValueToRoomMapper
+import com.aleksej.makaji.listopia.data.mapper.*
 import com.aleksej.makaji.listopia.data.repository.ProductDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
 import com.aleksej.makaji.listopia.data.room.ProductDao
@@ -54,7 +52,7 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
                 .build()
 
         val livePagedListOrder = LivePagedListBuilder(mProductDao.getProductsByShoppingListId(productsValue.shoppingListId).map {
-            RoomToModelMapper.mapProduct(it)
+            it.mapToProductModel()
         }, pagedListConfig)
                 .build()
 
@@ -66,7 +64,7 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
 
     override suspend fun saveProduct(saveProductValue: SaveProductValue): State<Long> {
         return try {
-            State.Success(mProductDao.saveProduct(ValueToRoomMapper.mapProduct(saveProductValue)))
+            State.Success(mProductDao.saveProduct(saveProductValue.mapToProduct()))
         }catch (e: Exception){
             State.Error(RoomError)
         }
@@ -82,7 +80,7 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
 
     override suspend fun updateProduct(productModel: ProductModel): State<Int> {
         return try {
-            State.Success(mProductDao.updateProduct(ModelToRoomMapper.mapProduct(productModel)))
+            State.Success(mProductDao.updateProduct(productModel.mapToProduct()))
         }catch (e: Exception){
             State.Error(RoomUpdateError)
         }
@@ -93,7 +91,7 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
         try {
             return Transformations.switchMap(mProductDao.getProductById(productValue.productId)) {
                 it?.run {
-                    productLiveData.postValue(StateHandler.success(RoomToModelMapper.mapProduct(it)))
+                    productLiveData.postValue(StateHandler.success(it.mapToProductModel()))
                 }
                 return@switchMap productLiveData
             }

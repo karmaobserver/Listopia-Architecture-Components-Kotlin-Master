@@ -7,8 +7,8 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
-import com.aleksej.makaji.listopia.data.mapper.RoomToModelMapper
-import com.aleksej.makaji.listopia.data.mapper.ValueToRoomMapper
+import com.aleksej.makaji.listopia.data.mapper.mapToShoppingList
+import com.aleksej.makaji.listopia.data.mapper.mapToShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.room.ShoppingListDao
@@ -17,8 +17,8 @@ import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
 import com.aleksej.makaji.listopia.error.RoomDeleteError
-import com.aleksej.makaji.listopia.error.RoomUpdateError
 import com.aleksej.makaji.listopia.error.RoomError
+import com.aleksej.makaji.listopia.error.RoomUpdateError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import javax.inject.Inject
@@ -59,7 +59,7 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
                 .build()
 
         val livePagedListOrder = LivePagedListBuilder(mShoppingListDao.getShoppingLists().map {
-            RoomToModelMapper.mapShoppingList(it)
+            it.mapToShoppingListModel()
         }, pagedListConfig)
                 .build()
 
@@ -74,7 +74,7 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
         try {
             return Transformations.switchMap(mShoppingListDao.getShoppingListById(shoppingListByIdValue.id)) {
                 it?.run {
-                    shoppingListLiveData.postValue(StateHandler.success(RoomToModelMapper.mapShoppingList(it)))
+                    shoppingListLiveData.postValue(StateHandler.success(it.mapToShoppingListModel()))
                 }
                 return@switchMap shoppingListLiveData
             }
@@ -86,7 +86,7 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
 
     override suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): State<Long> {
         return try {
-            State.Success(mShoppingListDao.saveShoppingList(ValueToRoomMapper.mapSaveShoppingList(saveShoppingListValue)))
+            State.Success(mShoppingListDao.saveShoppingList(saveShoppingListValue.mapToShoppingList()))
         }catch (e: Exception){
             State.Error(RoomError)
         }
@@ -102,7 +102,7 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
 
     override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int> {
         return try {
-            State.Success(mShoppingListDao.updateShoppingList(ValueToRoomMapper.mapShoppingList(shoppingListValue)))
+            State.Success(mShoppingListDao.updateShoppingList(shoppingListValue.mapToShoppingList()))
         }catch (e: Exception){
             State.Error(RoomUpdateError)
         }

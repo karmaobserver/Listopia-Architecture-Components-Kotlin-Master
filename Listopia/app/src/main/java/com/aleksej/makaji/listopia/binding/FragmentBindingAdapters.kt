@@ -1,5 +1,6 @@
 package com.aleksej.makaji.listopia.binding
 
+import android.net.Uri
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
@@ -15,7 +16,7 @@ import javax.inject.Inject
  */
 class FragmentBindingAdapters @Inject constructor(val fragment: Fragment) {
     @BindingAdapter("imageUrl")
-    fun bindImage(imageView: ImageView, url: String?) {
+    fun bindImage(imageView: ImageView, url: Uri?) {
         Glide.with(fragment).load(url).into(imageView)
     }
 }

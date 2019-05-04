@@ -12,10 +12,12 @@ import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
 import com.aleksej.makaji.listopia.di.annotation.Local
 import com.aleksej.makaji.listopia.di.annotation.Remote
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by Aleksej Makaji on 1/20/19.
  */
+@Singleton
 class ProductRepository @Inject constructor(@Remote private val mRemoteProductDataSource: ProductDataSource,
                                                  @Local private val mLocalProductDataSource: ProductDataSource): ProductDataSource {
 
