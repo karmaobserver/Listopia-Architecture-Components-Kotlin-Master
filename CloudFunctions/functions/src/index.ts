@@ -8,6 +8,8 @@ const cookieParser = require('cookie-parser')();
 const cors = require('cors')({origin: true});
 const app = express();
 
+const db = admin.firestore();
+
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
 // The Firebase ID token needs to be passed as a Bearer token in the Authorization HTTP header like this:
 // `Authorization: Bearer <Firebase ID Token>`.
@@ -57,7 +59,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
 app.use(cors);
 app.use(cookieParser);
 app.disable('etag');
-app.use(validateFirebaseIdToken);
+//app.use(validateFirebaseIdToken);
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -71,9 +73,136 @@ app.get('/hello', (req, res) => {
    //res.send(`Hellow ${req.user.name}`);
 });
 
-app.post('/user/save', (req, res) => {
+app.post('/user/add', (req, res) => {
   console.log(req.body);
-  res.status(204).end();
+  db.collection('users').doc(req.body.uid).set(req.body).then(ref => {
+    console.log('Added user document with ID: ', ref.id);
+    res.status(201).end();
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to add user into Firestore"));
+  });
+});
+
+app.post('/shopping-list/add', (req, res) => {
+  console.log(req.body);
+  db.collection('shopping_lists').doc(req.body.id).set(req.body).then(ref => {
+    console.log('Added shoppingList document with ID: ', ref.id);
+    res.status(201).end();
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to add shopping list into Firestore"));
+  });
+});
+
+app.get('/shopping-list/:userId', (req, res) => {
+  console.log(req.params.userId);
+  const shoppingListsRef = db.collection('shopping_lists');
+  shoppingListsRef.where('ownerUid', '==', req.params.userId).get().then(snapshot => {
+    if (snapshot.empty) {
+      console.log("No matching documents for shoppings lists");
+      res.status(200).end();
+      return
+    }
+    var result = [];
+    snapshot.forEach(doc => {
+      result.push(doc.data)
+    })
+    res.status(200).send(result);
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to add shopping list into Firestore"));
+  });
+});
+
+app.get('/generate-sample-data', (req, res) => {
+  var user1 = {
+    uid: 'qqqqqqqqq111111111',
+    name: 'Pera Peric',
+    email: 'pera_peric@testmail.com',
+    avatar: 'https://lh6.googleusercontent.com/-ZHu0DHyICb0/AAAAAAAAAAI/AAAAAAAAAGA/nTs_D1FNIzk/s96-c/photo.jpg',
+    friends: ['wwwwwwwwwwww22222222', 'eeeeeeeeeee3333333333']
+  }
+
+  var user2 = {
+    uid: 'wwwwwwwwwwww22222222',
+    name: 'Ana Anic',
+    email: 'ana_anic@testmail.com',
+    avatar: 'https://lh6.googleusercontent.com/-ZHu0DHyICb0/wwwwwwww/222222222/nTs_D1FNIzk/s96-c/photo.jpg',
+    friends: ['eeeeeeeeeee3333333333']
+  }
+
+  var user3 = {
+    uid: 'eeeeeeeeeee3333333333',
+    name: 'Milan Milance',
+    email: 'milan_milance@testmail.com',
+    avatar: 'https://lh6.googleusercontent.com/-ZHu0DHyICb0/eeeeeee/3333333/nTs_D1FNIzk/s96-c/photo.jpg',
+    friends: []
+  }
+
+  var shoppingList1 = {
+    id: '111',
+    name: 'Party',
+    ownerUid: 'qqqqqqqqq111111111',
+    editors: ['wwwwwwwwwwww22222222', 'eeeeeeeeeee3333333333']
+  }
+
+  var shoppingList2 = {
+    id: '222',
+    name: 'Cake',
+    ownerUid: 'qqqqqqqqq111111111',
+    editors: ['wwwwwwwwwwww22222222']
+  }
+
+  var product1 = {
+    id: '111111111',
+    shoppingListId: '111',
+    name: 'Ballons',
+    quantity: 10,
+    unit: 'piece',
+    price: 189,
+    notes: 'Black ballons only',
+    isChecked: false
+  }
+
+  var product2 = {
+    id: '222222222',
+    shoppingListId: '111',
+    name: 'Beers',
+    quantity: 20,
+    unit: 'piece',
+    price: 55,
+    notes: 'Lasko if not then Jelen',
+    isChecked: true
+  }
+
+  var product3 = {
+    id: '333333333',
+    shoppingListId: '222',
+    name: 'Eggs',
+    quantity: 5,
+    unit: 'piece',
+    price: 13,
+    notes: 'From Chichken, medium size',
+    isChecked: false
+  }
+
+  var batch = db.batch();
+
+  batch.set(db.collection('users').doc('qqqqqqqqq111111111'), user1);
+  batch.set(db.collection('users').doc('wwwwwwwwwwww22222222'), user2);
+  batch.set(db.collection('users').doc('eeeeeeeeeee3333333333'), user3);
+  batch.set(db.collection('shopping_lists').doc('111'), shoppingList1);
+  batch.set(db.collection('shopping_lists').doc('222'), shoppingList2);
+  batch.set(db.collection('shopping_lists').doc('111').collection('products').doc('111111111'), product1);
+  batch.set(db.collection('shopping_lists').doc('111').collection('products').doc('222222222'), product2);
+  batch.set(db.collection('shopping_lists').doc('222').collection('products').doc('333333333'), product3);
+
+  batch.commit().then(function () {
+    const testObject = {
+      test: "Success"
+    }
+    res.json(testObject);
+  }).catch(error => {
+    console.error("Error generate data ", error);
+  });
 });
 
 interface ErrorResponse {
