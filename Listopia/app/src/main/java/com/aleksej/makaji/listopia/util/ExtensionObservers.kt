@@ -5,8 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.aleksej.makaji.listopia.HomeActivity
 import com.aleksej.makaji.listopia.base.BaseFragment
-import com.aleksej.makaji.listopia.data.event.State
-import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.event.*
 import com.aleksej.makaji.listopia.error.ListopiaError
 
 /**
@@ -50,10 +49,10 @@ private fun <T : Any, L : LiveData<StateHandler<T>>> BaseFragment.observe(
     liveData.observe(this, Observer {
         when (it) {
             is StateHandler<T> -> {
-                val eventHandler = if (isSingleEvent) it.getContentIfNotHandled() else it.peekContent()
-                eventHandler?.let {
+                val stateHandler = if (isSingleEvent) it.getContentIfNotHandled() else it.peekContent()
+                stateHandler?.let {
                     when (it.state) {
-                        is State.Success -> {
+                        is SuccessState -> {
                             onHideLoading?.invoke()
                             onHideLoading.isNull { hideLoading() }
                             it.state.data?.run{
@@ -61,7 +60,7 @@ private fun <T : Any, L : LiveData<StateHandler<T>>> BaseFragment.observe(
                             }
                         }
 
-                        is State.Error -> {
+                        is ErrorState -> {
                             onHideLoading?.invoke()
                             onHideLoading.isNull { hideLoading() }
                             onError?.run {
@@ -70,7 +69,7 @@ private fun <T : Any, L : LiveData<StateHandler<T>>> BaseFragment.observe(
                                 showError(it.state.error)
                             }
                         }
-                        is State.Loading -> {
+                        is LoadingState -> {
                             onLoading?.run {
                                 invoke()
                             }.isNull {
@@ -122,10 +121,10 @@ private fun <T : Any, L : LiveData<StateHandler<T>>> FragmentActivity.observe(
     liveData.observe(this, Observer {
         when (it) {
             is StateHandler<T> -> {
-                val eventHandler = if (isSingleEvent) it.getContentIfNotHandled() else it.peekContent()
-                eventHandler?.let {
+                val stateHandler = if (isSingleEvent) it.getContentIfNotHandled() else it.peekContent()
+                stateHandler?.let {
                     when (it.state) {
-                        is State.Success -> {
+                        is SuccessState -> {
                             onHideLoading?.invoke()
                             onHideLoading.isNull { (this as? HomeActivity)?.hideProgress() }
                             it.state.data?.run{
@@ -133,7 +132,7 @@ private fun <T : Any, L : LiveData<StateHandler<T>>> FragmentActivity.observe(
                             }
                         }
 
-                        is State.Error -> {
+                        is ErrorState -> {
                             onHideLoading?.invoke()
                             onHideLoading.isNull { (this as? HomeActivity)?.hideProgress() }
                             onError?.run {
@@ -142,7 +141,7 @@ private fun <T : Any, L : LiveData<StateHandler<T>>> FragmentActivity.observe(
                                 (this as? HomeActivity)?.showError(it.state.error)
                             }
                         }
-                        is State.Loading -> {
+                        is LoadingState -> {
                             onLoading?.run {
                                 invoke()
                             }.isNull {

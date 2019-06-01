@@ -9,15 +9,15 @@ data class StateHandler<out T>(val state: State<out T>) {
     //Static methods in case we want different syntax (We will see on long road which is better)
     companion object {
         fun <T> success(data: T?): StateHandler<T> {
-            return StateHandler(State.Success(data))
+            return StateHandler(SuccessState(data))
         }
 
         fun <T> error(error: ListopiaError): StateHandler<T> {
-            return StateHandler(State.Error(error))
+            return StateHandler(ErrorState(error))
         }
 
         fun <T> loading(): StateHandler<T> {
-            return StateHandler(State.Loading())
+            return StateHandler(LoadingState())
         }
     }
 

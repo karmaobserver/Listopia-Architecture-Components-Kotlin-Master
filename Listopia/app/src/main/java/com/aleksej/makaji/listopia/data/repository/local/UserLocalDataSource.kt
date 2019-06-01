@@ -3,8 +3,10 @@ package com.aleksej.makaji.listopia.data.repository.local
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.mapper.mapToUser
 import com.aleksej.makaji.listopia.data.mapper.mapToUserModel
 import com.aleksej.makaji.listopia.data.repository.UserDataSource
@@ -31,9 +33,9 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao) : U
 
     override suspend fun saveUser(saveUserValue: SaveUserValue): State<Unit> {
         return try {
-            State.Success(mUserDao.saveUser(saveUserValue.mapToUser()))
+            SuccessState(mUserDao.saveUser(saveUserValue.mapToUser()))
         }catch (e: Exception){
-            State.Error(RoomError)
+            ErrorState(RoomError)
         }
     }
 

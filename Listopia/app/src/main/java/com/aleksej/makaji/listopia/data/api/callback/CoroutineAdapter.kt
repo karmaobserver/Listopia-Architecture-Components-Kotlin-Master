@@ -1,7 +1,9 @@
 package com.aleksej.makaji.listopia.data.api.callback
 
 import com.aleksej.makaji.listopia.data.api.callback.CoroutineConverterUtil.convert
+import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
+import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.mapper.IDtoModelMapper
 import com.aleksej.makaji.listopia.error.ErrorParser
 import com.aleksej.makaji.listopia.error.ErrorResponse
@@ -18,17 +20,17 @@ class CoroutineAdapter<T : IDtoModelMapper<T, F>, F> @Inject constructor(private
 
     operator fun invoke(): State<F> {
         if (response.code() == 401) {
-            return State.Error(UnauthorizedError)
+            return ErrorState(UnauthorizedError)
         }
         return if (response.isSuccessful) {
             val responseBody = response.body()
-            State.Success(if (responseBody != null) response.body()?.map(responseBody) else null)
+            SuccessState(if (responseBody != null) response.body()?.map(responseBody) else null)
         } else {
             return try {
                 val errorResponse = convert(ErrorConverter(retrofit), response.errorBody()) as ErrorResponse
-                State.Error(ErrorParser.parseBackendError(errorResponse))
+                ErrorState(ErrorParser.parseBackendError(errorResponse))
             } catch (e: Exception) {
-                State.Error(ExceptionError(e))
+                ErrorState(ExceptionError(e))
             }
         }
     }

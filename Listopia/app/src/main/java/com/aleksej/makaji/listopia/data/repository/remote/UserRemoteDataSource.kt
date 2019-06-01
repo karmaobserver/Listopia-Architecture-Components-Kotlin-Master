@@ -3,6 +3,7 @@ package com.aleksej.makaji.listopia.data.repository.remote
 import androidx.lifecycle.LiveData
 import com.aleksej.makaji.listopia.data.api.ListopiaApi
 import com.aleksej.makaji.listopia.data.api.callback.CoroutineAdapter
+import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.mapper.mapToSaveUserRequest
@@ -23,7 +24,7 @@ class UserRemoteDataSource @Inject constructor(private val mListopiaApi: Listopi
         return try {
             CoroutineAdapter(mListopiaApi.saveUser(saveUserValue.mapToSaveUserRequest()), mRetrofit)()
         } catch (e: Exception) {
-            State.Error(ExceptionError(e))
+            ErrorState(ExceptionError(e))
         }
     }
 

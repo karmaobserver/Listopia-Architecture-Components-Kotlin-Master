@@ -1,76 +1,73 @@
 package com.aleksej.makaji.listopia.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.repository.ProductRepository
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
-import com.aleksej.makaji.listopia.data.usecase.*
-import com.aleksej.makaji.listopia.data.usecase.value.*
+import com.aleksej.makaji.listopia.data.usecase.DeleteProductByIdUseCase
+import com.aleksej.makaji.listopia.data.usecase.SaveProductUseCase
+import com.aleksej.makaji.listopia.data.usecase.UpdateProductUseCase
+import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
+import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
  * Created by Aleksej Makaji on 4/27/19.
  */
-class ProductViewModel @Inject constructor(private val mGetProductsByShoppingListUseCase: GetProductsByShoppingListUseCase,
-                                           private val mUpdateProdctUseCase: UpdateProductUseCase,
+class ProductViewModel @Inject constructor(private val mUpdateProductUseCase: UpdateProductUseCase,
                                            private val mSaveProductUseCase: SaveProductUseCase,
-                                           private val mGetProductByIdUseCase: GetProductByIdUseCase,
-                                           private val mDeleteProductByIdUseCase: DeleteProductByIdUseCase) : ViewModel() {
+                                           private val mDeleteProductByIdUseCase: DeleteProductByIdUseCase,
+                                           private val mProductRepository: ProductRepository) : ViewModel() {
 
     var reloadEditData = true
 
-    private val _productsByShoppingId = MutableLiveData<ProductsValue>()
-    val productsByShoppingIdLiveData = Transformations.switchMap(_productsByShoppingId) {
-        mGetProductsByShoppingListUseCase.invoke(it)
-    }
+    private val getProductsByShoppingIdTrigger = MutableLiveData<ProductsValue>()
+    val getProductsByShoppingIdLiveData = Transformations.switchMap(getProductsByShoppingIdTrigger) { mProductRepository.getProductsByShoppingListId(it) }
 
-    private val _updateProduct = MutableLiveData<ProductModel>()
-    val updateProductLiveData = Transformations.switchMap(_updateProduct) {
-        mUpdateProdctUseCase.invoke(it)
-    }
+    private val updateProductTrigger = MutableLiveData<StateHandler<Int>>()
+    val updateProductLiveData : LiveData<StateHandler<Int>> = updateProductTrigger
 
-    private val _addProductEvent = MutableLiveData<StateHandler<Unit>>()
-    val addProductEvent : LiveData<StateHandler<Unit>>
-        get() = _addProductEvent
+    private val addProductTrigger = MutableLiveData<StateHandler<Long>>()
+    val addProductLiveData : MutableLiveData<StateHandler<Long>> = addProductTrigger
 
-    private val _addProduct = MutableLiveData<SaveProductValue>()
-    val addProductLiveData = Transformations.switchMap(_addProduct) {
-        mSaveProductUseCase.invoke(it)
-    }
+    private val getProductByIdTrigger = MutableLiveData<ProductValue>()
+    val getProductByIdLiveData = Transformations.switchMap(getProductByIdTrigger) { mProductRepository.getProductById(it) }
 
-    private val _getProductById = MutableLiveData<ProductValue>()
-    val getProductByIdLiveData = Transformations.switchMap(_getProductById) {
-        mGetProductByIdUseCase.invoke(it)
-    }
+    private val deleteProductByIdTrigger = MutableLiveData<StateHandler<Int>>()
+    val deleteProductByIdLiveData : LiveData<StateHandler<Int>> = deleteProductByIdTrigger
 
-    private val _deleteProductById = MutableLiveData<ProductValue>()
-    val deleteProductByIdLiveData = Transformations.switchMap(_deleteProductById) {
-        mDeleteProductByIdUseCase.invoke(it)
+    private val addProductEventTrigger = MutableLiveData<StateHandler<Unit>>()
+    val addProductEvent : LiveData<StateHandler<Unit>> = addProductEventTrigger
+
+    fun getProductsByShoppingId(productsValue: ProductsValue) {
+        getProductsByShoppingIdTrigger.postValue(productsValue)
     }
 
     fun getProductById(prodcutValue: ProductValue) {
-        _getProductById.postValue(prodcutValue)
+        getProductByIdTrigger.postValue(prodcutValue)
     }
 
     fun addProduct(saveProductValue: SaveProductValue) {
-        _addProduct.postValue(saveProductValue)
+        viewModelScope.launch {
+            addProductTrigger.value = StateHandler(mSaveProductUseCase.invoke(saveProductValue))
+        }
     }
 
     fun addProductEvent() {
-        _addProductEvent.postValue(StateHandler.success(Unit))
-    }
-
-    fun getProductsByShoppingId(productsValue: ProductsValue) {
-        _productsByShoppingId.postValue(productsValue)
+        addProductEventTrigger.postValue(StateHandler.success(Unit))
     }
 
     fun updateProduct(productModel: ProductModel) {
-        _updateProduct.postValue(productModel)
+        viewModelScope.launch {
+            updateProductTrigger.value = StateHandler(mUpdateProductUseCase.invoke(productModel))
+        }
     }
 
-    fun deleteProductById(productModel: ProductValue) {
-        _deleteProductById.postValue(productModel)
+    fun deleteProductById(productValue: ProductValue) {
+        viewModelScope.launch {
+            deleteProductByIdTrigger.value = StateHandler(mDeleteProductByIdUseCase.invoke(productValue))
+        }
     }
 }

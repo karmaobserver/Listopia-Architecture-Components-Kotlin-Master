@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.mapper.mapToShoppingList
 import com.aleksej.makaji.listopia.data.mapper.mapToShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
@@ -86,33 +88,33 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
 
     override suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): State<Long> {
         return try {
-            State.Success(mShoppingListDao.saveShoppingList(saveShoppingListValue.mapToShoppingList()))
+            SuccessState(mShoppingListDao.saveShoppingList(saveShoppingListValue.mapToShoppingList()))
         }catch (e: Exception){
-            State.Error(RoomError)
+            ErrorState(RoomError)
         }
     }
 
     override suspend fun deleteAllShoppingLists(): State<Int> {
         return try {
-            State.Success(mShoppingListDao.deleteAllShoppingLists())
+            SuccessState(mShoppingListDao.deleteAllShoppingLists())
         }catch (e: Exception){
-            State.Error(RoomDeleteError)
+            ErrorState(RoomDeleteError)
         }
     }
 
     override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int> {
         return try {
-            State.Success(mShoppingListDao.updateShoppingList(shoppingListValue.mapToShoppingList()))
+            SuccessState(mShoppingListDao.updateShoppingList(shoppingListValue.mapToShoppingList()))
         }catch (e: Exception){
-            State.Error(RoomUpdateError)
+            ErrorState(RoomUpdateError)
         }
     }
 
     override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {
         return try {
-            State.Success(mShoppingListDao.deleteShoppingListById(deleteShoppingListValue.id))
+            SuccessState(mShoppingListDao.deleteShoppingListById(deleteShoppingListValue.id))
         }catch (e: Exception){
-            State.Error(RoomDeleteError)
+            ErrorState(RoomDeleteError)
         }
     }
 

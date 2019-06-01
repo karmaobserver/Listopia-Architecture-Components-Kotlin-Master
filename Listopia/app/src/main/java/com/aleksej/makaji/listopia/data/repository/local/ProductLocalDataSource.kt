@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.mapper.*
 import com.aleksej.makaji.listopia.data.repository.ProductDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
@@ -20,7 +22,6 @@ import com.aleksej.makaji.listopia.error.RoomError
 import com.aleksej.makaji.listopia.error.RoomUpdateError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -64,25 +65,25 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
 
     override suspend fun saveProduct(saveProductValue: SaveProductValue): State<Long> {
         return try {
-            State.Success(mProductDao.saveProduct(saveProductValue.mapToProduct()))
+            SuccessState(mProductDao.saveProduct(saveProductValue.mapToProduct()))
         }catch (e: Exception){
-            State.Error(RoomError)
+            ErrorState(RoomError)
         }
     }
 
     override suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): State<Int> {
         return try {
-            State.Success(mProductDao.deleteProductsByShoppingList(deleteProductValue.shoppingListId))
+            SuccessState(mProductDao.deleteProductsByShoppingList(deleteProductValue.shoppingListId))
         }catch (e: Exception){
-            State.Error(RoomDeleteError)
+            ErrorState(RoomDeleteError)
         }
     }
 
     override suspend fun updateProduct(productModel: ProductModel): State<Int> {
         return try {
-            State.Success(mProductDao.updateProduct(productModel.mapToProduct()))
+            SuccessState(mProductDao.updateProduct(productModel.mapToProduct()))
         }catch (e: Exception){
-            State.Error(RoomUpdateError)
+            ErrorState(RoomUpdateError)
         }
     }
 
@@ -103,9 +104,9 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
 
     override suspend fun deleteProductById(productValue: ProductValue): State<Int> {
         return try {
-            State.Success(mProductDao.deleteProductById(productValue.productId))
+            SuccessState(mProductDao.deleteProductById(productValue.productId))
         }catch (e: Exception){
-            State.Error(RoomDeleteError)
+            ErrorState(RoomDeleteError)
         }
     }
 }

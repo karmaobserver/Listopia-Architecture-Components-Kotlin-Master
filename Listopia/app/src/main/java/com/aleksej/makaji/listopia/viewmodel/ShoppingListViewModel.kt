@@ -1,12 +1,10 @@
 package com.aleksej.makaji.listopia.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import com.aleksej.makaji.listopia.data.event.State
+import androidx.lifecycle.*
+import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.mapper.mapToShoppingListValue
 import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
@@ -14,7 +12,6 @@ import com.aleksej.makaji.listopia.data.usecase.*
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,77 +19,70 @@ import javax.inject.Inject
 /**
  * Created by Aleksej Makaji on 4/27/19.
  */
-class ShoppingListViewModel @Inject constructor(private val mGetShoppingListsUseCase: GetShoppingListsUseCase,
-                                                private val mDeleteShoppingListByIdUseCase: DeleteShoppingListByIdUseCase,
+class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListByIdUseCase: DeleteShoppingListByIdUseCase,
                                                 private val mSaveShoppingListUseCase: SaveShoppingListUseCase,
                                                 private val mUpdateShoppingListUseCase: UpdateShoppingListUseCase,
-                                                private val mGetShoppingListByIdUseCase: GetShoppingListByIdUseCase,
                                                 private val mShoppingListRepository: ShoppingListRepository) : ViewModel() {
 
     var reloadEditData = true
 
-    private val _getShoppingLists = MutableLiveData<Unit>()
-    val getShoppingListsLiveData = Transformations.switchMap(_getShoppingLists) {
-        mGetShoppingListsUseCase.invoke(Unit)
-    }
+    private val getShoppingListsTrigger = MutableLiveData<Unit>()
+    val getShoppingListsLiveData = Transformations.switchMap(getShoppingListsTrigger) { mShoppingListRepository.getShoppingLists() }
 
-    private val _addShoppingListEvent = MutableLiveData<StateHandler<Unit>>()
-    val addShoppingListEvent : LiveData<StateHandler<Unit>>
-        get() = _addShoppingListEvent
+    private val getShoppingListByIdTrigger = MutableLiveData<ShoppingListByIdValue>()
+    val getShoppingListByIdLiveData = Transformations.switchMap(getShoppingListByIdTrigger) { mShoppingListRepository.getShoppingListById(it) }
 
-    private val _deleteShoppingListById = MutableLiveData<DeleteShoppingListValue>()
-    val deleteShoppingListByIdLiveData = Transformations.switchMap(_deleteShoppingListById) {
-        mDeleteShoppingListByIdUseCase.invoke(it)
-    }
+    private val deleteShoppingListByIdTrigger = MutableLiveData<StateHandler<Int>>()
+    val deleteShoppingListByIdLiveData : LiveData<StateHandler<Int>> = deleteShoppingListByIdTrigger
 
-    private val _saveShoppingList = MutableLiveData<SaveShoppingListValue>()
-    val saveShoppingListLiveData = Transformations.switchMap(_saveShoppingList) {
-        mSaveShoppingListUseCase.invoke(it)
-    }
+    private val saveShoppingListTrigger = MutableLiveData<StateHandler<Long>>()
+    val saveShoppingListLiveData : LiveData<StateHandler<Long>> = saveShoppingListTrigger
 
-    private val _updateShoppingList = MutableLiveData<ShoppingListValue>()
-    val updateShoppingListLiveData = Transformations.switchMap(_updateShoppingList) {
-        mUpdateShoppingListUseCase.invoke(it)
-    }
+    private val updateShoppingListTrigger = MutableLiveData<StateHandler<Int>>()
+    val updateShoppingListLiveData : LiveData<StateHandler<Int>> = updateShoppingListTrigger
 
-    private val _getShoppingListById = MutableLiveData<ShoppingListByIdValue>()
-    val getShoppingListByIdLiveData = Transformations.switchMap(_getShoppingListById) {
-        mGetShoppingListByIdUseCase.invoke(it)
-    }
+    private val addShoppingListEventTrigger = MutableLiveData<StateHandler<Unit>>()
+    val addShoppingListEvent : LiveData<StateHandler<Unit>> = addShoppingListEventTrigger
 
     fun getShoppingLists() {
-        _getShoppingLists.postValue(Unit)
+        getShoppingListsTrigger.postValue(Unit)
     }
 
     fun updateShoppingList(shoppingListModel: ShoppingListModel) {
-        _updateShoppingList.postValue(shoppingListModel.mapToShoppingListValue())
+        viewModelScope.launch {
+            updateShoppingListTrigger.value = StateHandler(mUpdateShoppingListUseCase.invoke(shoppingListModel.mapToShoppingListValue()))
+        }
     }
 
     fun getShoppingListById(shoppingListByIdValue: ShoppingListByIdValue) {
-        _getShoppingListById.postValue(shoppingListByIdValue)
+        getShoppingListByIdTrigger.postValue(shoppingListByIdValue)
     }
 
     fun createShoppingList(saveShoppingListValue: SaveShoppingListValue) {
-        _saveShoppingList.postValue(saveShoppingListValue)
+        viewModelScope.launch {
+            saveShoppingListTrigger.value = StateHandler(mSaveShoppingListUseCase.invoke(saveShoppingListValue))
+        }
     }
 
     fun addShoppingListEvent() {
-        _addShoppingListEvent.postValue(StateHandler.success(Unit))
+        addShoppingListEventTrigger.postValue(StateHandler.success(Unit))
         test()
     }
 
     fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue) {
-        _deleteShoppingListById.postValue(deleteShoppingListValue)
+        viewModelScope.launch {
+            deleteShoppingListByIdTrigger.value = StateHandler(mDeleteShoppingListByIdUseCase.invoke(deleteShoppingListValue))
+        }
     }
 
     fun test() {
         GlobalScope.launch {
             val result = mShoppingListRepository.fetchShoppingLists()
             when (result) {
-                is State.Success -> {
+                is SuccessState -> {
                     Log.d("RETRO", "SUCCESS")
                 }
-                is State.Error -> {
+                is ErrorState -> {
                     Log.d("RETRO", "ERROR" + result.error)
                 }
             }

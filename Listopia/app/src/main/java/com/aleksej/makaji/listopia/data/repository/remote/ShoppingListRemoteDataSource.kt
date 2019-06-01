@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.aleksej.makaji.listopia.data.api.ListopiaApi
 import com.aleksej.makaji.listopia.data.api.callback.CoroutineAdapter
+import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
@@ -51,7 +52,7 @@ class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi:
         return try {
             CoroutineAdapter(mListopiaApi.testCloudFunction(), mRetrofit)()
         } catch (e: Exception) {
-            State.Error(ExceptionError(e))
+            ErrorState(ExceptionError(e))
         }
     }
 }
