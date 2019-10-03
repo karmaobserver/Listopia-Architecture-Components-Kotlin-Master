@@ -14,10 +14,7 @@ import com.aleksej.makaji.listopia.data.mapper.mapToShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.room.ShoppingListDao
-import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
-import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.*
 import com.aleksej.makaji.listopia.error.RoomDeleteError
 import com.aleksej.makaji.listopia.error.RoomError
 import com.aleksej.makaji.listopia.error.RoomUpdateError
@@ -121,4 +118,9 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
     override suspend fun fetchShoppingLists(): State<Unit> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override suspend fun fetchShoppingListsByUserId(fetchShoppingListsValue: FetchShoppingListsValue): State<List<ShoppingListModel>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 }

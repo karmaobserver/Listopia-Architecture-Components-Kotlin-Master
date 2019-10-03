@@ -9,7 +9,7 @@ class SharedPreferenceManager constructor(private val sharedPreferences: SharedP
 
     companion object {
         private const val TOKEN = "TOKEN"
-        private const val USER_UID = "USER_UID"
+        private const val USER_ID = "USER_ID"
         private const val CURRENCY = "CURRENCY"
         private const val LANGUAGE_CODE = "LANGUAGE_CODE"
     }
@@ -18,9 +18,9 @@ class SharedPreferenceManager constructor(private val sharedPreferences: SharedP
         get() = sharedPreferences.getString(TOKEN, "").orEmpty()
         set(googleToken) = sharedPreferences.edit().putString(TOKEN, googleToken).apply()
 
-    var userUid: String
-        get() = sharedPreferences.getString(USER_UID, "").orEmpty()
-        set(userUid) = sharedPreferences.edit().putString(USER_UID, userUid).apply()
+    var userId: String
+        get() = sharedPreferences.getString(USER_ID, "").orEmpty()
+        set(userId) = sharedPreferences.edit().putString(USER_ID, userId).apply()
 
     var currency: String
         get() = sharedPreferences.getString(CURRENCY, "$").orEmpty()

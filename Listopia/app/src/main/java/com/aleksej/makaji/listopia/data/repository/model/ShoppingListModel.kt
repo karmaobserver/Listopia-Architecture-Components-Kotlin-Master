@@ -5,4 +5,4 @@ package com.aleksej.makaji.listopia.data.repository.model
  */
 data class ShoppingListModel(val id: Long,
                              var name: String,
-                             val ownerUid: String)
+                             val ownerId: String)

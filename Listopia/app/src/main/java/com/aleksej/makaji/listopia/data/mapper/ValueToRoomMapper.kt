@@ -18,4 +18,4 @@ fun SaveShoppingListValue.mapToShoppingList(): ShoppingList = mapTo<ShoppingList
 
 fun ShoppingListValue.mapToShoppingList(): ShoppingList = mapTo<ShoppingList>().copy()
 
-fun SaveUserValue.mapToUser(): User = mapTo<User>().copy(id = 0)
+fun SaveUserValue.mapToUser(): User = mapTo<User>().copy()

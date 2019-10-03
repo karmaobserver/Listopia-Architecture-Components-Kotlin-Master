@@ -203,7 +203,7 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun checkIfUserLoggedIn() {
-        if (mSharedPreferenceManager.userUid != "") {
+        if (mSharedPreferenceManager.userId != "") {
             headerBinding.groupSignedIn.putVisibleOrGone(true)
             headerBinding.groupSignedOut.putVisibleOrGone(false)
             mUserViewModel.getUser()
@@ -214,7 +214,7 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun saveLoggedUser(user: FirebaseUser) {
-        mSharedPreferenceManager.userUid = user.uid
+        mSharedPreferenceManager.userId = user.uid
         user.getIdToken(true).addOnSuccessListener {
             it.token?.let {
                 mSharedPreferenceManager.token = it
@@ -228,7 +228,7 @@ class HomeActivity : BaseActivity() {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener {
-                    mSharedPreferenceManager.userUid = ""
+                    mSharedPreferenceManager.userId = ""
                     mSharedPreferenceManager.token = ""
                     checkIfUserLoggedIn()
                     showToast("Successfully Signed Out")

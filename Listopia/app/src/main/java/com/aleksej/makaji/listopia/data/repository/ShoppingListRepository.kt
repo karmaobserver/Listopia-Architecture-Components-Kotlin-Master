@@ -5,10 +5,7 @@ import androidx.paging.PagedList
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
-import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
-import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.*
 import com.aleksej.makaji.listopia.di.annotation.Local
 import com.aleksej.makaji.listopia.di.annotation.Remote
 import javax.inject.Inject
@@ -47,5 +44,9 @@ class ShoppingListRepository @Inject constructor(@Remote private val mRemoteShop
 
     override suspend fun fetchShoppingLists(): State<Unit> {
         return mRemoteShoppingListDataSource.fetchShoppingLists()
+    }
+
+    override suspend fun fetchShoppingListsByUserId(fetchShoppingListsValue: FetchShoppingListsValue): State<List<ShoppingListModel>> {
+        return mRemoteShoppingListDataSource.fetchShoppingListsByUserId(fetchShoppingListsValue)
     }
 }

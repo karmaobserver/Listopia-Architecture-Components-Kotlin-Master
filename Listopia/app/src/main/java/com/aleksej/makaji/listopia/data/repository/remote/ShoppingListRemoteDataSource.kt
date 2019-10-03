@@ -9,10 +9,7 @@ import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
-import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
-import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.*
 import com.aleksej.makaji.listopia.error.ExceptionError
 import retrofit2.Retrofit
 import javax.inject.Inject
@@ -51,6 +48,14 @@ class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi:
     override suspend fun fetchShoppingLists(): State<Unit> {
         return try {
             CoroutineAdapter(mListopiaApi.testCloudFunction(), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
+
+    override suspend fun fetchShoppingListsByUserId(fetchShoppingListsValue: FetchShoppingListsValue): State<List<ShoppingListModel>> {
+        return try {
+            CoroutineAdapter(mListopiaApi.fetchShoppingListsByUserId(fetchShoppingListsValue.userId), mRetrofit)()
         } catch (e: Exception) {
             ErrorState(ExceptionError(e))
         }

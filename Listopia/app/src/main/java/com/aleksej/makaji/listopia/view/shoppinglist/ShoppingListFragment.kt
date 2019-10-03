@@ -71,6 +71,7 @@ class ShoppingListFragment: BaseFragment() {
     private fun initData() {
         binding.shoppingListViewModel = mShoppingListViewModel
         mShoppingListViewModel.getShoppingLists()
+        test()
     }
 
     private fun test() {

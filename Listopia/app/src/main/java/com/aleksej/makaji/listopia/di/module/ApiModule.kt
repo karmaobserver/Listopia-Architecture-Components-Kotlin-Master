@@ -58,14 +58,10 @@ class ApiModule {
     @Provides
     @Singleton
     @Listopia
-    fun providesApiOkHttpBuilder(
-            cache: Cache,
-            stethoInterceptor: StethoInterceptor,
-            listopiaApiInterceptor: ListopiaApiInterceptor
-    ): OkHttpClient {
+    fun providesApiOkHttpBuilder(cache: Cache, stethoInterceptor: StethoInterceptor, listopiaApiInterceptor: ListopiaApiInterceptor): OkHttpClient {
         val clientBuilder = OkHttpClient.Builder()
         clientBuilder.cache(cache)
-        clientBuilder.addNetworkInterceptor(listopiaApiInterceptor)
+        clientBuilder.addInterceptor(listopiaApiInterceptor)
         if (BuildConfig.DEBUG) {
             clientBuilder.addNetworkInterceptor(stethoInterceptor)
         }

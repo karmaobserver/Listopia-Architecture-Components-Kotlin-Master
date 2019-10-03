@@ -28,8 +28,10 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".dev"
+            buildConfigField "String", "BASE_URL", "\"http://192.168.0.11:8080/\""
+            //buildConfigField "String", "BASE_URL", "\"http://192.168.0.11:5000/listopia-f7bba/us-central1/app/\""
             //buildConfigField "String", "BASE_URL", "\"http://localhost:5000/listopia-f7bba/us-central1/app/\""
-            buildConfigField "String", "BASE_URL", "\"https://us-central1-listopia-f7bba.cloudfunctions.net/app/\""
+            //buildConfigField "String", "BASE_URL", "\"https://us-central1-listopia-f7bba.cloudfunctions.net/app/\""
         }
         release {
             minifyEnabled false

@@ -52,7 +52,7 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
                 .setPageSize(PAGED_LIST_PAGE_SIZE)
                 .build()
 
-        val livePagedListOrder = LivePagedListBuilder(mProductDao.getProductsByShoppingListId(productsValue.shoppingListId).map {
+        val livePagedListOrder = LivePagedListBuilder<Int,ProductModel>(mProductDao.getProductsByShoppingListId(productsValue.shoppingListId).map {
             it.mapToProductModel()
         }, pagedListConfig)
                 .build()

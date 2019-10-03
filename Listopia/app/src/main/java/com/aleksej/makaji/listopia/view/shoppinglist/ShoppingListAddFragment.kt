@@ -79,6 +79,6 @@ class ShoppingListAddFragment: BaseFragment() {
     }
 
     private fun createShoppingList() {
-        mShoppingListViewModel.createShoppingList(SaveShoppingListValue(binding.editTextListName.text(), mSharedPreferenceManager.userUid))
+        mShoppingListViewModel.createShoppingList(SaveShoppingListValue(binding.editTextListName.text(), mSharedPreferenceManager.userId))
     }
 }

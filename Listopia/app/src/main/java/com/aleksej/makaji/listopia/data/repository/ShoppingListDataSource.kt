@@ -5,10 +5,7 @@ import androidx.paging.PagedList
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
-import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
-import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
-import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.*
 
 /**
  * Created by Aleksej Makaji on 12/30/18.
@@ -21,4 +18,5 @@ interface ShoppingListDataSource {
     suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int>
     suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int>
     suspend fun fetchShoppingLists(): State<Unit>
+    suspend fun fetchShoppingListsByUserId(fetchShoppingListsValue: FetchShoppingListsValue): State<List<ShoppingListModel>>
 }

@@ -1,4 +1,10 @@
 'use strict';
+const dotenv = require('dotenv').config();
+if (dotenv.error) {
+  throw dotenv.error
+}
+console.log(dotenv.parsed)
+
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
@@ -7,6 +13,13 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')();
 const cors = require('cors')({origin: true});
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
+
+// server.listen(5000, 'localhost');
+// server.on('listening', function() {
+//     console.log('Express server started on port %s at %s', server.address().port, server.address().address);
+// });
 
 const db = admin.firestore();
 
@@ -65,19 +78,38 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.get('/hello', (req, res) => {
+  const fbtest = process.env.FIREBASE_CONFIG
+  const tet = process.env.EXAMPLE_VAR
   const testObject = {
-    test: "Test"
+    test: "Test3"
   }
    console.error('Success', "Yey");
   res.json(testObject);
    //res.send(`Hellow ${req.user.name}`);
 });
 
-app.post('/user/add', (req, res) => {
-  console.log(req.body);
-  db.collection('users').doc(req.body.uid).set(req.body).then(ref => {
-    console.log('Added user document with ID: ', ref.id);
-    res.status(201).end();
+app.post('/user/save', (req, res) => {
+  var userRef = db.collection('users').doc(req.body.id)
+  userRef.get().then(function(thisDoc) {
+    if (thisDoc.exists) {
+      var updatedUser = {
+        avatar: req.body.avatar,
+        email: req.body.email,
+        name: req.body.name
+      };
+      userRef.update(updatedUser)
+      console.log('Updated user document with ID: ', req.body.id);
+    } else {
+      var newUser = {
+        avatar: req.body.avatar,
+        email: req.body.email,
+        name: req.body.name,
+        friends: []
+      };
+      userRef.set(newUser)
+      console.log('Added user document with ID: ', req.body.id);
+    }
+    res.status(201).json({});
   }).catch(error => {
     res.status(500).send(parseError("Failed to add user into Firestore"));
   });
@@ -96,7 +128,7 @@ app.post('/shopping-list/add', (req, res) => {
 app.get('/shopping-list/:userId', (req, res) => {
   console.log(req.params.userId);
   const shoppingListsRef = db.collection('shopping_lists');
-  shoppingListsRef.where('ownerUid', '==', req.params.userId).get().then(snapshot => {
+  shoppingListsRef.where('ownerId', '==', req.params.userId).get().then(snapshot => {
     if (snapshot.empty) {
       console.log("No matching documents for shoppings lists");
       res.status(200).end();
@@ -104,9 +136,9 @@ app.get('/shopping-list/:userId', (req, res) => {
     }
     var result = [];
     snapshot.forEach(doc => {
-      result.push(doc.data)
+      result.push(doc.data())
     })
-    res.status(200).send(result);
+    res.status(200).send(["sada", "www"]);
   }).catch(error => {
     res.status(500).send(parseError("Failed to add shopping list into Firestore"));
   });
@@ -114,7 +146,7 @@ app.get('/shopping-list/:userId', (req, res) => {
 
 app.get('/generate-sample-data', (req, res) => {
   var user1 = {
-    uid: 'qqqqqqqqq111111111',
+    id: 'qqqqqqqqq111111111',
     name: 'Pera Peric',
     email: 'pera_peric@testmail.com',
     avatar: 'https://lh6.googleusercontent.com/-ZHu0DHyICb0/AAAAAAAAAAI/AAAAAAAAAGA/nTs_D1FNIzk/s96-c/photo.jpg',
@@ -122,7 +154,7 @@ app.get('/generate-sample-data', (req, res) => {
   }
 
   var user2 = {
-    uid: 'wwwwwwwwwwww22222222',
+    id: 'wwwwwwwwwwww22222222',
     name: 'Ana Anic',
     email: 'ana_anic@testmail.com',
     avatar: 'https://lh6.googleusercontent.com/-ZHu0DHyICb0/wwwwwwww/222222222/nTs_D1FNIzk/s96-c/photo.jpg',
@@ -130,7 +162,7 @@ app.get('/generate-sample-data', (req, res) => {
   }
 
   var user3 = {
-    uid: 'eeeeeeeeeee3333333333',
+    id: 'eeeeeeeeeee3333333333',
     name: 'Milan Milance',
     email: 'milan_milance@testmail.com',
     avatar: 'https://lh6.googleusercontent.com/-ZHu0DHyICb0/eeeeeee/3333333/nTs_D1FNIzk/s96-c/photo.jpg',
@@ -140,14 +172,14 @@ app.get('/generate-sample-data', (req, res) => {
   var shoppingList1 = {
     id: '111',
     name: 'Party',
-    ownerUid: 'qqqqqqqqq111111111',
+    ownerId: 'qqqqqqqqq111111111',
     editors: ['wwwwwwwwwwww22222222', 'eeeeeeeeeee3333333333']
   }
 
   var shoppingList2 = {
     id: '222',
     name: 'Cake',
-    ownerUid: 'qqqqqqqqq111111111',
+    ownerId: 'qqqqqqqqq111111111',
     editors: ['wwwwwwwwwwww22222222']
   }
 
