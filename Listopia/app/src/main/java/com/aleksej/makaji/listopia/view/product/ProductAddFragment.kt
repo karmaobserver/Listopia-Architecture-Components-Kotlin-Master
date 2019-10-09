@@ -29,7 +29,7 @@ class ProductAddFragment: BaseFragment() {
     private var binding by autoCleared<FragmentProductAddBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
-    private var mShoppingListId: Long? = null
+    private var mShoppingListId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val dataBinding = DataBindingUtil.inflate<FragmentProductAddBinding>(

@@ -17,6 +17,7 @@ import com.aleksej.makaji.listopia.error.ListNameError
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 import kotlinx.android.synthetic.main.fragment_shopping_list_add.*
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -79,6 +80,6 @@ class ShoppingListAddFragment: BaseFragment() {
     }
 
     private fun createShoppingList() {
-        mShoppingListViewModel.createShoppingList(SaveShoppingListValue(binding.editTextListName.text(), mSharedPreferenceManager.userId))
+        mShoppingListViewModel.createShoppingList(SaveShoppingListValue(UUID.randomUUID().toString(), binding.editTextListName.text(), mSharedPreferenceManager.userId))
     }
 }

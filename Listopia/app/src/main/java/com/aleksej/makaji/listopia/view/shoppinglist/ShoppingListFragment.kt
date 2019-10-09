@@ -54,8 +54,8 @@ class ShoppingListFragment: BaseFragment() {
         binding.shopLiveData = mShoppingListViewModel.shoppingListLiveData*/
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_fragment_shopping_list, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_fragment_shopping_list, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -125,7 +125,7 @@ class ShoppingListFragment: BaseFragment() {
         })
     }
 
-    private fun setupOptionsPopupMenu(view: View, shoppingListId: Long) {
+    private fun setupOptionsPopupMenu(view: View, shoppingListId: String) {
         context?.let {
             val popup = PopupMenu(it, view)
             popup.inflate(R.menu.popup_menu_shopping_list)

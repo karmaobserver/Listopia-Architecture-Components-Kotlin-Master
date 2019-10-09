@@ -1,4 +1,4 @@
-package com.aleksej.makaji.listopia.data.room
+package com.aleksej.makaji.listopia.data.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
@@ -17,14 +17,14 @@ interface ProductDao {
     suspend fun updateProduct(product: Product): Int
 
     @Query("SELECT * FROM product WHERE id = :productId")
-    fun getProductById(productId: Long): LiveData<Product?>
+    fun getProductById(productId: String): LiveData<Product?>
 
     @Query("SELECT * FROM product WHERE shoppingListId = :shoppingListId")
-    fun getProductsByShoppingListId(shoppingListId: Long): DataSource.Factory<Int, Product>
+    fun getProductsByShoppingListId(shoppingListId: String): DataSource.Factory<Int, Product>
 
     @Query("DELETE FROM product WHERE shoppingListId = :shoppingListId")
-    suspend fun deleteProductsByShoppingList(shoppingListId: Long): Int
+    suspend fun deleteProductsByShoppingList(shoppingListId: String): Int
 
     @Query("DELETE FROM product WHERE id = :productId")
-    suspend fun deleteProductById(productId: Long): Int
+    suspend fun deleteProductById(productId: String): Int
 }

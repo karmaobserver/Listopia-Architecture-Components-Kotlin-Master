@@ -1,5 +1,6 @@
 package com.aleksej.makaji.listopia.data.room.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 
@@ -12,5 +13,8 @@ import androidx.room.ForeignKey
             ForeignKey(entity = User::class, parentColumns = arrayOf("id"), childColumns = arrayOf("userId")),
             ForeignKey(entity = ShoppingList::class, parentColumns = arrayOf("id"), childColumns = arrayOf("shoppingListId"))
         ])
-data class JoinUserShoppingList(val userId: Long,
-                                val shoppingListId: Long)
+data class ShoppingListUserJoin(
+        @ColumnInfo(index = true)
+        val userId: String,
+        @ColumnInfo(index = true)
+        val shoppingListId: String)

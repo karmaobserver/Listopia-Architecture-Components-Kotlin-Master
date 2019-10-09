@@ -1,9 +1,12 @@
 package com.aleksej.makaji.listopia.data.usecase
 
+import android.util.Log
 import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
+import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.util.Validator
 import javax.inject.Inject
 
@@ -16,6 +19,24 @@ class SaveShoppingListUseCase @Inject constructor(private val mShoppingListRepos
         Validator.validateListName(value.name)?.run {
             return ErrorState(this)
         }
-        return mShoppingListRepository.saveShoppingList(value)
+        when (val saveShoppingListRoom = mShoppingListRepository.saveShoppingList(value)) {
+            is SuccessState -> {
+                when (val getShoppingListRoom = mShoppingListRepository.getShoppingListByIdSuspend(ShoppingListByIdValue(value.id))) {
+                    is SuccessState -> {
+                        getShoppingListRoom.data?.let {
+                            when (mShoppingListRepository.saveShoppingListRemote(it)) {
+                                is SuccessState -> {
+                                    mShoppingListRepository.updateSyncShoppingList(it.id)
+                                }
+                                else -> { Log.d("SaveShoppingListUseCase", "error: saveShoppingListRemote") }
+                            }
+                        }
+                    }
+                    else -> { Log.d("SaveShoppingListUseCase", "error: getShoppingListRoom") }
+                }
+                return saveShoppingListRoom
+            }
+            else -> return saveShoppingListRoom
+        }
     }
 }

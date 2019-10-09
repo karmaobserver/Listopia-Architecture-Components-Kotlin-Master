@@ -7,6 +7,7 @@ import com.aleksej.makaji.listopia.data.api.callback.CoroutineAdapter
 import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.mapper.mapToSaveShoppingListRequest
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.usecase.value.*
@@ -20,6 +21,14 @@ import javax.inject.Singleton
  */
 @Singleton
 class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi: ListopiaApi, private val mRetrofit: Retrofit) : ShoppingListDataSource {
+
+    override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun updateSyncShoppingList(shoppingListId: String): State<Int> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun getShoppingListById(shoppingListByIdValue: ShoppingListByIdValue): LiveData<StateHandler<ShoppingListModel>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -43,6 +52,14 @@ class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi:
 
     override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun saveShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit> {
+        return try {
+            CoroutineAdapter(mListopiaApi.saveShoppingList(shoppingListModel.mapToSaveShoppingListRequest()), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
     }
 
     override suspend fun fetchShoppingLists(): State<Unit> {

@@ -18,12 +18,24 @@ import javax.inject.Singleton
 class ShoppingListRepository @Inject constructor(@Remote private val mRemoteShoppingListDataSource: ShoppingListDataSource,
                                                  @Local private val mLocalShoppingListDataSource: ShoppingListDataSource): ShoppingListDataSource {
 
+    override suspend fun saveShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit> {
+        return mLocalShoppingListDataSource.saveShoppingListRemote(shoppingListModel)
+    }
+
+    override suspend fun updateSyncShoppingList(shoppingListId: String): State<Int> {
+        return mLocalShoppingListDataSource.updateSyncShoppingList(shoppingListId)
+    }
+
     override fun getShoppingLists(): LiveData<StateHandler<PagedList<ShoppingListModel>>> {
         return mLocalShoppingListDataSource.getShoppingLists()
     }
 
     override fun getShoppingListById(shoppingListByIdValue: ShoppingListByIdValue): LiveData<StateHandler<ShoppingListModel>> {
         return mLocalShoppingListDataSource.getShoppingListById(shoppingListByIdValue)
+    }
+
+    override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel> {
+        return mLocalShoppingListDataSource.getShoppingListByIdSuspend(shoppingListByIdValue)
     }
 
     override suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): State<Long> {

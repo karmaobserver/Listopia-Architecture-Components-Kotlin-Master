@@ -27,7 +27,7 @@ class ProductEditFragment: BaseFragment() {
     private var binding by autoCleared<FragmentProductEditBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
-    private var mProductId: Long? = null
+    private var mProductId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val dataBinding = DataBindingUtil.inflate<FragmentProductEditBinding>(

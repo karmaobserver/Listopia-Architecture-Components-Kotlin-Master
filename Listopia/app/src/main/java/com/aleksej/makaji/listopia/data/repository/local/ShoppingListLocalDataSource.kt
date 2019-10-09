@@ -13,7 +13,7 @@ import com.aleksej.makaji.listopia.data.mapper.mapToShoppingList
 import com.aleksej.makaji.listopia.data.mapper.mapToShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
-import com.aleksej.makaji.listopia.data.room.ShoppingListDao
+import com.aleksej.makaji.listopia.data.room.dao.ShoppingListDao
 import com.aleksej.makaji.listopia.data.usecase.value.*
 import com.aleksej.makaji.listopia.error.RoomDeleteError
 import com.aleksej.makaji.listopia.error.RoomError
@@ -91,6 +91,10 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
         }
     }
 
+    override suspend fun saveShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override suspend fun deleteAllShoppingLists(): State<Int> {
         return try {
             SuccessState(mShoppingListDao.deleteAllShoppingLists())
@@ -115,6 +119,23 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
         }
     }
 
+    override suspend fun updateSyncShoppingList(shoppingListId: String): State<Int> {
+        return try {
+            SuccessState(mShoppingListDao.updateSyncShoppingList(shoppingListId))
+        }catch (e: Exception){
+            ErrorState(RoomDeleteError)
+        }
+    }
+
+
+    override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel> {
+        return try {
+            SuccessState(mShoppingListDao.getShoppingListByIdSuspend(shoppingListByIdValue.id).mapToShoppingListModel())
+        }catch (e: Exception){
+            ErrorState(RoomError)
+        }
+    }
+
     override suspend fun fetchShoppingLists(): State<Unit> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -122,5 +143,4 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
     override suspend fun fetchShoppingListsByUserId(fetchShoppingListsValue: FetchShoppingListsValue): State<List<ShoppingListModel>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
 }

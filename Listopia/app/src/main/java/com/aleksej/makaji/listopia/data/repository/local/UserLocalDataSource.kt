@@ -11,7 +11,7 @@ import com.aleksej.makaji.listopia.data.mapper.mapToUser
 import com.aleksej.makaji.listopia.data.mapper.mapToUserModel
 import com.aleksej.makaji.listopia.data.repository.UserDataSource
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
-import com.aleksej.makaji.listopia.data.room.UserDao
+import com.aleksej.makaji.listopia.data.room.dao.UserDao
 import com.aleksej.makaji.listopia.data.usecase.value.SaveUserValue
 import com.aleksej.makaji.listopia.error.RoomError
 import kotlinx.coroutines.CoroutineScope

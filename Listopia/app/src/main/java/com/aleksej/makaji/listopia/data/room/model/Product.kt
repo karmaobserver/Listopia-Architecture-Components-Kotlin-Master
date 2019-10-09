@@ -1,8 +1,7 @@
 package com.aleksej.makaji.listopia.data.room.model
 
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
+import java.util.*
 
 /**
  * Created by Aleksej Makaji on 1/20/19.
@@ -10,13 +9,17 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "product",
         foreignKeys = [ForeignKey(entity = ShoppingList::class, parentColumns = arrayOf("id"), childColumns = arrayOf("shoppingListId"))])
 data class Product(
-        @PrimaryKey(autoGenerate = true)
-        val id: Long = 0,
+        @PrimaryKey
+        @ColumnInfo(index = true)
+        val id: String,
         val name: String,
         val quantity: Double,
         val unit: String,
         val price: Double,
         val notes: String,
         val isChecked: Boolean,
-        val shoppingListId: Long
+        @ColumnInfo(index = true)
+        val shoppingListId: String,
+        val isSynced: Boolean,
+        val timestamp: Date
 )

@@ -1,4 +1,4 @@
-package com.aleksej.makaji.listopia.data.room
+package com.aleksej.makaji.listopia.data.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

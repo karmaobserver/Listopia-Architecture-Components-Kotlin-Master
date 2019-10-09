@@ -8,5 +8,5 @@ import com.aleksej.makaji.listopia.data.repository.model.ProductModel
  */
 sealed class ProductAdapterEvents {
     data class ProductClick(val productModel: ProductModel) : ProductAdapterEvents()
-    data class OptionsClick(val view: View, val productId: Long) : ProductAdapterEvents()
+    data class OptionsClick(val view: View, val productId: String) : ProductAdapterEvents()
 }

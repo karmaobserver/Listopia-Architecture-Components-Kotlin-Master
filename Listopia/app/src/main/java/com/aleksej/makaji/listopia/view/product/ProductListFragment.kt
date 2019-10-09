@@ -35,7 +35,7 @@ class ProductListFragment: BaseFragment() {
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var mProductAdapter by autoCleared<ProductAdapter>()
 
-    private var mShoppingListId: Long? = null
+    private var mShoppingListId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val dataBinding = DataBindingUtil.inflate<FragmentProductListBinding>(
@@ -59,8 +59,8 @@ class ProductListFragment: BaseFragment() {
         initObservers()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_fragment_product_list, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_fragment_product_list, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -140,7 +140,7 @@ class ProductListFragment: BaseFragment() {
         })
     }
 
-    private fun setupOptionsPopupMenu(view: View, productId: Long) {
+    private fun setupOptionsPopupMenu(view: View, productId: String) {
         context?.let {
             val popup = PopupMenu(it, view)
             popup.inflate(R.menu.popup_menu_product_list)

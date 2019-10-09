@@ -1,5 +1,6 @@
 package com.aleksej.makaji.listopia.data.api
 
+import com.aleksej.makaji.listopia.data.api.dto.request.SaveShoppingListRequest
 import com.aleksej.makaji.listopia.data.api.dto.request.SaveUserRequest
 import com.aleksej.makaji.listopia.data.api.dto.response.EmptyResponse
 import com.aleksej.makaji.listopia.data.api.dto.response.ShoppingListsResponse
@@ -16,6 +17,9 @@ interface ListopiaApi {
 
     @POST("user/save")
     suspend fun saveUser(@Body saveUserRequest: SaveUserRequest): Response<EmptyResponse>
+
+    @POST("shopping-list/add")
+    suspend fun saveShoppingList(@Body saveShoppingListRequest: SaveShoppingListRequest): Response<EmptyResponse>
 
     @GET("shopping-list/{userId}")
     suspend fun fetchShoppingListsByUserId(@Path("userId") userId: String): Response<ShoppingListsResponse>

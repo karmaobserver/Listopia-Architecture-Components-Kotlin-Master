@@ -8,41 +8,38 @@ buildscript {
         targetSdkVersion = 28
 
         // App dependencies
-        gradleVersion = '3.3.0'
-        kotlinVersion = '1.3.20'
+        gradleVersion = '3.5.0'
+        kotlinVersion = '1.3.50'
+        //Only dagger left to be updated
         daggerVersion = '2.16'
         supportLibraryVersion = '1.0.0'
-        constraintLayoutVersion = '2.0.0-alpha3'
-        coroutinesVersion = '1.0.0'
-        retrofitVersion = '2.4.0'
+        constraintLayoutVersion = '2.0.0-alpha4'
+        coroutinesVersion = '1.3.2'
+        retrofitVersion = '2.6.2'
         retrofitSnaphotVersion = '2.5.1-SNAPSHOT'
-        okHttpVersion = '3.11.0'
-        stethoVersion = '1.5.0'
+        okHttpVersion = '4.2.1'
+        stethoVersion = '1.5.1'
         timberVersion = '4.7.1'
-        materialVersion = '1.1.0-alpha02'
-        glideVersion = '4.8.0'
+        materialVersion = '1.1.0-alpha10'
+        glideVersion = '4.10.0'
         circularimageviewVersion = '3.2.0'
-        firebaseUi = '4.3.2'
-        firestoreVersion = '18.2.0'
+        firebaseUi = '6.0.2'
 
-        lifecycleVersion = '2.1.0-alpha04'
-        navigationVersion = '1.0.0'
-        workManagerVersion = '1.0.1'
-        pagingVersion = '2.1.0-rc01'
-        roomVersion = '2.1.0-alpha06'
+        lifecycleVersion = '2.2.0-alpha05'
+        navigationVersion = '2.1.0'
+        workManagerVersion = '2.2.0'
+        pagingVersion = '2.1.0'
+        roomVersion = '2.2.0-rc01'
 
         ktxVersion = '1.0.1'
         runnerVersion = '1.0.1'
         junitVersion = '4.12'
 
-        // Will be in usage, updated versions
-        googleServiceVersion = '4.2.0'
+        googleServiceVersion = '4.3.2'
+        firebaseCoreVersion = '17.2.0'
+        firebaseMessagingVersion = '20.0.0'
+        firebaseDatebaseVersion = '19.1.0'
 
-        // Check If I need to update
-        firebaseCoreVersion = '16.0.4'
-        firebaseMessagingVersion = '17.3.4'
-        firebaseDatebaseVersion = '16.0.4'
-        circularimageviewVersion = '3.2.0'
         gsonVersion = '2.8.2'
     }
     repositories {
@@ -54,7 +51,7 @@ buildscript {
         classpath "com.android.tools.build:gradle:$gradleVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServiceVersion"
-        classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
     }
 }
 

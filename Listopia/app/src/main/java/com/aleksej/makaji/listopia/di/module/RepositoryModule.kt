@@ -13,9 +13,10 @@ import com.aleksej.makaji.listopia.data.repository.local.UserLocalDataSource
 import com.aleksej.makaji.listopia.data.repository.remote.ProductRemoteDataSource
 import com.aleksej.makaji.listopia.data.repository.remote.ShoppingListRemoteDataSource
 import com.aleksej.makaji.listopia.data.repository.remote.UserRemoteDataSource
-import com.aleksej.makaji.listopia.data.room.ProductDao
-import com.aleksej.makaji.listopia.data.room.ShoppingListDao
-import com.aleksej.makaji.listopia.data.room.UserDao
+import com.aleksej.makaji.listopia.data.room.dao.ProductDao
+import com.aleksej.makaji.listopia.data.room.dao.ShoppingListDao
+import com.aleksej.makaji.listopia.data.room.dao.ShoppingListUserJoinDao
+import com.aleksej.makaji.listopia.data.room.dao.UserDao
 import com.aleksej.makaji.listopia.di.annotation.Listopia
 import com.aleksej.makaji.listopia.di.annotation.Local
 import com.aleksej.makaji.listopia.di.annotation.Remote
@@ -96,5 +97,11 @@ class RepositoryModule {
     @Provides
     fun provideUserDao(listopiaDatabase: ListopiaDatabase): UserDao {
         return listopiaDatabase.userDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideShoppingListUserJoinDao(listopiaDatabase: ListopiaDatabase): ShoppingListUserJoinDao {
+        return listopiaDatabase.shoppingListUserJoinDao()
     }
 }

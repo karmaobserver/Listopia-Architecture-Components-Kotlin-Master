@@ -23,10 +23,10 @@ class ListopiaApiInterceptor  @Inject constructor(private val mSharedPreferenceM
 
         val response = chain.proceed(request)
 
-        val responseBodyString = response.body()?.string()
+        val responseBodyString = response.body?.string()
 
         return response.newBuilder().body(
-                ResponseBody.create(response.body()?.contentType(),
+                ResponseBody.create(response.body?.contentType(),
                         responseBodyString.orEmpty())).build()
     }
 }

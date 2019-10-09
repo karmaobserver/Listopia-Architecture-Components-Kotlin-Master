@@ -29,7 +29,7 @@
         android:label="@string/title_products" >
         <argument
             android:name="shoppingListId"
-            app:argType="long" />
+            app:argType="string" />
         <action
             android:id="@+id/action_fragment_product_list_to_fragment_product_add"
             app:destination="@id/fragment_product_add" />
@@ -46,7 +46,7 @@
         android:label="@string/title_product_add" >
         <argument
             android:name="shoppingListId"
-            app:argType="long" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/fragment_shopping_list_edit"
@@ -54,7 +54,7 @@
         android:label="@string/title_shopping_list_edit" >
         <argument
             android:name="shoppingListId"
-            app:argType="long" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/fragment_product_edit"
@@ -62,6 +62,6 @@
         android:label="@string/title_product_edit">
         <argument
             android:name="productId"
-            app:argType="long" />
+            app:argType="string" />
     </fragment>
 </navigation>

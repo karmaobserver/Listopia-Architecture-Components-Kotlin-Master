@@ -12,7 +12,7 @@ import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.mapper.*
 import com.aleksej.makaji.listopia.data.repository.ProductDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
-import com.aleksej.makaji.listopia.data.room.ProductDao
+import com.aleksej.makaji.listopia.data.room.dao.ProductDao
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue

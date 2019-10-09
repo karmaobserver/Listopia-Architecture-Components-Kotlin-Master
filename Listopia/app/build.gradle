@@ -39,6 +39,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -94,8 +103,8 @@ dependencies {
 
     // Architecture Dependencies
     // Navigation
-    implementation "android.arch.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
-    implementation "android.arch.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
+    implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
 
     // LifeCycle
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleVersion"
@@ -108,10 +117,12 @@ dependencies {
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
 
     // Paging
-    implementation "android.arch.paging:runtime:$rootProject.pagingVersion"
+    implementation "androidx.paging:paging-runtime:$rootProject.pagingVersion"
 
     //WorkManager
-    implementation "android.arch.work:work-runtime-ktx:$rootProject.workManagerVersion"
+    implementation "androidx.work:work-runtime-ktx:$rootProject.workManagerVersion"
+
+    implementation 'androidx.fragment:fragment-ktx:1.2.0-alpha04'
 
 
     // Testing dependencies (not adding for rest components, since we will not write unit and integration tests)

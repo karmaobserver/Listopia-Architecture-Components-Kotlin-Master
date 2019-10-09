@@ -8,4 +8,4 @@ data class SaveProductValue(val name: String,
                             val unit: String,
                             val price: Double,
                             val notes: String,
-                            val shoppingListId: Long)
+                            val shoppingListId: String)
