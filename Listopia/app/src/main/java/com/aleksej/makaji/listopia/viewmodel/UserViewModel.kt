@@ -14,14 +14,21 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(private val mSaveUserUseCase: SaveUserUseCase,
                                         private val mUserRepository: UserRepository) : ViewModel() {
 
-    private val getUserTrigger = MutableLiveData<Unit>()
-    val getUserLiveData = Transformations.switchMap(getUserTrigger) { mUserRepository.getUser() }
+    private val getUserTrigger = MutableLiveData<String>()
+    val getUserLiveData = Transformations.switchMap(getUserTrigger) { mUserRepository.getUserById(it) }
 
-    private val saveUserTrigger = MutableLiveData<StateHandler<Unit>>()
-    val saveUserLiveData : LiveData<StateHandler<Unit>> = saveUserTrigger
+    private val saveUserTrigger = MutableLiveData<StateHandler<Long>>()
+    val saveUserLiveData : LiveData<StateHandler<Long>> = saveUserTrigger
 
-    fun getUser() {
-        getUserTrigger.postValue(Unit)
+    private val addFriendEventTrigger = MutableLiveData<StateHandler<Unit>>()
+    val addFriendEvent : LiveData<StateHandler<Unit>> = addFriendEventTrigger
+
+    fun addFriendEvent() {
+        addFriendEventTrigger.postValue(StateHandler.success(Unit))
+    }
+
+    fun getUserById(userId: String) {
+        getUserTrigger.postValue(userId)
     }
 
     fun saveUser(saveUserValue: SaveUserValue) {

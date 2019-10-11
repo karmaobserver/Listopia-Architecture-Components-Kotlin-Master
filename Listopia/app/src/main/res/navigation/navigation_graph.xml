@@ -39,6 +39,9 @@
         <argument
             android:name="shoppingListName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_fragment_product_list_to_friendListFragment"
+            app:destination="@id/fragment_friend_list" />
     </fragment>
     <fragment
         android:id="@+id/fragment_product_add"
@@ -64,4 +67,19 @@
             android:name="productId"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/fragment_friend_list"
+        android:name="com.aleksej.makaji.listopia.view.friend.FriendListFragment"
+        android:label="@string/title_friend_share">
+        <argument
+            android:name="shoppingListId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_friendListFragment_to_friendAddFragment"
+            app:destination="@id/fragment_friend_add" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_friend_add"
+        android:name="com.aleksej.makaji.listopia.view.friend.FriendAddFragment"
+        android:label="@string/title_friend_add" />
 </navigation>

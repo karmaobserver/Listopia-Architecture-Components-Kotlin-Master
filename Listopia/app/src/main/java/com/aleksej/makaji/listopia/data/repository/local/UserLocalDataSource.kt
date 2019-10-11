@@ -31,7 +31,7 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao) : U
 
     private val userLiveData = MutableLiveData<StateHandler<UserModel>>()
 
-    override suspend fun saveUser(saveUserValue: SaveUserValue): State<Unit> {
+    override suspend fun saveUser(saveUserValue: SaveUserValue): State<Long> {
         return try {
             SuccessState(mUserDao.saveUser(saveUserValue.mapToUser()))
         }catch (e: Exception){
@@ -39,10 +39,10 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao) : U
         }
     }
 
-    override fun getUser(): LiveData<StateHandler<UserModel>> {
+    override fun getUserById(userId: String): LiveData<StateHandler<UserModel>> {
         userLiveData.postValue(StateHandler.loading())
         try {
-            return Transformations.switchMap(mUserDao.getUser()) {
+            return Transformations.switchMap(mUserDao.getUserWithFriends(userId)) {
                 it?.run {
                     userLiveData.postValue(StateHandler.success(it.mapToUserModel()))
                 }
@@ -52,5 +52,17 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao) : U
             userLiveData.postValue(StateHandler.error(RoomError))
         }
         return userLiveData
+    }
+
+    override suspend fun saveUserRemote(userModel: UserModel): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun getUserByIdSuspended(userId: String): State<UserModel> {
+        return try {
+            SuccessState(mUserDao.getUserWithFriendsSuspended(userId).mapToUserModel())
+        }catch (e: Exception){
+            ErrorState(RoomError)
+        }
     }
 }

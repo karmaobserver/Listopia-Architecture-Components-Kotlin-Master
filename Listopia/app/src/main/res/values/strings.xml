@@ -18,10 +18,13 @@
     <string name="title_products">Products</string>
     <string name="title_product_add">Add Product</string>
     <string name="title_product_edit">Edit Product</string>
+    <string name="title_friend_share">List share</string>
+    <string name="title_friend_add">Add friend</string>
 
     <!--Sub menu_options-->
     <string name="submenu_shopping_list_options_delete_all">Delete all shopping lists</string>
     <string name="submenu_product_options_delete_all">Delete all products</string>
+    <string name="submenu_friend_options_delete_all">Delete all friends</string>
 
     <!--Popup menu options-->
     <string name="popup_menu_rename_shopping_list">Rename</string>
@@ -37,7 +40,9 @@
     <!--Labels-->
     <string name="label_sign_in_and_sync">To sync and share your lists</string>
     <string name="label_list_name">List name</string>
+    <string name="label_friend_email">Friend email address</string>
     <string name="label_options">Options</string>
+    <string name="label_friends">Friends</string>
     <string name="label_product_name">Product name</string>
     <string name="label_quantity">Quantity</string>
     <string name="label_price">Price</string>
@@ -53,6 +58,8 @@
     <string name="success_product_add">Successfully added product.</string>
     <string name="success_product_edit">Successfully edited product.</string>
     <string name="success_product_delete">Successfully deleted product.</string>
+    <string name="success_friend_add">Successfully added friend.</string>
+    <string name="success_friend_delete">Successfully deleted friend.</string>
 
     <!--Errors-->
     <string name="error_room">Error with Room operation.</string>

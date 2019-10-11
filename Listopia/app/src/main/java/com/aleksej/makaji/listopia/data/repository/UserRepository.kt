@@ -1,7 +1,6 @@
 package com.aleksej.makaji.listopia.data.repository
 
 import androidx.lifecycle.LiveData
-import com.aleksej.makaji.listopia.data.enums.SourceType
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
@@ -17,15 +16,19 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(@Remote private val mRemoteUserDataSource: UserDataSource,
                                          @Local private val mLocalUserDataSource: UserDataSource): UserDataSource {
-    override suspend fun saveUser(saveUserValue: SaveUserValue): State<Unit> {
-        return if (saveUserValue.sourceType == SourceType.LOCAL_ONLY) {
-            mLocalUserDataSource.saveUser(saveUserValue)
-        } else {
-            mRemoteUserDataSource.saveUser(saveUserValue)
-        }
+    override suspend fun getUserByIdSuspended(userId: String): State<UserModel> {
+        return mLocalUserDataSource.getUserByIdSuspended(userId)
     }
 
-    override fun getUser(): LiveData<StateHandler<UserModel>> {
-        return mLocalUserDataSource.getUser()
+    override suspend fun saveUserRemote(userModel: UserModel): State<Unit> {
+        return mRemoteUserDataSource.saveUserRemote(userModel)
+    }
+
+    override suspend fun saveUser(saveUserValue: SaveUserValue): State<Long> {
+        return mLocalUserDataSource.saveUser(saveUserValue)
+    }
+
+    override fun getUserById(userId: String): LiveData<StateHandler<UserModel>> {
+        return mLocalUserDataSource.getUserById(userId)
     }
 }

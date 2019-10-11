@@ -19,7 +19,7 @@ class ShoppingListRepository @Inject constructor(@Remote private val mRemoteShop
                                                  @Local private val mLocalShoppingListDataSource: ShoppingListDataSource): ShoppingListDataSource {
 
     override suspend fun saveShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit> {
-        return mLocalShoppingListDataSource.saveShoppingListRemote(shoppingListModel)
+        return mRemoteShoppingListDataSource.saveShoppingListRemote(shoppingListModel)
     }
 
     override suspend fun updateSyncShoppingList(shoppingListId: String): State<Int> {

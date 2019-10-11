@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/friends"
-        android:icon="@drawable/ic_friends"
-        app:showAsAction="ifRoom"
-        android:title="@string/label_friends">
-    </item>
-    <item
         android:id="@+id/options"
         android:icon="@drawable/ic_options"
         app:showAsAction="always"
@@ -15,7 +9,7 @@
         <menu>
             <item
                 android:id="@+id/submenu_options_delete_all"
-                android:title="@string/submenu_product_options_delete_all">
+                android:title="@string/submenu_friend_options_delete_all">
             </item>
         </menu>
     </item>

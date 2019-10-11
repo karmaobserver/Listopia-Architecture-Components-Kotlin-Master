@@ -7,4 +7,3 @@ import com.aleksej.makaji.listopia.util.mapTo
 /**
  * Created by Aleksej Makaji on 5/4/19.
  */
-fun SaveUserValue.mapToSaveUserRequest(): SaveUserRequest = mapTo<SaveUserRequest>().copy()

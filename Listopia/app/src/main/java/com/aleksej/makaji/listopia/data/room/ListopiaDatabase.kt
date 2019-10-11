@@ -7,15 +7,12 @@ import com.aleksej.makaji.listopia.data.room.dao.ShoppingListUserJoinDao
 import com.aleksej.makaji.listopia.data.room.dao.ProductDao
 import com.aleksej.makaji.listopia.data.room.dao.ShoppingListDao
 import com.aleksej.makaji.listopia.data.room.dao.UserDao
-import com.aleksej.makaji.listopia.data.room.model.ShoppingListUserJoin
-import com.aleksej.makaji.listopia.data.room.model.Product
-import com.aleksej.makaji.listopia.data.room.model.ShoppingList
-import com.aleksej.makaji.listopia.data.room.model.User
+import com.aleksej.makaji.listopia.data.room.model.*
 
 /**
  * Created by Aleksej Makaji on 12/30/18.
  */
-@Database(entities = [ShoppingList::class, Product::class, User::class, ShoppingListUserJoin::class], version = 13, exportSchema = false)
+@Database(entities = [ShoppingList::class, Product::class, User::class, UserUserXRef::class], version = 14, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ListopiaDatabase : RoomDatabase() {
     abstract fun shoppingListDao() : ShoppingListDao

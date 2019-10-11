@@ -1,11 +1,9 @@
 package com.aleksej.makaji.listopia.data.room.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.aleksej.makaji.listopia.data.room.model.User
+import com.aleksej.makaji.listopia.data.room.model.UserWithFriends
 
 /**
  * Created by Aleksej Makaji on 5/4/19.
@@ -13,8 +11,14 @@ import com.aleksej.makaji.listopia.data.room.model.User
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveUser(user: User)
+    suspend fun saveUser(user: User): Long
 
     @Query("SELECT * FROM user")
     fun getUser(): LiveData<User?>
+
+    @Transaction @Query("SELECT * FROM user WHERE id = :userId")
+    fun getUserWithFriends(userId: String): LiveData<UserWithFriends?>
+
+    @Transaction @Query("SELECT * FROM user WHERE id = :userId")
+    suspend fun getUserWithFriendsSuspended(userId: String): UserWithFriends
 }

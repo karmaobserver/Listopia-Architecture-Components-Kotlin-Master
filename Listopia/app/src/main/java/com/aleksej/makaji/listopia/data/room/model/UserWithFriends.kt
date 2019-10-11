@@ -7,20 +7,18 @@ import androidx.room.Relation
 /**
  * Created by Aleksej Makaji on 2019-10-08.
  */
-/*
 data class UserWithFriends(
         @Embedded
         val user: User,
 
         @Relation(
-                parentColumn = "userId",
+                parentColumn = "id",
                 entity = User::class,
-                entityColumn = "friendsId",
-                associateBy = @Junction(
+                entityColumn = "id",
+                associateBy = Junction(
                         value = UserUserXRef::class,
                         parentColumn = "userId",
-                        entityColumn = "friendsId"
-                )
+                        entityColumn = "friendId")
         )
-        val friends: User
-)*/
+        val friends: List<User>
+)

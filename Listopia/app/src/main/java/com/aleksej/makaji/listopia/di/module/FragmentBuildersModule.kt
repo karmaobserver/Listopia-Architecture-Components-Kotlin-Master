@@ -1,5 +1,7 @@
 package com.aleksej.makaji.listopia.di.module
 
+import com.aleksej.makaji.listopia.view.friend.FriendAddFragment
+import com.aleksej.makaji.listopia.view.friend.FriendListFragment
 import com.aleksej.makaji.listopia.view.product.ProductAddFragment
 import com.aleksej.makaji.listopia.view.product.ProductEditFragment
 import com.aleksej.makaji.listopia.view.product.ProductListFragment
@@ -32,4 +34,10 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeShoppingListEditFragment(): ShoppingListEditFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeFriendListFragment(): FriendListFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeFriendAddFragment(): FriendAddFragment
 }

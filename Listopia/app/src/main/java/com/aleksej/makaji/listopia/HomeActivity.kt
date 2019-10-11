@@ -25,6 +25,7 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_home.*
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -206,7 +207,7 @@ class HomeActivity : BaseActivity() {
         if (mSharedPreferenceManager.userId != "") {
             headerBinding.groupSignedIn.putVisibleOrGone(true)
             headerBinding.groupSignedOut.putVisibleOrGone(false)
-            mUserViewModel.getUser()
+            mUserViewModel.getUserById(mSharedPreferenceManager.userId)
         } else {
             headerBinding.groupSignedIn.putVisibleOrGone(false)
             headerBinding.groupSignedOut.putVisibleOrGone(true)
@@ -220,8 +221,7 @@ class HomeActivity : BaseActivity() {
                 mSharedPreferenceManager.token = it
             }
         }
-        mUserViewModel.saveUser(SaveUserValue(user.uid, user.displayName, user.email, user.photoUrl.toString(), SourceType.LOCAL_ONLY))
-        mUserViewModel.saveUser(SaveUserValue(user.uid, user.displayName, user.email, user.photoUrl.toString(), SourceType.REMOTE_ONLY))
+        mUserViewModel.saveUser(SaveUserValue(user.uid, user.displayName, user.email, user.photoUrl.toString()))
     }
 
     private fun signOut() {

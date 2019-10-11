@@ -66,7 +66,6 @@ class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListB
 
     fun addShoppingListEvent() {
         addShoppingListEventTrigger.postValue(StateHandler.success(Unit))
-        test()
     }
 
     fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue) {
