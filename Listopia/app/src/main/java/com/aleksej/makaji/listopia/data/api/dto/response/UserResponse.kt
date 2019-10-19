@@ -9,8 +9,9 @@ import com.aleksej.makaji.listopia.data.repository.model.UserModel
  */
 data class UserResponse(val id: Long,
                         var name: String,
-                        val ownerId: String,
-                        val friends: List<UserResponse>?) : IDtoModelMapper<UserResponse, UserModel> {
+                        val email: String,
+                        val avatar: String,
+                        val friends: List<UserResponse>? = null) : IDtoModelMapper<UserResponse, UserModel> {
     override fun map(value: UserResponse): UserModel {
         return value.mapToUserModel()
     }

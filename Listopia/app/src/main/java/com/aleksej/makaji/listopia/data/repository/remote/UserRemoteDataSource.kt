@@ -20,12 +20,17 @@ import javax.inject.Singleton
  */
 @Singleton
 class UserRemoteDataSource @Inject constructor(private val mListopiaApi: ListopiaApi, private val mRetrofit: Retrofit) : UserDataSource {
+
     override suspend fun saveUserRemote(userModel: UserModel): State<Unit> {
         return try {
             CoroutineAdapter(mListopiaApi.saveUser(userModel.mapToSaveUserRequest()), mRetrofit)()
         } catch (e: Exception) {
             ErrorState(ExceptionError(e))
         }
+    }
+
+    override suspend fun saveUsers(users: List<UserModel>): State<List<Long>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override suspend fun getUserByIdSuspended(userId: String): State<UserModel> {

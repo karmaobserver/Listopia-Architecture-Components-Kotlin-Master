@@ -9,4 +9,4 @@ data class SaveUserRequest(val id: String = "",
                            val name: String? = null,
                            val email: String? = null,
                            val avatar: String? = null,
-                           val friends: List<UserModel>? = null)
+                           val friends: List<UserRequest>? = null)

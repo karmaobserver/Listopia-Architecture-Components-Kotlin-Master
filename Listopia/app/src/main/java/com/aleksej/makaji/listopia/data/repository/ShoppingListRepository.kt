@@ -17,6 +17,21 @@ import javax.inject.Singleton
 @Singleton
 class ShoppingListRepository @Inject constructor(@Remote private val mRemoteShoppingListDataSource: ShoppingListDataSource,
                                                  @Local private val mLocalShoppingListDataSource: ShoppingListDataSource): ShoppingListDataSource {
+    override suspend fun updateShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit> {
+        return mRemoteShoppingListDataSource.updateShoppingListRemote(shoppingListModel)
+    }
+
+    override suspend fun saveShoppingListsWithEditors(saveShoppingListEditorValue: List<SaveShoppingListEditorValue>): State<List<Long>> {
+        return mLocalShoppingListDataSource.saveShoppingListsWithEditors(saveShoppingListEditorValue)
+    }
+
+    override suspend fun saveShoppingLists(shoppingLists: List<ShoppingListModel>): State<List<Long>> {
+        return mLocalShoppingListDataSource.saveShoppingLists(shoppingLists)
+    }
+
+    override suspend fun getShoppingListsSuspend(): State<List<ShoppingListModel>> {
+        return mLocalShoppingListDataSource.getShoppingListsSuspend()
+    }
 
     override suspend fun saveShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit> {
         return mRemoteShoppingListDataSource.saveShoppingListRemote(shoppingListModel)
@@ -46,8 +61,8 @@ class ShoppingListRepository @Inject constructor(@Remote private val mRemoteShop
         return mLocalShoppingListDataSource.deleteAllShoppingLists()
     }
 
-    override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int> {
-        return mLocalShoppingListDataSource.updateShoppingList(shoppingListValue)
+    override suspend fun updateShoppingList(shoppingListModel: ShoppingListModel): State<Int> {
+        return mLocalShoppingListDataSource.updateShoppingList(shoppingListModel)
     }
 
     override suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {

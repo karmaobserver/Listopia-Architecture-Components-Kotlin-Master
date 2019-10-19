@@ -9,7 +9,7 @@
         "type": "node",
         "request": "attach",
         "name": "Attach to Remote",
-        "address": "192.168.0.11",
+        "address": "192.168.0.17",
         "port": 5000,
         "localRoot": "${workspaceFolder}",
         "remoteRoot": "Absolute path to the remote directory containing the program"

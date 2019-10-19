@@ -11,4 +11,4 @@ import com.aleksej.makaji.listopia.util.mapTo
  */
 fun UserResponse.mapToUserModel(): UserModel = mapTo<UserModel>().copy()
 
-fun ShoppingListResponse.mapToShoppingListModel(): ShoppingListModel = mapTo<ShoppingListModel>().copy()
+fun ShoppingListResponse.mapToShoppingListModel(): ShoppingListModel = mapTo<ShoppingListModel>().copy(isSynced = false)

@@ -13,16 +13,19 @@ import com.aleksej.makaji.listopia.adapter.ShoppingListAdapter
 import com.aleksej.makaji.listopia.adapter.ShoppingListAdapterEvents
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
-import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.databinding.FragmentShoppingListBinding
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
+import javax.inject.Inject
 
 /**
  * Created by Aleksej Makaji on 12/30/18.
  */
 class ShoppingListFragment: BaseFragment() {
+
+    @Inject
+    lateinit var mSharedPreferenceManager: SharedPreferenceManager
 
     private lateinit var mShoppingListViewModel: ShoppingListViewModel
 
@@ -70,8 +73,11 @@ class ShoppingListFragment: BaseFragment() {
 
     private fun initData() {
         binding.shoppingListViewModel = mShoppingListViewModel
+        if (mSharedPreferenceManager.userId != "") {
+            mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
+        }
         mShoppingListViewModel.getShoppingLists()
-        test()
+        //test()
     }
 
     private fun test() {

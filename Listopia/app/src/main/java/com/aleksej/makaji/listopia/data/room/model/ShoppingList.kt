@@ -15,6 +15,7 @@ data class ShoppingList(
         val id: String,
         val name: String,
         val ownerId: String,
+        val isDeleted: Boolean,
         val isSynced: Boolean,
         val timestamp: Date
 )

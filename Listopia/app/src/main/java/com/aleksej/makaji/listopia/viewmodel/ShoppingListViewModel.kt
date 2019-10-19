@@ -10,6 +10,7 @@ import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.usecase.*
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
+import com.aleksej.makaji.listopia.data.usecase.value.FetchShoppingListsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import kotlinx.coroutines.GlobalScope
@@ -22,12 +23,13 @@ import javax.inject.Inject
 class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListByIdUseCase: DeleteShoppingListByIdUseCase,
                                                 private val mSaveShoppingListUseCase: SaveShoppingListUseCase,
                                                 private val mUpdateShoppingListUseCase: UpdateShoppingListUseCase,
+                                                private val mFetchAndSaveShoppingListUseCase: FetchAndSaveShoppingListUseCase,
                                                 private val mShoppingListRepository: ShoppingListRepository) : ViewModel() {
 
     var reloadEditData = true
 
-    private val getShoppingListsTrigger = MutableLiveData<Unit>()
-    val getShoppingListsLiveData = Transformations.switchMap(getShoppingListsTrigger) { mShoppingListRepository.getShoppingLists() }
+    private val getShoppingListsByUserIdTrigger = MutableLiveData<Unit>()
+    val getShoppingListsLiveData = Transformations.switchMap(getShoppingListsByUserIdTrigger) { mShoppingListRepository.getShoppingLists() }
 
     private val getShoppingListByIdTrigger = MutableLiveData<ShoppingListByIdValue>()
     val getShoppingListByIdLiveData = Transformations.switchMap(getShoppingListByIdTrigger) { mShoppingListRepository.getShoppingListById(it) }
@@ -44,13 +46,22 @@ class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListB
     private val addShoppingListEventTrigger = MutableLiveData<StateHandler<Unit>>()
     val addShoppingListEvent : LiveData<StateHandler<Unit>> = addShoppingListEventTrigger
 
+    private val fetchShoppingListsTrigger = MutableLiveData<StateHandler<Unit>>()
+    val fetchShoppingListsLiveData : LiveData<StateHandler<Unit>> = fetchShoppingListsTrigger
+
     fun getShoppingLists() {
-        getShoppingListsTrigger.postValue(Unit)
+        getShoppingListsByUserIdTrigger.postValue(Unit)
+    }
+
+    fun fetchShoppingListsByUserId(userId: String) {
+        viewModelScope.launch {
+            fetchShoppingListsTrigger.value = StateHandler(mFetchAndSaveShoppingListUseCase.invoke(FetchShoppingListsValue(userId)))
+        }
     }
 
     fun updateShoppingList(shoppingListModel: ShoppingListModel) {
         viewModelScope.launch {
-            updateShoppingListTrigger.value = StateHandler(mUpdateShoppingListUseCase.invoke(shoppingListModel.mapToShoppingListValue()))
+            updateShoppingListTrigger.value = StateHandler(mUpdateShoppingListUseCase.invoke(shoppingListModel))
         }
     }
 

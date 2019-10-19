@@ -116,12 +116,20 @@ app.post('/user/save', (req, res) => {
 });
 
 app.post('/shopping-list/add', (req, res) => {
-  console.log(req.body);
-  db.collection('shopping_lists').doc(req.body.id).set(req.body).then(ref => {
-    console.log('Added shoppingList document with ID: ', ref.id);
-    res.status(201).end();
+  var shoppingListRef = db.collection('shopping_lists').doc(req.body.id)
+  shoppingListRef.set(req.body).then(function() {
+    res.status(201).json({});
   }).catch(error => {
-    res.status(500).send(parseError("Failed to add shopping list into Firestore"));
+    res.status(500).send(parseError("Failed to add shopping list into Firestore with ID: " + req.body.id));
+  });
+});
+
+app.put('/shopping-list/update', (req, res) => {
+  var shoppingListRef = db.collection('shopping_lists').doc(req.body.id)
+  shoppingListRef.update(req.body).then(function() {
+    res.status(201).json({});
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to update shopping list into Firestore with ID: " + req.body.id));
   });
 });
 
@@ -131,16 +139,17 @@ app.get('/shopping-list/:userId', (req, res) => {
   shoppingListsRef.where('ownerId', '==', req.params.userId).get().then(snapshot => {
     if (snapshot.empty) {
       console.log("No matching documents for shoppings lists");
-      res.status(200).end();
+      res.status(204).json({});
       return
     }
     var result = [];
     snapshot.forEach(doc => {
+      console.log("ShoppingListModel" + doc.data());
       result.push(doc.data())
     })
-    res.status(200).send(["sada", "www"]);
+    res.status(200).send(result);
   }).catch(error => {
-    res.status(500).send(parseError("Failed to add shopping list into Firestore"));
+    res.status(500).send(parseError("Failed to get shopping lists Firestore"));
   });
 });
 

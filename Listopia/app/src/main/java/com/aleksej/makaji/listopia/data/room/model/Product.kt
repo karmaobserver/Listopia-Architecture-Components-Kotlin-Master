@@ -17,6 +17,7 @@ data class Product(
         val unit: String,
         val price: Double,
         val notes: String,
+        val isDeleted: Boolean,
         val isChecked: Boolean,
         @ColumnInfo(index = true)
         val shoppingListId: String,

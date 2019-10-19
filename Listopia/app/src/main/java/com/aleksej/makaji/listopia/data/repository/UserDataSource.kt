@@ -11,6 +11,7 @@ import com.aleksej.makaji.listopia.data.usecase.value.SaveUserValue
  */
 interface UserDataSource {
     suspend fun saveUser(saveUserValue: SaveUserValue): State<Long>
+    suspend fun saveUsers(users: List<UserModel>): State<List<Long>>
     suspend fun saveUserRemote(userModel: UserModel): State<Unit>
     fun getUserById(userId: String): LiveData<StateHandler<UserModel>>
     suspend fun getUserByIdSuspended(userId: String) : State<UserModel>

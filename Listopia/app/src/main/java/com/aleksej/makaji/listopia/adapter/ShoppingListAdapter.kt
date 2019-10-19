@@ -21,7 +21,9 @@ class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponen
             override fun areContentsTheSame(oldItem: ShoppingListModel, newItem: ShoppingListModel): Boolean {
                 return oldItem.name == newItem.name
                         && oldItem.ownerId == newItem.ownerId
+                        && oldItem.isSynced == newItem.isSynced
                         && oldItem.timestamp == newItem.timestamp
+                        && oldItem.editors == newItem.editors
             }
         }
 ) {

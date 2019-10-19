@@ -8,6 +8,7 @@ import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.mapper.mapToSaveShoppingListRequest
+import com.aleksej.makaji.listopia.data.mapper.mapToUpdateShoppingListRequest
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.usecase.value.*
@@ -21,6 +22,18 @@ import javax.inject.Singleton
  */
 @Singleton
 class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi: ListopiaApi, private val mRetrofit: Retrofit) : ShoppingListDataSource {
+
+    override suspend fun saveShoppingLists(shoppingLists: List<ShoppingListModel>): State<List<Long>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun saveShoppingListsWithEditors(saveShoppingListEditorValue: List<SaveShoppingListEditorValue>): State<List<Long>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun getShoppingListsSuspend(): State<List<ShoppingListModel>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -46,7 +59,7 @@ class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi:
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun updateShoppingList(shoppingListValue: ShoppingListValue): State<Int> {
+    override suspend fun updateShoppingList(shoppingListModel: ShoppingListModel): State<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -77,4 +90,13 @@ class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi:
             ErrorState(ExceptionError(e))
         }
     }
+
+    override suspend fun updateShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit> {
+        return try {
+            CoroutineAdapter(mListopiaApi.updateShoppingList(shoppingListModel.mapToUpdateShoppingListRequest()), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
+
 }

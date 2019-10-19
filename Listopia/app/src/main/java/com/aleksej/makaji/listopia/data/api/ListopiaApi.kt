@@ -2,6 +2,7 @@ package com.aleksej.makaji.listopia.data.api
 
 import com.aleksej.makaji.listopia.data.api.dto.request.SaveShoppingListRequest
 import com.aleksej.makaji.listopia.data.api.dto.request.SaveUserRequest
+import com.aleksej.makaji.listopia.data.api.dto.request.UpdateShoppingListRequest
 import com.aleksej.makaji.listopia.data.api.dto.response.EmptyResponse
 import com.aleksej.makaji.listopia.data.api.dto.response.ShoppingListsResponse
 import retrofit2.Response
@@ -20,6 +21,9 @@ interface ListopiaApi {
 
     @POST("shopping-list/add")
     suspend fun saveShoppingList(@Body saveShoppingListRequest: SaveShoppingListRequest): Response<EmptyResponse>
+
+    @PUT("shopping-list/update")
+    suspend fun updateShoppingList(@Body updateShoppingListRequest: UpdateShoppingListRequest) : Response<EmptyResponse>
 
     @GET("shopping-list/{userId}")
     suspend fun fetchShoppingListsByUserId(@Path("userId") userId: String): Response<ShoppingListsResponse>

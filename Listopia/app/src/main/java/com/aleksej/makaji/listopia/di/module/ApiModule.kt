@@ -65,9 +65,9 @@ class ApiModule {
         if (BuildConfig.DEBUG) {
             clientBuilder.addNetworkInterceptor(stethoInterceptor)
         }
-        clientBuilder.connectTimeout(30, TimeUnit.SECONDS)
-        clientBuilder.readTimeout(30, TimeUnit.SECONDS)
-        clientBuilder.writeTimeout(30, TimeUnit.SECONDS)
+        clientBuilder.connectTimeout(3000, TimeUnit.SECONDS)
+        clientBuilder.readTimeout(3000, TimeUnit.SECONDS)
+        clientBuilder.writeTimeout(3000, TimeUnit.SECONDS)
 
         return clientBuilder.build()
     }

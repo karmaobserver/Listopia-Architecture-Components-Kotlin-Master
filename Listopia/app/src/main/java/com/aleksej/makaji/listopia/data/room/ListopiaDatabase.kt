@@ -12,7 +12,7 @@ import com.aleksej.makaji.listopia.data.room.model.*
 /**
  * Created by Aleksej Makaji on 12/30/18.
  */
-@Database(entities = [ShoppingList::class, Product::class, User::class, UserUserXRef::class], version = 14, exportSchema = false)
+@Database(entities = [ShoppingList::class, Product::class, User::class, UserUserXRef::class, ShoppingListUserXRef::class], version = 20, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ListopiaDatabase : RoomDatabase() {
     abstract fun shoppingListDao() : ShoppingListDao

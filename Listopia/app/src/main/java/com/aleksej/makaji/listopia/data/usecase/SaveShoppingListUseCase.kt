@@ -7,6 +7,7 @@ import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
+import com.aleksej.makaji.listopia.error.UnknownError
 import com.aleksej.makaji.listopia.util.Validator
 import javax.inject.Inject
 
@@ -19,24 +20,32 @@ class SaveShoppingListUseCase @Inject constructor(private val mShoppingListRepos
         Validator.validateListName(value.name)?.run {
             return ErrorState(this)
         }
+        var returnValue : State<Long> = ErrorState(UnknownError)
         when (val saveShoppingListRoom = mShoppingListRepository.saveShoppingList(value)) {
             is SuccessState -> {
                 when (val getShoppingListRoom = mShoppingListRepository.getShoppingListByIdSuspend(ShoppingListByIdValue(value.id))) {
                     is SuccessState -> {
                         getShoppingListRoom.data?.let {
-                            when (mShoppingListRepository.saveShoppingListRemote(it)) {
+                            when (val saveShoppingListRemote = mShoppingListRepository.saveShoppingListRemote(it)) {
                                 is SuccessState -> {
                                     mShoppingListRepository.updateSyncShoppingList(it.id)
+                                    return saveShoppingListRoom
                                 }
-                                else -> { Log.d("SaveShoppingListUseCase", "error: saveShoppingListRemote") }
+                                else -> {
+                                    returnValue =  saveShoppingListRoom
+                                    Log.d("SaveShoppingListUseCase", "error: saveShoppingListRemote")
+                                }
                             }
                         }
                     }
-                    else -> { Log.d("SaveShoppingListUseCase", "error: getShoppingListRoom") }
+                    else -> {
+                        returnValue = saveShoppingListRoom
+                        Log.d("SaveShoppingListUseCase", "error: getShoppingListRoom")
+                    }
                 }
-                return saveShoppingListRoom
             }
-            else -> return saveShoppingListRoom
+            else -> returnValue = saveShoppingListRoom
         }
+        return returnValue
     }
 }

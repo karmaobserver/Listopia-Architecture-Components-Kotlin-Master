@@ -35,7 +35,17 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao) : U
         return try {
             SuccessState(mUserDao.saveUser(saveUserValue.mapToUser()))
         }catch (e: Exception){
-            ErrorState(RoomError)
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun saveUsers(users: List<UserModel>): State<List<Long>> {
+        return try {
+            SuccessState(mUserDao.saveUsers(users.map {
+                it.mapToUser()
+            }))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
         }
     }
 
@@ -49,7 +59,7 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao) : U
                 return@switchMap userLiveData
             }
         } catch (e: Exception) {
-            userLiveData.postValue(StateHandler.error(RoomError))
+            userLiveData.postValue(StateHandler.error(RoomError(e)))
         }
         return userLiveData
     }
@@ -62,7 +72,7 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao) : U
         return try {
             SuccessState(mUserDao.getUserWithFriendsSuspended(userId).mapToUserModel())
         }catch (e: Exception){
-            ErrorState(RoomError)
+            ErrorState(RoomError(e))
         }
     }
 }

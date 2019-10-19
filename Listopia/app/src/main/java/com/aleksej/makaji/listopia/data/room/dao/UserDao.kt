@@ -13,6 +13,9 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveUser(user: User): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveUsers(users: List<User>): List<Long>
+
     @Query("SELECT * FROM user")
     fun getUser(): LiveData<User?>
 

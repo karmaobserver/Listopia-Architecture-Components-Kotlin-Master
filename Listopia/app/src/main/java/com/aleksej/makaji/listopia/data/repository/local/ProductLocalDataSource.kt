@@ -17,9 +17,7 @@ import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
-import com.aleksej.makaji.listopia.error.RoomDeleteError
 import com.aleksej.makaji.listopia.error.RoomError
-import com.aleksej.makaji.listopia.error.RoomUpdateError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import javax.inject.Inject
@@ -67,7 +65,7 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
         return try {
             SuccessState(mProductDao.saveProduct(saveProductValue.mapToProduct()))
         }catch (e: Exception){
-            ErrorState(RoomError)
+            ErrorState(RoomError(e))
         }
     }
 
@@ -75,7 +73,7 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
         return try {
             SuccessState(mProductDao.deleteProductsByShoppingList(deleteProductValue.shoppingListId))
         }catch (e: Exception){
-            ErrorState(RoomDeleteError)
+            ErrorState(RoomError(e))
         }
     }
 
@@ -83,7 +81,7 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
         return try {
             SuccessState(mProductDao.updateProduct(productModel.mapToProduct()))
         }catch (e: Exception){
-            ErrorState(RoomUpdateError)
+            ErrorState(RoomError(e))
         }
     }
 
@@ -97,7 +95,7 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
                 return@switchMap productLiveData
             }
         } catch (e: Exception) {
-            productLiveData.postValue(StateHandler.error(RoomError))
+            productLiveData.postValue(StateHandler.error(RoomError(e)))
         }
         return productLiveData
     }
@@ -106,7 +104,7 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
         return try {
             SuccessState(mProductDao.deleteProductById(productValue.productId))
         }catch (e: Exception){
-            ErrorState(RoomDeleteError)
+            ErrorState(RoomError(e))
         }
     }
 }

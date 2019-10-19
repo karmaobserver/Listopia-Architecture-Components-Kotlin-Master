@@ -16,6 +16,10 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(@Remote private val mRemoteUserDataSource: UserDataSource,
                                          @Local private val mLocalUserDataSource: UserDataSource): UserDataSource {
+    override suspend fun saveUsers(users: List<UserModel>): State<List<Long>> {
+        return mLocalUserDataSource.saveUsers(users)
+    }
+
     override suspend fun getUserByIdSuspended(userId: String): State<UserModel> {
         return mLocalUserDataSource.getUserByIdSuspended(userId)
     }
