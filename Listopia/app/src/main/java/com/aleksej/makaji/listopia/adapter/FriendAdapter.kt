@@ -21,7 +21,6 @@ class FriendAdapter(private val mDataBindingComponent: DataBindingComponent, pri
             override fun areContentsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
                 return oldItem.name == newItem.name
                         && oldItem.avatar == newItem.avatar
-                        && oldItem.email == newItem.email
             }
         }
 ) {

@@ -21,7 +21,7 @@
                 style="@style/TextViewAppearanceBody1.Margin8"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{userModel.name}"
+                android:text="@{userModel.id}"
                 app:layout_constraintEnd_toStartOf="@+id/image_button_share"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

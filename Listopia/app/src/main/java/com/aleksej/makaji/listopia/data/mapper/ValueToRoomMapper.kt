@@ -17,4 +17,6 @@ fun SaveShoppingListValue.mapToShoppingList(): ShoppingList = mapTo<ShoppingList
 
 fun SaveUserValue.mapToUser(): User = mapTo<User>().copy()
 
+fun SaveFriendValue.mapToUser(): User = mapTo<User>().copy(id = friendId)
+
 fun SaveShoppingListEditorValue.mapToShoppingListEditor(): ShoppingListUserXRef = mapTo<ShoppingListUserXRef>().copy()

@@ -17,3 +17,6 @@ object UnauthorizedError : ListopiaError()
 //View Errors
 data class ListNameError(val resourceId : Int) : ListopiaError()
 data class ProductNameError(val resourceId : Int) : ListopiaError()
+data class EmailError(val resourceId : Int) : ListopiaError()
+
+const val ERROR_NOT_FOUND = 404

@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.aleksej.makaji.listopia.R
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
+import com.aleksej.makaji.listopia.data.usecase.value.SaveFriendValue
 import com.aleksej.makaji.listopia.databinding.FragmentFriendAddBinding
-import com.aleksej.makaji.listopia.util.autoCleared
-import com.aleksej.makaji.listopia.util.showKeyboard
-import com.aleksej.makaji.listopia.util.viewModel
+import com.aleksej.makaji.listopia.error.EmailError
+import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.fragment_friend_add.*
 
@@ -47,20 +48,20 @@ class FriendAddFragment: BaseFragment() {
     }
 
     private fun initObservers() {
-        observeSaveShoppingList()
+        observeSaveFriend()
     }
 
-    private fun observeSaveShoppingList() {
-  /*      observeSingle(mProductViewModel.addProductLiveData, {
+    private fun observeSaveFriend() {
+        observeSingle(mUserViewModel.saveFriendLiveData, {
             hideKeyboard()
-            showToastLong(R.string.success_product_add)
+            showToastLong(R.string.success_friend_add)
             findNavController().navigateUp()
         }, onError = {
             when (it) {
-                is ProductNameError -> binding.textInputLayoutProductName.error = getString(it.resourceId)
+                is EmailError -> binding.textInputLayoutFriendEmail.error = getString(it.resourceId)
                 else -> showError(it)
             }
-        })*/
+        })
     }
 
     private fun initListeners() {
@@ -70,11 +71,6 @@ class FriendAddFragment: BaseFragment() {
     }
 
     private fun addFriend() {
-  /*      mFriendViewModel.addFriend(SaveProductValue(binding.editTextProductName.text(),
-                binding.editTextQuantity.textDouble(),
-                binding.editTextUnit.text(),
-                binding.editTextPrice.textDouble(),
-                binding.editTextNotes.text(),
-                it))*/
+        mUserViewModel.saveFriend(SaveFriendValue(binding.editTextFriendEmail.text()))
     }
 }

@@ -5,5 +5,4 @@ package com.aleksej.makaji.listopia.data.api.dto.request
  */
 data class UserRequest(val id: String = "",
                        val name: String? = null,
-                       val email: String? = null,
                        val avatar: String? = null)

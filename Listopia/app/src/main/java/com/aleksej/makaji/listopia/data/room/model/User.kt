@@ -11,5 +11,4 @@ data class User(
         @PrimaryKey
         val id: String = "",
         val name: String? = null,
-        val email: String? = null,
         val avatar: String? = null)

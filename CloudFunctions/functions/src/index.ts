@@ -88,21 +88,59 @@ app.get('/hello', (req, res) => {
    //res.send(`Hellow ${req.user.name}`);
 });
 
+app.get('/user/get/:userId', (req, res) => {
+  var userRef = db.collection('users').doc(req.params.userId)
+  userRef.get().then(function(doc) {
+    if (doc.exists) {
+      console.log(doc.data())
+      var friendsRef = []
+      var user = doc.data()
+      user.friends.forEach(function(userId) {
+        friendsRef.push(db.collection('users').doc(userId))
+      })
+      var allFriends = []
+      db.getAll(...friendsRef).then(docs => {
+        docs.forEach(function(friend) {
+          allFriends.push(friend.data())
+        })
+        console.log(allFriends)
+        user.friends = allFriends
+        res.status(201).json(user);
+      })      
+    } else {
+      // var newUser = {
+      //   id: req.params.userId,
+      //   avatar: null,
+      //   name: null,
+      //   friends: []
+      // };
+      // userRef.set(newUser)
+      // console.log('Added user document with ID: ', req.body.id);
+      res.status(404).json({
+        code: 404,
+        message: "User not found"
+      });
+    }
+  }).catch(error => {
+    console.log(error)
+    res.status(500).send(parseError("Failed to add user into Firestore"));
+  });
+});
+
 app.post('/user/save', (req, res) => {
   var userRef = db.collection('users').doc(req.body.id)
   userRef.get().then(function(thisDoc) {
     if (thisDoc.exists) {
       var updatedUser = {
         avatar: req.body.avatar,
-        email: req.body.email,
         name: req.body.name
       };
       userRef.update(updatedUser)
       console.log('Updated user document with ID: ', req.body.id);
     } else {
       var newUser = {
+        id: req.body.id,
         avatar: req.body.avatar,
-        email: req.body.email,
         name: req.body.name,
         friends: []
       };
@@ -111,8 +149,43 @@ app.post('/user/save', (req, res) => {
     }
     res.status(201).json({});
   }).catch(error => {
+    console.log(error)
     res.status(500).send(parseError("Failed to add user into Firestore"));
   });
+});
+
+app.post('/user/:userId/add-friend', (req, res) => {
+  var friendRef = db.collection('users').doc(req.body.friendId)
+  friendRef.get().then(function(thisDoc) {
+    if (thisDoc.exists) {
+      friendRef.update({
+        friends: admin.firestore.FieldValue.arrayUnion(req.params.userId)
+      })
+      console.log('Updated user document with ID: ', req.body.friendId);
+    } else {
+      //TODO: Send email address to friend - invatation with a link to playstore
+      var newUser = {
+        avatar: null,
+        name: null,
+        friends: [req.params.userId]
+      };
+      friendRef.set(newUser)
+      console.log('Added user document with ID: ', req.body.friendId);
+    }
+  }).catch(error => {
+    console.log(error)
+    res.status(500).send(parseError("Failed to add friend into Firestore"));
+  });
+  var userRef = db.collection('users').doc(req.params.userId)
+  userRef.update({
+    friends: admin.firestore.FieldValue.arrayUnion(req.body.friendId)
+  }).then(function() {
+    console.log('Successfully added friend with ID: ', req.params.userId);
+    res.status(201).json({});
+  }).catch(error => {
+    console.log(error)
+    res.status(500).send(parseError("Failed to add friend into Firestore"));
+  })
 });
 
 app.post('/shopping-list/add', (req, res) => {

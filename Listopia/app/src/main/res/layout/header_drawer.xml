@@ -32,7 +32,7 @@
             android:id="@+id/text_view_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{userModel.email}"
+            android:text="@{userModel.id}"
             style="@style/TextViewAppearanceBody2.White.Margin20"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -96,19 +96,19 @@ class FriendListFragment: BaseFragment() {
 
     private fun initObservers() {
         observeFriends()
-        observeAddProduct()
-        observeDeleteProductById()
+        observeAddFriend()
+        observeDeleteFriendById()
     }
 
-    private fun observeDeleteProductById() {
-     /*   observeSingle(mFriendViewModel.deleteProductByIdLiveData, {
+    private fun observeDeleteFriendById() {
+     /*   observeSingle(mUserViewModel.deleteFriendByIdLiveData, {
             showToastLong(R.string.success_friend_delete)
         }, onError = {
             showError(it)
         })*/
     }
 
-    private fun observeAddProduct() {
+    private fun observeAddFriend() {
         observeSingle(mUserViewModel.addFriendEvent, {
             findNavController().navigate(FriendListFragmentDirections.actionFriendListFragmentToFriendAddFragment())
         })

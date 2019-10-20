@@ -13,8 +13,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.aleksej.makaji.listopia.base.BaseActivity
-import com.aleksej.makaji.listopia.data.enums.SourceType
-import com.aleksej.makaji.listopia.data.usecase.value.SaveUserValue
+import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveUserValue
 import com.aleksej.makaji.listopia.databinding.ActivityHomeBinding
 import com.aleksej.makaji.listopia.databinding.HeaderDrawerBinding
 import com.aleksej.makaji.listopia.error.*
@@ -25,7 +24,6 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_home.*
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -197,7 +195,8 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun observeSaveUser() {
-        observeSingle(mUserViewModel.saveUserLiveData, {
+        observeSingle(mUserViewModel.fetchAndSaveUserLiveData, {
+            checkIfUserLoggedIn()
         }, onError = {
             showError(it)
         })
@@ -215,13 +214,13 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun saveLoggedUser(user: FirebaseUser) {
-        mSharedPreferenceManager.userId = user.uid
+        mSharedPreferenceManager.userId = user.email ?: "fake"
         user.getIdToken(true).addOnSuccessListener {
             it.token?.let {
                 mSharedPreferenceManager.token = it
             }
         }
-        mUserViewModel.saveUser(SaveUserValue(user.uid, user.displayName, user.email, user.photoUrl.toString()))
+        mUserViewModel.fetchAndSaveUser(FetchAndSaveUserValue(user.email ?: "fake", user.displayName, user.photoUrl.toString()))
     }
 
     private fun signOut() {

@@ -15,11 +15,11 @@ import com.aleksej.makaji.listopia.data.repository.remote.ShoppingListRemoteData
 import com.aleksej.makaji.listopia.data.repository.remote.UserRemoteDataSource
 import com.aleksej.makaji.listopia.data.room.dao.ProductDao
 import com.aleksej.makaji.listopia.data.room.dao.ShoppingListDao
-import com.aleksej.makaji.listopia.data.room.dao.ShoppingListUserJoinDao
 import com.aleksej.makaji.listopia.data.room.dao.UserDao
 import com.aleksej.makaji.listopia.di.annotation.Listopia
 import com.aleksej.makaji.listopia.di.annotation.Local
 import com.aleksej.makaji.listopia.di.annotation.Remote
+import com.aleksej.makaji.listopia.util.SharedPreferenceManager
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -82,26 +82,20 @@ class RepositoryModule {
     @Singleton
     @Provides
     @Local
-    fun bindUserLocalDataSource(userDao: UserDao): UserDataSource {
-        return UserLocalDataSource(userDao)
+    fun bindUserLocalDataSource(userDao: UserDao, sharedPreferenceManager: SharedPreferenceManager): UserDataSource {
+        return UserLocalDataSource(userDao, sharedPreferenceManager)
     }
 
     @Singleton
     @Provides
     @Remote
-    fun bindUserRemoteDataSource(listopiaApi: ListopiaApi, @Listopia retrofit: Retrofit): UserDataSource {
-        return UserRemoteDataSource(listopiaApi, retrofit)
+    fun bindUserRemoteDataSource(listopiaApi: ListopiaApi, @Listopia retrofit: Retrofit, sharedPreferenceManager: SharedPreferenceManager): UserDataSource {
+        return UserRemoteDataSource(listopiaApi, retrofit, sharedPreferenceManager)
     }
 
     @Singleton
     @Provides
     fun provideUserDao(listopiaDatabase: ListopiaDatabase): UserDao {
         return listopiaDatabase.userDao()
-    }
-
-    @Singleton
-    @Provides
-    fun provideShoppingListUserJoinDao(listopiaDatabase: ListopiaDatabase): ShoppingListUserJoinDao {
-        return listopiaDatabase.shoppingListUserJoinDao()
     }
 }

@@ -3,6 +3,7 @@ package com.aleksej.makaji.listopia.data.room.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.aleksej.makaji.listopia.data.room.model.User
+import com.aleksej.makaji.listopia.data.room.model.UserUserXRef
 import com.aleksej.makaji.listopia.data.room.model.UserWithFriends
 
 /**
@@ -15,6 +16,12 @@ interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveUsers(users: List<User>): List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveFriend(friend: UserUserXRef): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveFriends(friends: List<UserUserXRef>): List<Long>
 
     @Query("SELECT * FROM user")
     fun getUser(): LiveData<User?>

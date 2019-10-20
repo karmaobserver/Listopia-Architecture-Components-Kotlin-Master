@@ -9,11 +9,14 @@ import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.mapper.mapToUser
 import com.aleksej.makaji.listopia.data.mapper.mapToUserModel
+import com.aleksej.makaji.listopia.data.mapper.mapToUserWithFriends
 import com.aleksej.makaji.listopia.data.repository.UserDataSource
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.data.room.dao.UserDao
-import com.aleksej.makaji.listopia.data.usecase.value.SaveUserValue
+import com.aleksej.makaji.listopia.data.room.model.UserUserXRef
+import com.aleksej.makaji.listopia.data.usecase.value.SaveFriendValue
 import com.aleksej.makaji.listopia.error.RoomError
+import com.aleksej.makaji.listopia.util.SharedPreferenceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import javax.inject.Inject
@@ -24,16 +27,17 @@ import kotlin.coroutines.CoroutineContext
  * Created by Aleksej Makaji on 5/4/19.
  */
 @Singleton
-class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao) : UserDataSource, CoroutineScope {
+class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao, private val mSharedPreferenceManager: SharedPreferenceManager) : UserDataSource, CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Job()
 
     private val userLiveData = MutableLiveData<StateHandler<UserModel>>()
 
-    override suspend fun saveUser(saveUserValue: SaveUserValue): State<Long> {
+    override suspend fun saveUser(userModel: UserModel): State<Long> {
         return try {
-            SuccessState(mUserDao.saveUser(saveUserValue.mapToUser()))
+            saveFriends(userModel)
+            SuccessState(mUserDao.saveUser(userModel.mapToUser()))
         }catch (e: Exception){
             ErrorState(RoomError(e))
         }
@@ -75,4 +79,32 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao) : U
             ErrorState(RoomError(e))
         }
     }
+
+    override suspend fun saveFriendRemote(saveFriendValue: SaveFriendValue): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun saveFriend(saveFriendValue: SaveFriendValue): State<Long> {
+        return try {
+            SuccessState(mUserDao.saveUser(saveFriendValue.mapToUser()))
+            SuccessState(mUserDao.saveFriend(UserUserXRef(mSharedPreferenceManager.userId, saveFriendValue.friendId)))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun fetchUser(userId: String): State<UserModel> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private suspend fun saveFriends(userModel: UserModel) {
+        val friends = arrayListOf<UserUserXRef>()
+        userModel.friends?.let {
+            it.forEach {
+                friends.add(UserUserXRef(mSharedPreferenceManager.userId, it.id))
+            }
+            mUserDao.saveFriends(friends)
+        }
+    }
+
 }

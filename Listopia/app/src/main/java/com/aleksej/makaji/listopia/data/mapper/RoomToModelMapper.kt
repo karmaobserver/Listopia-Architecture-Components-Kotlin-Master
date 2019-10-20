@@ -18,4 +18,4 @@ fun Product.mapToProductModel(): ProductModel = mapTo<ProductModel>().copy()
 
 fun User.mapToUserModel(): UserModel = mapTo<UserModel>().copy()
 
-fun UserWithFriends.mapToUserModel(): UserModel = mapTo<UserModel>().copy(id = user.id, name = user.name, email = user.email, avatar = user.avatar, friends = friends.map { it.mapToUserModel()})
+fun UserWithFriends.mapToUserModel(): UserModel = mapTo<UserModel>().copy(id = user.id, name = user.name, avatar = user.avatar, friends = friends.map { it.mapToUserModel()})
