@@ -13,6 +13,10 @@ data class RoomError(val exception: Exception): ListopiaError()
 data class ThrowableError(val throwable: Throwable) : ListopiaError()
 data class BackendError(val response: ErrorResponse) : ListopiaError()
 object UnauthorizedError : ListopiaError()
+object NoRemoteData : ListopiaError()
+
+//Specific errors
+data class UserDoesNotExistsError(val response: ErrorResponse): ListopiaError()
 
 //View Errors
 data class ListNameError(val resourceId : Int) : ListopiaError()

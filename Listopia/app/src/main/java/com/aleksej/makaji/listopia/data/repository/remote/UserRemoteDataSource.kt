@@ -35,7 +35,7 @@ class UserRemoteDataSource @Inject constructor(private val mListopiaApi: Listopi
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun saveFriendRemote(saveFriendValue: SaveFriendValue): State<Unit> {
+    override suspend fun saveFriendRemote(saveFriendValue: SaveFriendValue): State<UserModel> {
         return try {
             CoroutineAdapter(mListopiaApi.saveFriend(mSharedPreferenceManager.userId, saveFriendValue.mapToSaveFriendRequest()), mRetrofit)()
         } catch (e: Exception) {
@@ -64,6 +64,10 @@ class UserRemoteDataSource @Inject constructor(private val mListopiaApi: Listopi
     }
 
     override fun getUserById(userId: String): LiveData<StateHandler<UserModel>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun saveFriendByModel(userModel: UserModel): State<Long> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

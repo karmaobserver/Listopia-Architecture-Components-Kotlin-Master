@@ -16,6 +16,10 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(@Remote private val mRemoteUserDataSource: UserDataSource,
                                          @Local private val mLocalUserDataSource: UserDataSource): UserDataSource {
+    override suspend fun saveFriendByModel(userModel: UserModel): State<Long> {
+        return mLocalUserDataSource.saveFriendByModel(userModel)
+    }
+
     override suspend fun fetchUser(userId: String): State<UserModel> {
         return mRemoteUserDataSource.fetchUser(userId)
     }
@@ -24,7 +28,7 @@ class UserRepository @Inject constructor(@Remote private val mRemoteUserDataSour
         return mLocalUserDataSource.saveFriend(saveFriendValue)
     }
 
-    override suspend fun saveFriendRemote(saveFriendValue: SaveFriendValue): State<Unit> {
+    override suspend fun saveFriendRemote(saveFriendValue: SaveFriendValue): State<UserModel> {
         return mRemoteUserDataSource.saveFriendRemote(saveFriendValue)
     }
 

@@ -1,12 +1,12 @@
 package com.aleksej.makaji.listopia.data.usecase
 
 import com.aleksej.makaji.listopia.data.event.ErrorState
+import com.aleksej.makaji.listopia.data.event.LoadingState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.repository.UserRepository
 import com.aleksej.makaji.listopia.data.usecase.value.SaveFriendValue
-import com.aleksej.makaji.listopia.data.usecase.value.SaveUserValue
-import com.aleksej.makaji.listopia.error.UnknownError
+import com.aleksej.makaji.listopia.error.NoRemoteData
 import com.aleksej.makaji.listopia.util.Validator
 import timber.log.Timber
 import javax.inject.Inject
@@ -20,19 +20,19 @@ class SaveFriendUseCase @Inject constructor(private val mUserRepository: UserRep
         Validator.validateEmail(value.friendId)?.run {
             return ErrorState(this)
         }
-        when (val saveFriendRoom = mUserRepository.saveFriend(value)) {
+
+        when (val saveFriendRemote =  mUserRepository.saveFriendRemote(value)) {
             is SuccessState -> {
-                when (val saveFriendRemote =  mUserRepository.saveFriendRemote(value)) {
-                    is SuccessState -> {
-                        return SuccessState(1L)
-                    }
-                    else -> {
-                        Timber.d("Failed to saveFriendRemote")
-                        return ErrorState(UnknownError)
-                    }
+                saveFriendRemote.data?.let {
+                    return mUserRepository.saveFriendByModel(it)
                 }
+                return ErrorState(NoRemoteData)
             }
-            else -> return saveFriendRoom
+            is ErrorState -> {
+                Timber.d("Failed to saveFriendRemote")
+                return ErrorState(saveFriendRemote.error)
+            }
+            is LoadingState -> return LoadingState()
         }
     }
 }

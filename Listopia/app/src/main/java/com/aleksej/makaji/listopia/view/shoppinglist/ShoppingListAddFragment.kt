@@ -67,6 +67,12 @@ class ShoppingListAddFragment: BaseFragment() {
                 is ListNameError -> binding.textInputLayoutListName.error = getString(it.resourceId)
                 else -> showError(it)
             }
+        }, onLoading = {
+            showLoading()
+            button_create_list.isEnabled = false
+        }, onHideLoading = {
+            button_create_list.isEnabled = true
+            hideLoading()
         })
     }
 

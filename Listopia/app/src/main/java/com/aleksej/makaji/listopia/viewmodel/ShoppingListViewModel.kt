@@ -70,6 +70,7 @@ class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListB
     }
 
     fun createShoppingList(saveShoppingListValue: SaveShoppingListValue) {
+        saveShoppingListTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             saveShoppingListTrigger.value = StateHandler(mSaveShoppingListUseCase.invoke(saveShoppingListValue))
         }

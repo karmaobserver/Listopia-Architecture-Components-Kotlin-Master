@@ -17,5 +17,6 @@ interface UserDataSource {
     fun getUserById(userId: String): LiveData<StateHandler<UserModel>>
     suspend fun getUserByIdSuspended(userId: String) : State<UserModel>
     suspend fun saveFriend(saveFriendValue: SaveFriendValue): State<Long>
-    suspend fun saveFriendRemote(saveFriendValue: SaveFriendValue): State<Unit>
+    suspend fun saveFriendByModel(userModel: UserModel): State<Long>
+    suspend fun saveFriendRemote(saveFriendValue: SaveFriendValue): State<UserModel>
 }

@@ -26,7 +26,7 @@ interface ListopiaApi {
 
     @POST("user/{userId}/add-friend")
     suspend fun saveFriend(@Path("userId") userId: String,
-                           @Body saveFriendRequest: SaveFriendRequest): Response<EmptyResponse>
+                           @Body saveFriendRequest: SaveFriendRequest): Response<UserResponse>
 
     @POST("shopping-list/add")
     suspend fun saveShoppingList(@Body saveShoppingListRequest: SaveShoppingListRequest): Response<EmptyResponse>

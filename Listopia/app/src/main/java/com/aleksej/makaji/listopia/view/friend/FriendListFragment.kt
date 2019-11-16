@@ -16,6 +16,7 @@ import com.aleksej.makaji.listopia.adapter.FriendAdapter
 import com.aleksej.makaji.listopia.adapter.FriendAdapterEvents
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
+import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveUserValue
 import com.aleksej.makaji.listopia.databinding.FragmentFriendListBinding
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.UserViewModel
@@ -72,6 +73,7 @@ class FriendListFragment: BaseFragment() {
     }
 
     private fun initData() {
+        reFetchUserData()
         mUserViewModel.getUserById(mSharedPreferenceManager.userId)
     }
 
@@ -98,6 +100,14 @@ class FriendListFragment: BaseFragment() {
         observeFriends()
         observeAddFriend()
         observeDeleteFriendById()
+        observeFetchAndSaveUser()
+    }
+
+    private fun observeFetchAndSaveUser() {
+        observeSingle(mUserViewModel.fetchAndSaveUserLiveData, {
+        }, onError = {
+            showError(it)
+        })
     }
 
     private fun observeDeleteFriendById() {
@@ -119,7 +129,12 @@ class FriendListFragment: BaseFragment() {
             mFriendAdapter.submitList(it.friends)
         }, onError = {
             showError(it)
+
         })
+    }
+
+    private fun reFetchUserData() {
+        mUserViewModel.fetchAndSaveUser(FetchAndSaveUserValue(mSharedPreferenceManager.userId))
     }
 
 }

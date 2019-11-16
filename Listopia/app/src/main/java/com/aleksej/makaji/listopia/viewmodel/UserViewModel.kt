@@ -44,6 +44,7 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
     }
 
     fun saveFriend(saveFriendValue: SaveFriendValue) {
+        saveFriendTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             saveFriendTrigger.value = StateHandler(mSaveFriendUseCase.invoke(saveFriendValue))
         }

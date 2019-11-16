@@ -1,4 +1,5 @@
 'use strict';
+import { ErrorType } from "./errorType";
 const dotenv = require('dotenv').config();
 if (dotenv.error) {
   throw dotenv.error
@@ -92,21 +93,26 @@ app.get('/user/get/:userId', (req, res) => {
   var userRef = db.collection('users').doc(req.params.userId)
   userRef.get().then(function(doc) {
     if (doc.exists) {
-      console.log(doc.data())
       var friendsRef = []
       var user = doc.data()
-      user.friends.forEach(function(userId) {
-        friendsRef.push(db.collection('users').doc(userId))
+      user.friends.forEach(function(id) {
+        friendsRef.push(db.collection('users').doc(id))
       })
       var allFriends = []
-      db.getAll(...friendsRef).then(docs => {
-        docs.forEach(function(friend) {
-          allFriends.push(friend.data())
-        })
-        console.log(allFriends)
+      if (friendsRef.length != 0) {
+        db.getAll(...friendsRef).then(docs => {
+          docs.forEach(function(friend) {
+            allFriends.push(friend.data())
+          })
+          user.friends = allFriends
+          //user.friends = JSON.stringify(allFriends)
+          console.log(user)
+          res.status(201).json(user);
+        })     
+      } else {
         user.friends = allFriends
         res.status(201).json(user);
-      })      
+      }  
     } else {
       // var newUser = {
       //   id: req.params.userId,
@@ -162,30 +168,34 @@ app.post('/user/:userId/add-friend', (req, res) => {
         friends: admin.firestore.FieldValue.arrayUnion(req.params.userId)
       })
       console.log('Updated user document with ID: ', req.body.friendId);
+
+      var userRef = db.collection('users').doc(req.params.userId)
+      userRef.update({
+        friends: admin.firestore.FieldValue.arrayUnion(req.body.friendId)
+      }).then(function() {
+        console.log('Successfully added friend with ID: ', req.params.friendId);
+        res.status(201).send(thisDoc.data());
+      }).catch(error => {
+        console.log(error)
+        res.status(500).send(parseError("Failed to add friend into Firestore"));
+      })
     } else {
       //TODO: Send email address to friend - invatation with a link to playstore
-      var newUser = {
-        avatar: null,
-        name: null,
-        friends: [req.params.userId]
-      };
-      friendRef.set(newUser)
-      console.log('Added user document with ID: ', req.body.friendId);
+      // var newUser = {
+      //   avatar: null,
+      //   name: null,
+      //   friends: [req.params.userId]
+      // };
+      // friendRef.set(newUser)
+      // console.log('Added user document with ID: ', req.body.friendId);
+      
+      res.status(404).send(parseError("User does not exists in system", ErrorType.USER_DOES_NOT_EXISTS));
     }
   }).catch(error => {
     console.log(error)
     res.status(500).send(parseError("Failed to add friend into Firestore"));
   });
-  var userRef = db.collection('users').doc(req.params.userId)
-  userRef.update({
-    friends: admin.firestore.FieldValue.arrayUnion(req.body.friendId)
-  }).then(function() {
-    console.log('Successfully added friend with ID: ', req.params.userId);
-    res.status(201).json({});
-  }).catch(error => {
-    console.log(error)
-    res.status(500).send(parseError("Failed to add friend into Firestore"));
-  })
+  
 });
 
 app.post('/shopping-list/add', (req, res) => {

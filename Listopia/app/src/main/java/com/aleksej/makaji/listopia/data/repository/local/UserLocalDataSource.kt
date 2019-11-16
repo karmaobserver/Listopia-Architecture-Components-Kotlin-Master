@@ -9,7 +9,6 @@ import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.mapper.mapToUser
 import com.aleksej.makaji.listopia.data.mapper.mapToUserModel
-import com.aleksej.makaji.listopia.data.mapper.mapToUserWithFriends
 import com.aleksej.makaji.listopia.data.repository.UserDataSource
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.data.room.dao.UserDao
@@ -80,7 +79,7 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao, pri
         }
     }
 
-    override suspend fun saveFriendRemote(saveFriendValue: SaveFriendValue): State<Unit> {
+    override suspend fun saveFriendRemote(saveFriendValue: SaveFriendValue): State<UserModel> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -88,6 +87,15 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao, pri
         return try {
             SuccessState(mUserDao.saveUser(saveFriendValue.mapToUser()))
             SuccessState(mUserDao.saveFriend(UserUserXRef(mSharedPreferenceManager.userId, saveFriendValue.friendId)))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun saveFriendByModel(userModel: UserModel): State<Long> {
+        return try {
+            SuccessState(mUserDao.saveUser(userModel.mapToUser()))
+            SuccessState(mUserDao.saveFriend(UserUserXRef(mSharedPreferenceManager.userId, userModel.id)))
         }catch (e: Exception){
             ErrorState(RoomError(e))
         }
