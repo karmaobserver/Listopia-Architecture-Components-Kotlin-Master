@@ -31,4 +31,7 @@ interface UserDao {
 
     @Transaction @Query("SELECT * FROM user WHERE id = :userId")
     suspend fun getUserWithFriendsSuspended(userId: String): UserWithFriends
+
+    @Query("DELETE FROM user WHERE id = :userId")
+    suspend fun deleteUserById(userId: String)
 }

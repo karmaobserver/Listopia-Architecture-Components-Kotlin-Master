@@ -1,5 +1,6 @@
 package com.aleksej.makaji.listopia.adapter
 
+import android.view.View
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 
 /**
@@ -7,5 +8,5 @@ import com.aleksej.makaji.listopia.data.repository.model.UserModel
  */
 sealed class FriendAdapterEvents {
     data class FriendClick(val userModel: UserModel) : FriendAdapterEvents()
-    data class ShareClick(val userModel: UserModel) : FriendAdapterEvents()
+    data class OptionsClick(val view: View, val userModel: UserModel) : FriendAdapterEvents()
 }

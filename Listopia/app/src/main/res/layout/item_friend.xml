@@ -8,6 +8,7 @@
             type="com.aleksej.makaji.listopia.data.repository.model.UserModel"/>
     </data>
     <androidx.cardview.widget.CardView
+        android:id="@+id/card_view_friends"
         style="@style/CardViewMaterial.BackgroundRipple.Margin4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -22,13 +23,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{userModel.id}"
-                app:layout_constraintEnd_toStartOf="@+id/image_button_share"
+                app:layout_constraintEnd_toStartOf="@+id/image_button_options"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="User Name" />
 
             <ImageButton
-                android:id="@+id/image_button_share"
+                android:id="@+id/image_button_options"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:background="@drawable/button_selector_transparent"

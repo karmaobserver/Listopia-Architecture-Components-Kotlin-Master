@@ -115,4 +115,16 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao, pri
         }
     }
 
+    override suspend fun deleteFriendByIdRemote(friendId: String): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun deleteFriendById(friendId: String): State<Unit> {
+        return try {
+            SuccessState(mUserDao.deleteUserById(friendId))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
 }

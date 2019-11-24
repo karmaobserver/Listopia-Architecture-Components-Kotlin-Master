@@ -6,6 +6,7 @@ package com.aleksej.makaji.listopia.view.friend
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
@@ -16,9 +17,12 @@ import com.aleksej.makaji.listopia.adapter.FriendAdapter
 import com.aleksej.makaji.listopia.adapter.FriendAdapterEvents
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteFriendValue
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveUserValue
 import com.aleksej.makaji.listopia.databinding.FragmentFriendListBinding
 import com.aleksej.makaji.listopia.util.*
+import com.aleksej.makaji.listopia.view.shoppinglist.ShoppingListFragmentDirections
 import com.aleksej.makaji.listopia.viewmodel.UserViewModel
 import javax.inject.Inject
 
@@ -88,8 +92,8 @@ class FriendListFragment: BaseFragment() {
                 is FriendAdapterEvents.FriendClick -> {
                     //TODO
                 }
-                is FriendAdapterEvents.ShareClick -> {
-                    //TODO
+                is FriendAdapterEvents.OptionsClick -> {
+                    setupOptionsPopupMenu(it.view, it.userModel.id)
                 }
             }
         }
@@ -111,11 +115,11 @@ class FriendListFragment: BaseFragment() {
     }
 
     private fun observeDeleteFriendById() {
-     /*   observeSingle(mUserViewModel.deleteFriendByIdLiveData, {
+        observeSingle(mUserViewModel.deleteFriendEventLiveData, {
             showToastLong(R.string.success_friend_delete)
         }, onError = {
             showError(it)
-        })*/
+        })
     }
 
     private fun observeAddFriend() {
@@ -135,6 +139,22 @@ class FriendListFragment: BaseFragment() {
 
     private fun reFetchUserData() {
         mUserViewModel.fetchAndSaveUser(FetchAndSaveUserValue(mSharedPreferenceManager.userId))
+    }
+
+    private fun setupOptionsPopupMenu(view: View, friendId: String) {
+        context?.let {
+            val popup = PopupMenu(it, view)
+            popup.inflate(R.menu.popup_menu_friend_list)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.popup_menu_delete_friend -> {
+                        mUserViewModel.deleteFriendById(DeleteFriendValue(friendId))
+                    }
+                }
+                false
+            }
+            popup.show()
+        }
     }
 
 }

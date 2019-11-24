@@ -38,9 +38,9 @@ class FriendAdapter(private val mDataBindingComponent: DataBindingComponent, pri
                 mFriendAdapterEvents.invoke(FriendAdapterEvents.FriendClick(it))
             }
         }
-        binding.imageButtonShare.setOnClickListener { view ->
+        binding.imageButtonOptions.setOnClickListener { view ->
             binding.userModel?.let {
-                mFriendAdapterEvents.invoke(FriendAdapterEvents.ShareClick(it))
+                mFriendAdapterEvents.invoke(FriendAdapterEvents.OptionsClick(view, it))
             }
         }
         return binding

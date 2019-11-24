@@ -22,6 +22,17 @@ import javax.inject.Singleton
  */
 @Singleton
 class UserRemoteDataSource @Inject constructor(private val mListopiaApi: ListopiaApi, private val mRetrofit: Retrofit, private val mSharedPreferenceManager: SharedPreferenceManager) : UserDataSource {
+    override suspend fun deleteFriendById(friendId: String): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun deleteFriendByIdRemote(friendId: String): State<Unit> {
+        return try {
+            CoroutineAdapter(mListopiaApi.deleteFriendById(mSharedPreferenceManager.userId, friendId), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
 
     override suspend fun fetchUser(userId: String): State<UserModel> {
         return try {

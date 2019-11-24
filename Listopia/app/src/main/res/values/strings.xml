@@ -33,6 +33,7 @@
     <string name="popup_menu_copy_shopping_list">Copy</string>
     <string name="popup_menu_edit_product_list">Edit</string>
     <string name="popup_menu_delete_product_list">Delete</string>
+    <string name="popup_menu_delete_friend">Delete</string>
 
     <!--Header drawer-->
     <string name="header_sign_in_sign_up">Sign in or sign up</string>

@@ -102,16 +102,18 @@ app.get('/user/get/:userId', (req, res) => {
       if (friendsRef.length != 0) {
         db.getAll(...friendsRef).then(docs => {
           docs.forEach(function(friend) {
-            allFriends.push(friend.data())
+            var friendData = friend.data();
+            delete friendData.friends;
+            allFriends.push(friendData)
           })
           user.friends = allFriends
           //user.friends = JSON.stringify(allFriends)
           console.log(user)
-          res.status(201).json(user);
+          res.status(200).json(user);
         })     
       } else {
         user.friends = allFriends
-        res.status(201).json(user);
+        res.status(200).json(user);
       }  
     } else {
       // var newUser = {
@@ -131,6 +133,22 @@ app.get('/user/get/:userId', (req, res) => {
     console.log(error)
     res.status(500).send(parseError("Failed to add user into Firestore"));
   });
+});
+
+app.delete('/user/:userId/delete-friend/:friendId', (req, res) => {
+  var userRef = db.collection('users').doc(req.params.userId)
+  userRef.update({
+    "friends": admin.firestore.FieldValue.arrayRemove(req.params.friendId)
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to delete friend" + req.params.friendId));
+  })
+  var friendRef = db.collection('users').doc(req.params.friendId)
+  friendRef.update({
+    "friends": admin.firestore.FieldValue.arrayRemove(req.params.userId)
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to delete friend of other" + req.params.userId));
+  })
+  res.status(200).json({});
 });
 
 app.post('/user/save', (req, res) => {
