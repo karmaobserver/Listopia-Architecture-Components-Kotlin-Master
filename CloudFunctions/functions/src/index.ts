@@ -236,23 +236,56 @@ app.put('/shopping-list/update', (req, res) => {
 
 app.get('/shopping-list/:userId', (req, res) => {
   console.log(req.params.userId);
-  const shoppingListsRef = db.collection('shopping_lists');
-  shoppingListsRef.where('ownerId', '==', req.params.userId).get().then(snapshot => {
-    if (snapshot.empty) {
-      console.log("No matching documents for shoppings lists");
-      res.status(204).json({});
-      return
-    }
-    var result = [];
-    snapshot.forEach(doc => {
-      console.log("ShoppingListModel" + doc.data());
-      result.push(doc.data())
-    })
-    res.status(200).send(result);
-  }).catch(error => {
+  try {
+    const shoppingListsRef = db.collection('shopping_lists');
+    shoppingListsRef.where('ownerId', '==', req.params.userId).get().then(snapshot => {
+      if (snapshot.empty) {
+        console.log("No matching documents for shoppings lists");
+        res.status(204).json({});
+        return
+      }
+      var shoppingLists = getShoppingLists(req, snapshot, res)
+    });
+  }catch(error) {
     res.status(500).send(parseError("Failed to get shopping lists Firestore"));
-  });
+  };
 });
+
+async function getShoppingLists(req: any, snapshot: any, res: any) {
+    var shoppingLists = [];
+    for (let snap of snapshot.docs) {
+      var shopingList = snap.data();
+      var editorsRef = [];
+      shopingList.editors.forEach(function(id) {
+        editorsRef.push(db.collection('users').doc(id));
+      });
+      await getShoppingListsWithEditors(editorsRef, shopingList, shoppingLists)
+    };
+    console.log(shoppingLists)
+    res.status(200).json(shoppingLists);
+    return shoppingLists
+}
+
+async function getShoppingListsWithEditors(editorsRef: any, shopingList: any, shoppingLists: any) {
+  var allEditors = [];
+  if (editorsRef.length != 0) {
+      let editors = await getEditos(editorsRef)
+      for (let editor of editors) {
+          var editorData = editor.data();
+          delete editorData.friends;
+          allEditors.push(editorData)
+      }
+      shopingList.editors = allEditors
+      shoppingLists.push(shopingList)
+  } else {
+    shopingList.editors = allEditors
+    shoppingLists.push(shopingList)
+  }  
+}
+
+function getEditos(editorsRef: any) {
+  return db.getAll(...editorsRef)
+}
 
 app.get('/generate-sample-data', (req, res) => {
   var user1 = {

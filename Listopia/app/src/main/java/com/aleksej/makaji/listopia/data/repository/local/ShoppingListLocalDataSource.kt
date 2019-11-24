@@ -42,13 +42,6 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
         get() = Job()
 
     override fun getShoppingLists(): LiveData<StateHandler<PagedList<ShoppingListModel>>> {
-        //Just for Testing to fill data first time
-        /*async {
-            mShoppingListDao.insertShoppingList(ShoppingList(1, "Name-1", "123"))
-            mShoppingListDao.insertShoppingList(ShoppingList(2, "Name-2", "312"))
-            mShoppingListDao.insertShoppingList(ShoppingList(3, "Name-3", "333"))
-            mShoppingListDao.insertShoppingList(ShoppingList(4, "Name-4", "444"))
-        }*/
         shoppingListsLiveData.postValue(StateHandler.loading())
 
         val pagedListConfig = PagedList.Config.Builder()
