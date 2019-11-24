@@ -21,9 +21,12 @@ class FriendAdapter(private val mDataBindingComponent: DataBindingComponent, pri
             override fun areContentsTheSame(oldItem: UserModel, newItem: UserModel): Boolean {
                 return oldItem.name == newItem.name
                         && oldItem.avatar == newItem.avatar
+                        && oldItem.friends == newItem.friends
             }
         }
 ) {
+
+    private var mEditors: List<UserModel>? = null
 
     override fun createBinding(parent: ViewGroup): ItemFriendBinding {
         val binding = DataBindingUtil.inflate<ItemFriendBinding>(
@@ -35,7 +38,11 @@ class FriendAdapter(private val mDataBindingComponent: DataBindingComponent, pri
         )
         binding.root.setOnClickListener {
             binding.userModel?.let {
-                mFriendAdapterEvents.invoke(FriendAdapterEvents.FriendClick(it))
+                if (checkIfUserIsInEditors(it)) {
+                    mFriendAdapterEvents.invoke(FriendAdapterEvents.FriendClick(it, false))
+                } else {
+                    mFriendAdapterEvents.invoke(FriendAdapterEvents.FriendClick(it, true))
+                }
             }
         }
         binding.imageButtonOptions.setOnClickListener { view ->
@@ -48,5 +55,24 @@ class FriendAdapter(private val mDataBindingComponent: DataBindingComponent, pri
 
     override fun bind(binding: ItemFriendBinding, item: UserModel) {
         binding.userModel = item
+        if (checkIfUserIsInEditors(item)) {
+            binding.constraintViewFriends.setBackgroundResource(R.color.colorPrimaryDark)
+        } else {
+            binding.constraintViewFriends.setBackgroundResource(R.color.grey_40)
+        }
+    }
+
+    fun setEditors(editors: List<UserModel>) {
+        mEditors = editors
+        notifyDataSetChanged()
+    }
+
+    private fun checkIfUserIsInEditors(userModel: UserModel): Boolean {
+        mEditors?.forEach { editor ->
+            if ( editor.id == userModel.id) {
+                return true
+            }
+        }
+        return false
     }
 }

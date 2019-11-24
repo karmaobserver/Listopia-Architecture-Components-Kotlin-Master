@@ -11,4 +11,4 @@ data class ProductModel(val id: String,
                         var notes: String,
                         var isDeleted: Boolean,
                         var isChecked: Boolean,
-                        val shoppingListId: Long)
+                        val shoppingListId: String)

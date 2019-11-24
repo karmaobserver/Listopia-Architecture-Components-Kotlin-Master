@@ -29,7 +29,7 @@ interface ShoppingListDao {
     fun getShoppingLists(): DataSource.Factory<Int, ShoppingList>
 
     @Query("SELECT * FROM shopping_list WHERE id = :id")
-    fun getShoppingListById(id: String): LiveData<ShoppingList>
+    fun getShoppingListById(id: String): LiveData<ShoppingListWithEditors>
 
     @Transaction @Query("SELECT * FROM shopping_list WHERE id = :shoppingListId")
     suspend fun getShoppingListByIdSuspend(shoppingListId: String): ShoppingListWithEditors

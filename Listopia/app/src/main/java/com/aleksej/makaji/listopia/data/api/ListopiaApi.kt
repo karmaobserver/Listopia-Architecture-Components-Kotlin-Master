@@ -38,4 +38,10 @@ interface ListopiaApi {
     @GET("shopping-list/{userId}")
     suspend fun fetchShoppingListsByUserId(@Path("userId") userId: String): Response<ShoppingListsResponse>
 
+    @POST("shopping-list/add-editor")
+    suspend fun saveEditor(@Body saveEditorRequest: SaveEditorRequest): Response<EmptyResponse>
+
+    @PUT("shopping-list/delete-editor")
+    suspend fun deleteEditor(@Body deleteEditorRequest: DeleteEditorRequest): Response<EmptyResponse>
+
 }

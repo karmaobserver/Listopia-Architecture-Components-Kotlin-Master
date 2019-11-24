@@ -17,12 +17,12 @@ import com.aleksej.makaji.listopia.adapter.FriendAdapter
 import com.aleksej.makaji.listopia.adapter.FriendAdapterEvents
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
-import com.aleksej.makaji.listopia.data.usecase.value.DeleteFriendValue
-import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
-import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveUserValue
+import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
+import com.aleksej.makaji.listopia.data.repository.model.UserModel
+import com.aleksej.makaji.listopia.data.usecase.value.*
 import com.aleksej.makaji.listopia.databinding.FragmentFriendListBinding
 import com.aleksej.makaji.listopia.util.*
-import com.aleksej.makaji.listopia.view.shoppinglist.ShoppingListFragmentDirections
+import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 import com.aleksej.makaji.listopia.viewmodel.UserViewModel
 import javax.inject.Inject
 
@@ -33,11 +33,15 @@ class FriendListFragment: BaseFragment() {
 
     private lateinit var mUserViewModel: UserViewModel
 
+    private lateinit var mShoppingListViewModel: ShoppingListViewModel
+
     private var binding by autoCleared<FragmentFriendListBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var mFriendAdapter by autoCleared<FriendAdapter>()
 
     private var mFriendId: String? = null
+
+    private var mShoppingListId: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val dataBinding = DataBindingUtil.inflate<FragmentFriendListBinding>(
@@ -55,6 +59,7 @@ class FriendListFragment: BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mUserViewModel = viewModel(mViewModelFactory)
+        mShoppingListViewModel = viewModel(mViewModelFactory)
         binding.userViewModel= mUserViewModel
         initData()
         initRecyclerView()
@@ -77,8 +82,16 @@ class FriendListFragment: BaseFragment() {
     }
 
     private fun initData() {
+        getArgs()
+        getShoppingListById()
         reFetchUserData()
         mUserViewModel.getUserById(mSharedPreferenceManager.userId)
+    }
+
+    private fun getArgs() {
+        arguments?.let {
+            mShoppingListId = FriendListFragmentArgs.fromBundle(it).shoppingListId
+        }
     }
 
     private fun initRecyclerView() {
@@ -90,7 +103,7 @@ class FriendListFragment: BaseFragment() {
         mFriendAdapter = FriendAdapter(mDataBindingComponent) {
             when (it) {
                 is FriendAdapterEvents.FriendClick -> {
-                    //TODO
+                    addOrDeleteEditor(it.userModel, it.shouldAddEditor)
                 }
                 is FriendAdapterEvents.OptionsClick -> {
                     setupOptionsPopupMenu(it.view, it.userModel.id)
@@ -105,6 +118,37 @@ class FriendListFragment: BaseFragment() {
         observeAddFriend()
         observeDeleteFriendById()
         observeFetchAndSaveUser()
+        observeAddEditors()
+        observeDeleteEditors()
+        observeShoppingList()
+    }
+
+    private fun observeShoppingList() {
+        observePeek(mShoppingListViewModel.getShoppingListByIdLiveData, {
+            if (it.editors.isNullOrEmpty()) {
+                mFriendAdapter.setEditors(listOf())
+            } else {
+                mFriendAdapter.setEditors(it.editors)
+            }
+        }, onError = {
+            showError(it)
+        })
+    }
+
+    private fun observeDeleteEditors() {
+        observeSingle(mUserViewModel.deleteEditorLiveData, {
+            showToast(R.string.success_editor_deleted)
+        }, onError = {
+            showError(it)
+        })
+    }
+
+    private fun observeAddEditors() {
+        observeSingle(mUserViewModel.saveEditorLiveData, {
+            showToast(R.string.success_editor_added)
+        }, onError = {
+            showError(it)
+        })
     }
 
     private fun observeFetchAndSaveUser() {
@@ -133,7 +177,6 @@ class FriendListFragment: BaseFragment() {
             mFriendAdapter.submitList(it.friends)
         }, onError = {
             showError(it)
-
         })
     }
 
@@ -154,6 +197,32 @@ class FriendListFragment: BaseFragment() {
                 false
             }
             popup.show()
+        }
+    }
+
+    private fun addOrDeleteEditor(userModel: UserModel, shouldAddEditor: Boolean) {
+        if (shouldAddEditor) {
+            addFriendAsEditor(userModel)
+        } else {
+            deleteEditorFromList(userModel)
+        }
+    }
+
+    private fun addFriendAsEditor(userModel: UserModel) {
+        mShoppingListId?.let {
+            mUserViewModel.saveEditor(SaveEditorValue(userModel.id, it))
+        }
+    }
+
+    private fun deleteEditorFromList(userModel: UserModel) {
+        mShoppingListId?.let {
+            mUserViewModel.deleteEditor(DeleteEditorValue(userModel.id, it))
+        }
+    }
+
+    private fun getShoppingListById() {
+        mShoppingListId?.let {
+            mShoppingListViewModel.getShoppingListById(ShoppingListByIdValue(it))
         }
     }
 

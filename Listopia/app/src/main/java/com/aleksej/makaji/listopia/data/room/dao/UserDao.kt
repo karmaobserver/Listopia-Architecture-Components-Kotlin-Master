@@ -2,6 +2,7 @@ package com.aleksej.makaji.listopia.data.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.aleksej.makaji.listopia.data.room.model.ShoppingListUserXRef
 import com.aleksej.makaji.listopia.data.room.model.User
 import com.aleksej.makaji.listopia.data.room.model.UserUserXRef
 import com.aleksej.makaji.listopia.data.room.model.UserWithFriends
@@ -23,6 +24,9 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveFriends(friends: List<UserUserXRef>): List<Long>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveEditor(editor: ShoppingListUserXRef): Long
+
     @Query("SELECT * FROM user")
     fun getUser(): LiveData<User?>
 
@@ -34,4 +38,10 @@ interface UserDao {
 
     @Query("DELETE FROM user WHERE id = :userId")
     suspend fun deleteUserById(userId: String)
+
+    @Query("DELETE FROM friends WHERE userId = :userId AND friendId = :friendId")
+    suspend fun deleteFriend(userId: String, friendId: String)
+
+    @Query("DELETE FROM editors WHERE editorId = :editorId AND shoppingListId = :shoppingListId")
+    suspend fun deleteEditor(editorId: String, shoppingListId: String)
 }

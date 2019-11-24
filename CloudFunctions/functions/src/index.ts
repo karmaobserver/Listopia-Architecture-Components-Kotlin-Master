@@ -216,6 +216,42 @@ app.post('/user/:userId/add-friend', (req, res) => {
   
 });
 
+app.post('/shopping-list/add-editor', (req, res) => {
+  var shoppingListRef = db.collection('shopping_lists').doc(req.body.shoppingListId)
+  shoppingListRef.get().then(function(shoppingList) {
+    if (shoppingList.exists) {
+      shoppingListRef.update({
+        editors: admin.firestore.FieldValue.arrayUnion(req.body.editorId)
+      })
+      console.log('Added editor with ID: ', req.body.editorId);
+      res.status(201).json({});
+    } else {
+      res.status(404).send(parseError("ShoppingList does not exists in database with ID: " + req.body.shoppingListId));
+    }
+  }).catch(error => {
+    console.log(error)
+    res.status(500).send(parseError("Failed to add editor into Firestore"));
+  });
+});
+
+app.put('/shopping-list/delete-editor', (req, res) => {
+  var shoppingListRef = db.collection('shopping_lists').doc(req.body.shoppingListId)
+  shoppingListRef.get().then(function(shoppingList) {
+    if (shoppingList.exists) {
+      shoppingListRef.update({
+        editors: admin.firestore.FieldValue.arrayRemove(req.body.editorId)
+      })
+      console.log('Deleted editor with ID: ', req.body.editorId);
+      res.status(201).json({});
+    } else {
+      res.status(404).send(parseError("ShoppingList does not exists in database with ID: " + req.body.shoppingListId));
+    }
+  }).catch(error => {
+    console.log(error)
+    res.status(500).send(parseError("Failed to delete editor from Firestore"));
+  });
+});
+
 app.post('/shopping-list/add', (req, res) => {
   var shoppingListRef = db.collection('shopping_lists').doc(req.body.id)
   shoppingListRef.set(req.body).then(function() {

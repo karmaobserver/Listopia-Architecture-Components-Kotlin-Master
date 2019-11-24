@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteEditorValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveEditorValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveFriendValue
 import com.aleksej.makaji.listopia.di.annotation.Local
 import com.aleksej.makaji.listopia.di.annotation.Remote
@@ -16,6 +18,22 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(@Remote private val mRemoteUserDataSource: UserDataSource,
                                          @Local private val mLocalUserDataSource: UserDataSource): UserDataSource {
+    override suspend fun deleteEditor(deleteEditorValue: DeleteEditorValue): State<Unit> {
+        return mLocalUserDataSource.deleteEditor(deleteEditorValue)
+    }
+
+    override suspend fun deleteEditorRemote(deleteEditorValue: DeleteEditorValue): State<Unit> {
+        return mRemoteUserDataSource.deleteEditorRemote(deleteEditorValue)
+    }
+
+    override suspend fun saveEditor(saveEditorValue: SaveEditorValue): State<Long> {
+        return mLocalUserDataSource.saveEditor(saveEditorValue)
+    }
+
+    override suspend fun saveEditorRemote(saveEditorValue: SaveEditorValue): State<Unit> {
+        return mRemoteUserDataSource.saveEditorRemote(saveEditorValue)
+    }
+
     override suspend fun deleteFriendByIdRemote(friendId: String): State<Unit> {
         return mRemoteUserDataSource.deleteFriendByIdRemote(friendId)
     }

@@ -6,10 +6,14 @@ import com.aleksej.makaji.listopia.data.api.callback.CoroutineAdapter
 import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.mapper.mapToDeleteEditorRequest
+import com.aleksej.makaji.listopia.data.mapper.mapToSaveEditorRequest
 import com.aleksej.makaji.listopia.data.mapper.mapToSaveFriendRequest
 import com.aleksej.makaji.listopia.data.mapper.mapToSaveUserRequest
 import com.aleksej.makaji.listopia.data.repository.UserDataSource
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteEditorValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveEditorValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveFriendValue
 import com.aleksej.makaji.listopia.error.ExceptionError
 import com.aleksej.makaji.listopia.util.SharedPreferenceManager
@@ -22,6 +26,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class UserRemoteDataSource @Inject constructor(private val mListopiaApi: ListopiaApi, private val mRetrofit: Retrofit, private val mSharedPreferenceManager: SharedPreferenceManager) : UserDataSource {
+
     override suspend fun deleteFriendById(friendId: String): State<Unit> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -57,6 +62,30 @@ class UserRemoteDataSource @Inject constructor(private val mListopiaApi: Listopi
     override suspend fun saveUserRemote(userModel: UserModel): State<Unit> {
         return try {
             CoroutineAdapter(mListopiaApi.saveUser(userModel.mapToSaveUserRequest()), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
+
+    override suspend fun saveEditor(saveEditorValue: SaveEditorValue): State<Long> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun saveEditorRemote(saveEditorValue: SaveEditorValue): State<Unit> {
+        return try {
+            CoroutineAdapter(mListopiaApi.saveEditor(saveEditorValue.mapToSaveEditorRequest()), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
+
+    override suspend fun deleteEditor(deleteEditorValue: DeleteEditorValue): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun deleteEditorRemote(deleteEditorValue: DeleteEditorValue): State<Unit> {
+        return try {
+            CoroutineAdapter(mListopiaApi.deleteEditor(deleteEditorValue.mapToDeleteEditorRequest()), mRetrofit)()
         } catch (e: Exception) {
             ErrorState(ExceptionError(e))
         }

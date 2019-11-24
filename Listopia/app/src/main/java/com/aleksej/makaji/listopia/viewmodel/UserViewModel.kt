@@ -3,12 +3,8 @@ package com.aleksej.makaji.listopia.viewmodel
 import androidx.lifecycle.*
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.UserRepository
-import com.aleksej.makaji.listopia.data.usecase.DeleteFriendByIdUseCase
-import com.aleksej.makaji.listopia.data.usecase.SaveFriendUseCase
-import com.aleksej.makaji.listopia.data.usecase.FetchAndSaveUserUseCase
-import com.aleksej.makaji.listopia.data.usecase.value.DeleteFriendValue
-import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveUserValue
-import com.aleksej.makaji.listopia.data.usecase.value.SaveFriendValue
+import com.aleksej.makaji.listopia.data.usecase.*
+import com.aleksej.makaji.listopia.data.usecase.value.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +14,9 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: FetchAndSaveUserUseCase,
                                         private val mUserRepository: UserRepository,
                                         private val mSaveFriendUseCase: SaveFriendUseCase,
-                                        private val mDeleteFriendByIdUseCase: DeleteFriendByIdUseCase) : ViewModel() {
+                                        private val mDeleteFriendByIdUseCase: DeleteFriendByIdUseCase,
+                                        private val mSaveEditorUseCase: SaveEditorUseCase,
+                                        private val mDeleteEditorUseCase: DeleteEditorUseCase) : ViewModel() {
 
     private val getUserTrigger = MutableLiveData<String>()
     val getUserLiveData = Transformations.switchMap(getUserTrigger) { mUserRepository.getUserById(it) }
@@ -32,6 +30,12 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
 
     private val saveFriendTrigger = MutableLiveData<StateHandler<Long>>()
     val saveFriendLiveData : LiveData<StateHandler<Long>> = saveFriendTrigger
+
+    private val saveEditorTrigger = MutableLiveData<StateHandler<Long>>()
+    val saveEditorLiveData : LiveData<StateHandler<Long>> = saveEditorTrigger
+
+    private val deleteEditorTrigger = MutableLiveData<StateHandler<Unit>>()
+    val deleteEditorLiveData : LiveData<StateHandler<Unit>> = deleteEditorTrigger
 
     private val addFriendEventTrigger = MutableLiveData<StateHandler<Unit>>()
     val addFriendEvent : LiveData<StateHandler<Unit>> = addFriendEventTrigger
@@ -62,6 +66,20 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
         deleteFriendTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             deleteFriendTrigger.value = StateHandler(mDeleteFriendByIdUseCase.invoke(deleteFriendValue))
+        }
+    }
+
+    fun saveEditor(saveEditorValue: SaveEditorValue) {
+        saveEditorTrigger.value = StateHandler.loading()
+        viewModelScope.launch {
+            saveEditorTrigger.value = StateHandler(mSaveEditorUseCase.invoke(saveEditorValue))
+        }
+    }
+
+    fun deleteEditor(deleteEditorValue: DeleteEditorValue) {
+        deleteEditorTrigger.value = StateHandler.loading()
+        viewModelScope.launch {
+            deleteEditorTrigger.value = StateHandler(mDeleteEditorUseCase.invoke(deleteEditorValue))
         }
     }
 }

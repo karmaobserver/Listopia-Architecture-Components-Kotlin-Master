@@ -12,7 +12,10 @@ import com.aleksej.makaji.listopia.data.mapper.mapToUserModel
 import com.aleksej.makaji.listopia.data.repository.UserDataSource
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.data.room.dao.UserDao
+import com.aleksej.makaji.listopia.data.room.model.ShoppingListUserXRef
 import com.aleksej.makaji.listopia.data.room.model.UserUserXRef
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteEditorValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveEditorValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveFriendValue
 import com.aleksej.makaji.listopia.error.RoomError
 import com.aleksej.makaji.listopia.util.SharedPreferenceManager
@@ -121,10 +124,35 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao, pri
 
     override suspend fun deleteFriendById(friendId: String): State<Unit> {
         return try {
+            SuccessState(mUserDao.deleteFriend(mSharedPreferenceManager.userId, friendId))
             SuccessState(mUserDao.deleteUserById(friendId))
         }catch (e: Exception){
             ErrorState(RoomError(e))
         }
+    }
+
+    override suspend fun saveEditor(saveEditorValue: SaveEditorValue): State<Long> {
+        return try {
+            SuccessState(mUserDao.saveEditor(ShoppingListUserXRef(saveEditorValue.shoppingListId, saveEditorValue.editorId)))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun saveEditorRemote(saveEditorValue: SaveEditorValue): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun deleteEditor(deleteEditorValue: DeleteEditorValue): State<Unit> {
+        return try {
+            SuccessState(mUserDao.deleteEditor(deleteEditorValue.editorId, deleteEditorValue.shoppingListId))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun deleteEditorRemote(deleteEditorValue: DeleteEditorValue): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

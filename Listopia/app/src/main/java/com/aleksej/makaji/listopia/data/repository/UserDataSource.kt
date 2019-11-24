@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
-import com.aleksej.makaji.listopia.data.usecase.value.DeleteFriendValue
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteEditorValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveEditorValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveFriendValue
 
 /**
@@ -22,4 +23,9 @@ interface UserDataSource {
     suspend fun saveFriendRemote(saveFriendValue: SaveFriendValue): State<UserModel>
     suspend fun deleteFriendByIdRemote(friendId: String): State<Unit>
     suspend fun deleteFriendById(friendId: String): State<Unit>
+    suspend fun saveEditor(saveEditorValue: SaveEditorValue): State<Long>
+    suspend fun saveEditorRemote(saveEditorValue: SaveEditorValue): State<Unit>
+    suspend fun deleteEditor(deleteEditorValue: DeleteEditorValue): State<Unit>
+    suspend fun deleteEditorRemote(deleteEditorValue: DeleteEditorValue): State<Unit>
 }
+
