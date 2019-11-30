@@ -13,11 +13,13 @@ import com.aleksej.makaji.listopia.adapter.ShoppingListAdapter
 import com.aleksej.makaji.listopia.adapter.ShoppingListAdapterEvents
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
+import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.databinding.FragmentShoppingListBinding
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
+import kotlinx.android.synthetic.main.item_shopping_list.view.*
 import javax.inject.Inject
 
 /**
@@ -117,8 +119,8 @@ class ShoppingListFragment: BaseFragment() {
     }
 
     private fun observeShoppingLists() {
-        observePeek(mShoppingListViewModel.getShoppingListsLiveData, {
-                mShoppingListAdapter.submitList(it)
+        observeSingle(mShoppingListViewModel.getShoppingListsLiveData, {
+            mShoppingListAdapter.submitList(it)
         }, onError = {
             showError(it)
         })

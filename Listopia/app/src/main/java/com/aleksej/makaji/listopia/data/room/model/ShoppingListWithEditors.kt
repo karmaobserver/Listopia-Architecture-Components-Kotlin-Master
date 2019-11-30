@@ -20,5 +20,13 @@ data class ShoppingListWithEditors(
                         parentColumn = "shoppingListId",
                         entityColumn = "editorId")
         )
-        val editors: List<User>
+        val editors: List<User>,
+
+        @Relation(
+                parentColumn = "id",
+                entity = Product::class,
+                entityColumn = "shoppingListId"
+                )
+        val products: List<Product>
+
 )

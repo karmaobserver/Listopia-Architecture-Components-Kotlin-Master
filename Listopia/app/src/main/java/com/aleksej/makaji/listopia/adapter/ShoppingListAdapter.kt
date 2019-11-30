@@ -51,5 +51,21 @@ class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponen
 
     override fun bind(binding: ItemShoppingListBinding, item: ShoppingListModel) {
         binding.shoppingListModel = item
+        countCheckedProducts(binding, item)
+    }
+
+    private fun countCheckedProducts(binding: ItemShoppingListBinding, shoppingListModel: ShoppingListModel) {
+        if (shoppingListModel.products.isNullOrEmpty()) {
+            binding.textViewMaxProducts.text = "0"
+            binding.textViewCheckedProducts.text = "0"
+            return
+        } else {
+            binding.textViewMaxProducts.text = shoppingListModel.products.size.toString()
+        }
+        var countCheked = 0
+        shoppingListModel.products.forEach {
+            if (it.isChecked) countCheked++
+        }
+        binding.textViewCheckedProducts.text = countCheked.toString()
     }
 }

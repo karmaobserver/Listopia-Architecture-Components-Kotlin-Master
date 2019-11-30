@@ -11,4 +11,5 @@ data class ShoppingListModel(val id: String,
                              val isDeleted: Boolean,
                              var isSynced: Boolean,
                              var timestamp: Date,
-                             val editors: List<UserModel>? = null)
+                             val editors: List<UserModel>? = null,
+                             val products: List<ProductModel>? = null)
