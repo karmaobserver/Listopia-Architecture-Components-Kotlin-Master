@@ -11,6 +11,7 @@ import com.aleksej.makaji.listopia.data.repository.model.ProductModel
 import com.aleksej.makaji.listopia.databinding.ItemProductBinding
 import com.aleksej.makaji.listopia.util.SharedPreferenceManager
 import com.aleksej.makaji.listopia.util.margin
+import com.aleksej.makaji.listopia.util.toDecimalString
 import javax.inject.Inject
 
 /**
@@ -67,6 +68,11 @@ class ProductAdapter(private val mDataBindingComponent: DataBindingComponent,
         binding.currency = mSharedPreferenceManager.currency
         binding.productModel = item
         shouldSetBottomMargins(binding, item)
+        if (item.quantity == 0.0 || item.quantity == null) {
+            binding.textViewProductPrice.text = item.price.toDecimalString()
+        } else {
+            binding.textViewProductPrice.text = (item.price * item.quantity).toDecimalString()
+        }
     }
 
     private fun markItemAsChecked(binding: ItemProductBinding) {

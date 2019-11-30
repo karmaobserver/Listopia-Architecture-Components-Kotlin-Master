@@ -15,6 +15,9 @@ import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.GsonBuilder
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 /**
  * Created by Aleksej Makaji on 12/30/18.
@@ -114,3 +117,9 @@ inline fun <reified T : Any> Any.mapTo(): T =
         GsonBuilder().create().run {
             toJson(this@mapTo).let { fromJson(it, T::class.java) }
         }
+
+fun Double.toDecimalString(): String {
+    val decimalFormat = DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH))
+    decimalFormat.maximumFractionDigits = 340
+    return decimalFormat.format(this)
+}

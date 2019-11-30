@@ -14,13 +14,17 @@ import com.aleksej.makaji.listopia.adapter.ProductAdapter
 import com.aleksej.makaji.listopia.adapter.ProductAdapterEvents
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
+import com.aleksej.makaji.listopia.data.repository.model.ProductModel
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
-import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
 import com.aleksej.makaji.listopia.databinding.FragmentProductListBinding
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 import javax.inject.Inject
+
 
 /**
  * Created by Aleksej Makaji on 1/20/19.
@@ -143,6 +147,7 @@ class ProductListFragment: BaseFragment() {
     private fun observeProducts() {
         observePeek(mProductViewModel.getProductsByShoppingIdLiveData, {
             mProductAdapter.submitList(it)
+            calculateTotalPriceList(it)
         }, onError = {
             showError(it)
         })
@@ -166,6 +171,32 @@ class ProductListFragment: BaseFragment() {
                 false
             }
             popup.show()
+        }
+    }
+
+    private fun calculateTotalPriceList(products: List<ProductModel>) {
+        if (products.isNullOrEmpty()) {
+            binding.textViewListTotal.text = "0"
+            binding.textViewCartTotal.text = "0"
+        } else {
+            var listTotal = 0.0
+            var cartTotal = 0.0
+            products.forEach {
+                if (it.quantity == 0.0 || it.quantity == null) {
+                    listTotal += it.price
+                    if (it.isChecked) {
+                        cartTotal += it.price
+                    }
+                } else {
+                    listTotal += it.price * it.quantity
+                    if (it.isChecked) {
+                        cartTotal += it.price * it.quantity
+                    }
+                }
+            }
+
+            binding.textViewListTotal.text = listTotal.toDecimalString()
+            binding.textViewCartTotal.text = cartTotal.toDecimalString()
         }
     }
 }
