@@ -14,6 +14,7 @@ import com.aleksej.makaji.listopia.adapter.ProductAdapter
 import com.aleksej.makaji.listopia.adapter.ProductAdapterEvents
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
 import com.aleksej.makaji.listopia.databinding.FragmentProductListBinding
@@ -157,7 +158,9 @@ class ProductListFragment: BaseFragment() {
                         findNavController().navigate(ProductListFragmentDirections.actionFragmentProductListToFragmentProductEdit(productId))
                     }
                     R.id.popup_menu_delete_product_list -> {
-                        mProductViewModel.deleteProductById(ProductValue(productId))
+                        mShoppingListId?.let {
+                            mProductViewModel.deleteProductById(DeleteProductValue(it, productId))
+                        }
                     }
                 }
                 false

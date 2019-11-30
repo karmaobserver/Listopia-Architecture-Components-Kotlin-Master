@@ -69,8 +69,8 @@ class RepositoryModule {
     @Singleton
     @Provides
     @Remote
-    fun bindProductRemoteDataSource(): ProductDataSource {
-        return ProductRemoteDataSource()
+    fun bindProductRemoteDataSource(listopiaApi: ListopiaApi, @Listopia retrofit: Retrofit): ProductDataSource {
+        return ProductRemoteDataSource(listopiaApi, retrofit)
     }
 
     @Singleton

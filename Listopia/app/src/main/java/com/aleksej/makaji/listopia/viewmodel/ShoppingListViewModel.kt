@@ -46,8 +46,8 @@ class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListB
     private val addShoppingListEventTrigger = MutableLiveData<StateHandler<Unit>>()
     val addShoppingListEvent : LiveData<StateHandler<Unit>> = addShoppingListEventTrigger
 
-    private val fetchShoppingListsTrigger = MutableLiveData<StateHandler<Unit>>()
-    val fetchShoppingListsLiveData : LiveData<StateHandler<Unit>> = fetchShoppingListsTrigger
+    private val fetchShoppingListsTrigger = MutableLiveData<StateHandler<List<String>>>()
+    val fetchShoppingListsLiveData : LiveData<StateHandler<List<String>>> = fetchShoppingListsTrigger
 
     fun getShoppingLists() {
         getShoppingListsByUserIdTrigger.postValue(Unit)
@@ -83,20 +83,6 @@ class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListB
     fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue) {
         viewModelScope.launch {
             deleteShoppingListByIdTrigger.value = StateHandler(mDeleteShoppingListByIdUseCase.invoke(deleteShoppingListValue))
-        }
-    }
-
-    fun test() {
-        GlobalScope.launch {
-            val result = mShoppingListRepository.fetchShoppingLists()
-            when (result) {
-                is SuccessState -> {
-                    Log.d("RETRO", "SUCCESS")
-                }
-                is ErrorState -> {
-                    Log.d("RETRO", "ERROR" + result.error)
-                }
-            }
         }
     }
 }

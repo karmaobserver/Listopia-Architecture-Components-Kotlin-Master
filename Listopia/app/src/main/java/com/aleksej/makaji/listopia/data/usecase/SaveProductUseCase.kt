@@ -1,9 +1,12 @@
 package com.aleksej.makaji.listopia.data.usecase
 
+import android.util.Log
 import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
+import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.repository.ProductRepository
 import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
+import com.aleksej.makaji.listopia.error.UnknownError
 import com.aleksej.makaji.listopia.util.Validator
 import javax.inject.Inject
 
@@ -16,6 +19,32 @@ class SaveProductUseCase @Inject constructor(private val mProductRepository: Pro
         Validator.validateProductName(value.name)?.run {
             return ErrorState(this)
         }
-        return mProductRepository.saveProduct(value)
+        var returnValue : State<Long> = ErrorState(UnknownError)
+        when (val saveProductRoom = mProductRepository.saveProduct(value)) {
+            is SuccessState -> {
+                when (val getProductRoom = mProductRepository.getProductByIdSuspend(value.id)) {
+                    is SuccessState -> {
+                        getProductRoom.data?.let {
+                            when (mProductRepository.saveProductRemote(it)) {
+                                is SuccessState -> {
+                                    mProductRepository.updateSyncProduct(it.id)
+                                    return saveProductRoom
+                                }
+                                else -> {
+                                    returnValue =  saveProductRoom
+                                    Log.d("SaveShoppingListUseCase", "error: saveShoppingListRemote")
+                                }
+                            }
+                        }
+                    }
+                    else -> {
+                        returnValue = saveProductRoom
+                        Log.d("SaveShoppingListUseCase", "error: getShoppingListRoom")
+                    }
+                }
+            }
+            else -> returnValue = saveProductRoom
+        }
+        return returnValue
     }
 }

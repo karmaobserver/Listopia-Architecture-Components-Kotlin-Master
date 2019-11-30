@@ -5,11 +5,10 @@ import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.ProductRepository
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
 import com.aleksej.makaji.listopia.data.usecase.DeleteProductByIdUseCase
+import com.aleksej.makaji.listopia.data.usecase.FetchAndSaveProductsUseCase
 import com.aleksej.makaji.listopia.data.usecase.SaveProductUseCase
 import com.aleksej.makaji.listopia.data.usecase.UpdateProductUseCase
-import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
-import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
-import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
+import com.aleksej.makaji.listopia.data.usecase.value.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +18,7 @@ import javax.inject.Inject
 class ProductViewModel @Inject constructor(private val mUpdateProductUseCase: UpdateProductUseCase,
                                            private val mSaveProductUseCase: SaveProductUseCase,
                                            private val mDeleteProductByIdUseCase: DeleteProductByIdUseCase,
+                                           private val mFetchAndSaveProductsUseCase: FetchAndSaveProductsUseCase,
                                            private val mProductRepository: ProductRepository) : ViewModel() {
 
     var reloadEditData = true
@@ -41,12 +41,21 @@ class ProductViewModel @Inject constructor(private val mUpdateProductUseCase: Up
     private val addProductEventTrigger = MutableLiveData<StateHandler<Unit>>()
     val addProductEvent : LiveData<StateHandler<Unit>> = addProductEventTrigger
 
+    private val fetchProductsTrigger = MutableLiveData<StateHandler<Unit>>()
+    val fetchProductsLiveData : LiveData<StateHandler<Unit>> = fetchProductsTrigger
+
     fun getProductsByShoppingId(productsValue: ProductsValue) {
         getProductsByShoppingIdTrigger.postValue(productsValue)
     }
 
     fun getProductById(prodcutValue: ProductValue) {
         getProductByIdTrigger.postValue(prodcutValue)
+    }
+
+    fun fetchProducts(shoppingListsId: List<String>) {
+        viewModelScope.launch {
+            fetchProductsTrigger.value = StateHandler(mFetchAndSaveProductsUseCase.invoke(FetchProductsValue(shoppingListsId)))
+        }
     }
 
     fun addProduct(saveProductValue: SaveProductValue) {
@@ -65,9 +74,9 @@ class ProductViewModel @Inject constructor(private val mUpdateProductUseCase: Up
         }
     }
 
-    fun deleteProductById(productValue: ProductValue) {
+    fun deleteProductById(deleteProductValue: DeleteProductValue) {
         viewModelScope.launch {
-            deleteProductByIdTrigger.value = StateHandler(mDeleteProductByIdUseCase.invoke(productValue))
+            deleteProductByIdTrigger.value = StateHandler(mDeleteProductByIdUseCase.invoke(deleteProductValue))
         }
     }
 }

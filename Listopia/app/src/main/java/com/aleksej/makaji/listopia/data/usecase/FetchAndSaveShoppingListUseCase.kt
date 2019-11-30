@@ -11,7 +11,6 @@ import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.data.usecase.value.FetchShoppingListsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListEditorValue
-import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.error.UnknownError
 import javax.inject.Inject
 
@@ -19,27 +18,29 @@ import javax.inject.Inject
  * Created by Aleksej Makaji on 2019-10-12.
  */
 class FetchAndSaveShoppingListUseCase @Inject constructor(private val mShoppingListRepository: ShoppingListRepository,
-                                                          private val mUserRepository: UserRepository) : UseCase<FetchShoppingListsValue, Unit>() {
+                                                          private val mUserRepository: UserRepository) : UseCase<FetchShoppingListsValue, List<String>>() {
 
-    override suspend fun invoke(value: FetchShoppingListsValue): State<Unit> {
+    override suspend fun invoke(value: FetchShoppingListsValue): State<List<String>> {
         when (val fetchedShoppingLists = mShoppingListRepository.fetchShoppingListsByUserId(value)) {
             is SuccessState -> {
                 fetchedShoppingLists.data?.let { remoteShoppingLists ->
                     when (val shoppingListsRoom = mShoppingListRepository.getShoppingListsSuspend()) {
                         is SuccessState -> {
+                            val shoppingListsId = arrayListOf<String>()
                             val roomShoppingLists = shoppingListsRoom.data
                             val editorsToBeAdded = arrayListOf<UserModel>()
                             val shoppingListEditorsRef = arrayListOf<SaveShoppingListEditorValue>()
                             val shoppingListsToBeAdded = arrayListOf<ShoppingListModel>()
                             remoteShoppingLists.forEach {
+                                shoppingListsId.add(it.id)
                                 it.editors?.forEach {editor ->
                                     shoppingListEditorsRef.add(SaveShoppingListEditorValue(it.id, editor.id))
                                     if (!editorsToBeAdded.contains(editor)) {
                                         editorsToBeAdded.add(editor)
                                     }
                                 }
-                                val index = roomShoppingLists?.indexOfFirst { roomMessageModel ->
-                                    roomMessageModel.id == it.id
+                                val index = roomShoppingLists?.indexOfFirst { roomShoppingListModel ->
+                                    roomShoppingListModel.id == it.id
                                 } // -1 if not found
                                 if (index != null && index >= 0) {
                                     //If shopping list exists in database
@@ -55,11 +56,11 @@ class FetchAndSaveShoppingListUseCase @Inject constructor(private val mShoppingL
                                 }
                             }
                             saveShoppingListsWithEditors(shoppingListsToBeAdded, editorsToBeAdded, shoppingListEditorsRef)
-                            return SuccessState(Unit)
+                            return SuccessState(shoppingListsId)
 
                         }
                         is ErrorState -> return ErrorState(shoppingListsRoom.error)
-                        is LoadingState -> {}
+                        is LoadingState -> return LoadingState()
                     }
                 }
             }

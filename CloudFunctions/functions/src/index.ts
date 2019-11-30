@@ -270,6 +270,130 @@ app.put('/shopping-list/update', (req, res) => {
   });
 });
 
+
+app.delete('/shopping-list/delete/:shoppingListId', (req, res) => {
+  try {
+    const shoppingListProductsCollection = db.collection('shopping_lists').doc(req.params.shoppingListId).collection('product')
+    var deleted = new Promise((resolve, reject) => {
+      deleteQueryBatch(shoppingListProductsCollection, 10, resolve, reject)
+    }).then(function() {
+      db.collection('shopping_lists').doc(req.params.shoppingListId).delete();
+      res.status(200).json({});
+    }).catch(error => {
+      res.status(500).send(parseError("Failed to delete shopping list" + req.params.shoppingListId));
+    });
+  }catch(error) {
+    res.status(500).send(parseError("Failed to delete shopping list" + req.params.shoppingListId));
+  };
+});
+
+app.delete('/product/delete/:shoppingListId/:productId', (req, res) => {
+  try {
+    db.collection('shopping_lists').doc(req.params.shoppingListId).collection('product').doc(req.params.productId).delete();
+    res.status(200).json({});
+  }catch(error) {
+    res.status(500).send(parseError("Failed to delete product" + req.params.productId));
+  };
+});
+
+function deleteQueryBatch(query, batchSize, resolve, reject) {
+  query.get()
+    .then((snapshot) => {
+      // When there are no documents left, we are done
+      if (snapshot.size == 0) {
+        return 0;
+      }
+
+      // Delete documents in a batch
+      let batch = db.batch();
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+
+      return batch.commit().then(() => {
+        return snapshot.size;
+      });
+    }).then((numDeleted) => {
+      if (numDeleted === 0) {
+        resolve();
+        return;
+      }
+
+      // Recurse on the next process tick, to avoid
+      // exploding the stack.
+      process.nextTick(() => {
+        deleteQueryBatch(query, batchSize, resolve, reject);
+      });
+    })
+    .catch(reject);
+}
+
+app.put('/product/update', (req, res) => {
+  var productRef = db.collection('shopping_lists').doc(req.body.shoppingListId).collection('product').doc(req.body.id)
+  productRef.update(req.body).then(function() {
+    res.status(201).json({});
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to update product into Firestore with ID: " + req.body.id));
+  });
+});
+
+app.post('/product/add', (req, res) => {
+  var productRef = db.collection('shopping_lists').doc(req.body.shoppingListId).collection('product').doc(req.body.id)
+  productRef.set(req.body).then(function() {
+    res.status(201).json({});
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to add product into Firestore with ID: " + req.body.id));
+  });
+});
+
+app.post('/products', (req, res) => {
+  console.log(req.body.shoppingListsId);
+  try {
+    var products = [];
+    var shoppingListids = req.body.shoppingListsId
+    shoppingListids.forEach(function (shoppingListId, i) {
+      db.collection('shopping_lists').doc(shoppingListId).get().then(document => {
+        if (document.empty) {
+          console.log("No matching documents for shoppings lists to fetch products");
+          res.status(204).json({});
+          return
+        }
+        if (i == shoppingListids.length - 1) {
+          getProducts(req, res, document, products, true)
+        } else {
+          getProducts(req, res, document, products, false)
+        }
+      });
+    }); 
+  }catch(error) {
+    res.status(500).send(parseError("Failed to fetch"));
+  };
+});
+
+ async function getShopingingList(req: any, res: any, products: any, shoppingListId: any, isLastItem: boolean) {
+  console.log("test");
+  db.collection('shopping_lists').doc(shoppingListId).get().then(document => {
+    if (document.empty) {
+      console.log("No matching documents for shoppings lists to fetch products");
+      res.status(204).json({});
+      return
+    }
+    getProducts(req, res, document, products, isLastItem)
+  });
+}
+
+async function getProducts(req: any, res: any, document: any, products: any, isLastItem: boolean) {
+ document.ref.collection("product").get().then((querySnapshot) => {
+    querySnapshot.forEach((document) => {
+      products.push(document.data())
+    });
+    if (isLastItem) {
+      console.log(products)
+      res.status(200).json(products);
+    }
+  });
+}
+
 app.get('/shopping-list/:userId', (req, res) => {
   console.log(req.params.userId);
   try {

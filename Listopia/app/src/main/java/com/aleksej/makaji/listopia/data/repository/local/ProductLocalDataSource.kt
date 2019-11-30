@@ -13,10 +13,7 @@ import com.aleksej.makaji.listopia.data.mapper.*
 import com.aleksej.makaji.listopia.data.repository.ProductDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
 import com.aleksej.makaji.listopia.data.room.dao.ProductDao
-import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
-import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
-import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
-import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
+import com.aleksej.makaji.listopia.data.usecase.value.*
 import com.aleksej.makaji.listopia.error.RoomError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -69,9 +66,9 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
         }
     }
 
-    override suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): State<Int> {
+    override suspend fun deleteProductsByShoppingList(deleteProductsValue: DeleteProductsValue): State<Int> {
         return try {
-            SuccessState(mProductDao.deleteProductsByShoppingList(deleteProductValue.shoppingListId))
+            SuccessState(mProductDao.deleteProductsByShoppingList(deleteProductsValue.shoppingListId))
         }catch (e: Exception){
             ErrorState(RoomError(e))
         }
@@ -106,5 +103,57 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
         }catch (e: Exception){
             ErrorState(RoomError(e))
         }
+    }
+
+    override suspend fun getProductsSuspend(): State<List<ProductModel>> {
+        return try {
+            SuccessState(mProductDao.getProductsSuspend().map {
+                it.mapToProductModel()
+            })
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun saveProducts(products: List<ProductModel>): State<List<Long>> {
+        return try {
+            SuccessState(mProductDao.saveProducts(products.map {
+                it.mapToProduct()
+            }))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun getProductByIdSuspend(productId: String): State<ProductModel> {
+        return try {
+            SuccessState(mProductDao.getProductByIdSuspend(productId).mapToProductModel())
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun updateSyncProduct(productId: String): State<Int> {
+        return try {
+            SuccessState(mProductDao.updateSyncProduct(productId))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun fetchProducts(shoppingListsId: List<String>): State<List<ProductModel>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun saveProductRemote(productModel: ProductModel): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun updateProductRemote(productModel: ProductModel): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun deleteProductByIdRemote(deleteProductValue: DeleteProductValue): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

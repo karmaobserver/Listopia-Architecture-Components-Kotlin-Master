@@ -16,6 +16,7 @@ import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
 import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.databinding.FragmentShoppingListBinding
 import com.aleksej.makaji.listopia.util.*
+import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 import javax.inject.Inject
 
@@ -28,6 +29,7 @@ class ShoppingListFragment: BaseFragment() {
     lateinit var mSharedPreferenceManager: SharedPreferenceManager
 
     private lateinit var mShoppingListViewModel: ShoppingListViewModel
+    private lateinit var mProductViewModel: ProductViewModel
 
     private var binding by autoCleared<FragmentShoppingListBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
@@ -49,6 +51,7 @@ class ShoppingListFragment: BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mShoppingListViewModel = viewModel(mViewModelFactory)
+        mProductViewModel = viewModel(mViewModelFactory)
         initRecyclerView()
         initObservers()
         initData()
@@ -77,11 +80,6 @@ class ShoppingListFragment: BaseFragment() {
             mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
         }
         mShoppingListViewModel.getShoppingLists()
-        //test()
-    }
-
-    private fun test() {
-        mShoppingListViewModel.test()
     }
 
     private fun initRecyclerView() {
@@ -107,6 +105,15 @@ class ShoppingListFragment: BaseFragment() {
         observeShoppingLists()
         observeAddShoppingList()
         observeDeleteShoppingListById()
+        observeFetchAndSaveShoppingLists()
+    }
+
+    private fun observeFetchAndSaveShoppingLists() {
+        observeSingle(mShoppingListViewModel.fetchShoppingListsLiveData, {
+            mProductViewModel.fetchProducts(it)
+        }, onError = {
+            showError(it)
+        })
     }
 
     private fun observeShoppingLists() {

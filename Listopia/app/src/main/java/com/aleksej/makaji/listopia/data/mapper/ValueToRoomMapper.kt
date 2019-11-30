@@ -11,7 +11,7 @@ import java.util.*
 /**
  * Created by Aleksej Makaji on 1/19/19.
  */
-fun SaveProductValue.mapToProduct(): Product = mapTo<Product>().copy(id = UUID.randomUUID().toString(), isSynced = false, isDeleted = false, timestamp = Date())
+fun SaveProductValue.mapToProduct(): Product = mapTo<Product>().copy(isSynced = false, isDeleted = false, timestamp = Date())
 
 fun SaveShoppingListValue.mapToShoppingList(): ShoppingList = mapTo<ShoppingList>().copy(isSynced = false, isDeleted = false, timestamp = Date())
 

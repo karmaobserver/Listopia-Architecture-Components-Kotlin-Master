@@ -18,6 +18,7 @@ import com.aleksej.makaji.listopia.error.ProductNameError
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
 import kotlinx.android.synthetic.main.fragment_product_add.*
+import java.util.*
 
 /**
  * Created by Aleksej Makaji on 1/20/19.
@@ -83,7 +84,8 @@ class ProductAddFragment: BaseFragment() {
 
     private fun addProduct() {
         mShoppingListId?.let {
-            mProductViewModel.addProduct(SaveProductValue(binding.editTextProductName.text(),
+            mProductViewModel.addProduct(SaveProductValue(UUID.randomUUID().toString(),
+                    binding.editTextProductName.text(),
                     binding.editTextQuantity.textDouble(),
                     binding.editTextUnit.text(),
                     binding.editTextPrice.textDouble(),

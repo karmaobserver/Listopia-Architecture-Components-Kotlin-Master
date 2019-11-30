@@ -2,6 +2,7 @@ package com.aleksej.makaji.listopia.data.api
 
 import com.aleksej.makaji.listopia.data.api.dto.request.*
 import com.aleksej.makaji.listopia.data.api.dto.response.EmptyResponse
+import com.aleksej.makaji.listopia.data.api.dto.response.ProductsResponse
 import com.aleksej.makaji.listopia.data.api.dto.response.ShoppingListsResponse
 import com.aleksej.makaji.listopia.data.api.dto.response.UserResponse
 import retrofit2.Response
@@ -11,9 +12,6 @@ import retrofit2.http.*
  * Created by Aleksej Makaji on 4/28/19.
  */
 interface ListopiaApi {
-
-    @GET("hello")
-    suspend fun testCloudFunction(): Response<EmptyResponse>
 
     @POST("user/save")
     suspend fun saveUser(@Body saveUserRequest: SaveUserRequest): Response<EmptyResponse>
@@ -44,4 +42,19 @@ interface ListopiaApi {
     @PUT("shopping-list/delete-editor")
     suspend fun deleteEditor(@Body deleteEditorRequest: DeleteEditorRequest): Response<EmptyResponse>
 
+    @POST("product/add")
+    suspend fun saveProduct(@Body saveProductRequest: SaveProductRequest): Response<EmptyResponse>
+
+    @POST("products")
+    suspend fun fetchProducts(@Body fetchProductsRequest: FetchProductsRequest): Response<ProductsResponse>
+
+    @PUT("product/update")
+    suspend fun updateProduct(@Body updateProductRequest: UpdateProductRequest) : Response<EmptyResponse>
+
+    @DELETE("product/delete/{shoppingListId}/{productId}")
+    suspend fun deleteProductById(@Path("productId") productId: String,
+                                  @Path("shoppingListId") shoppingListId: String) : Response<EmptyResponse>
+
+    @DELETE("shopping-list/delete/{shoppingListId}")
+    suspend fun deleteShoppingListById(@Path("shoppingListId") shoppingListId: String) : Response<EmptyResponse>
 }

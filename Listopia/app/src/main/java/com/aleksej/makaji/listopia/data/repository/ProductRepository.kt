@@ -5,10 +5,7 @@ import androidx.paging.PagedList
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.model.ProductModel
-import com.aleksej.makaji.listopia.data.usecase.value.DeleteProductValue
-import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
-import com.aleksej.makaji.listopia.data.usecase.value.ProductsValue
-import com.aleksej.makaji.listopia.data.usecase.value.SaveProductValue
+import com.aleksej.makaji.listopia.data.usecase.value.*
 import com.aleksej.makaji.listopia.di.annotation.Local
 import com.aleksej.makaji.listopia.di.annotation.Remote
 import javax.inject.Inject
@@ -20,6 +17,37 @@ import javax.inject.Singleton
 @Singleton
 class ProductRepository @Inject constructor(@Remote private val mRemoteProductDataSource: ProductDataSource,
                                                  @Local private val mLocalProductDataSource: ProductDataSource): ProductDataSource {
+    override suspend fun getProductByIdSuspend(productId: String): State<ProductModel> {
+        return mLocalProductDataSource.getProductByIdSuspend(productId)
+    }
+
+    override suspend fun saveProducts(products: List<ProductModel>): State<List<Long>> {
+        return mLocalProductDataSource.saveProducts(products)
+    }
+
+    override suspend fun getProductsSuspend(): State<List<ProductModel>> {
+        return mLocalProductDataSource.getProductsSuspend()
+    }
+
+    override suspend fun updateSyncProduct(productId: String): State<Int> {
+        return mLocalProductDataSource.updateSyncProduct(productId)
+    }
+
+    override suspend fun fetchProducts(shoppingListsId: List<String>): State<List<ProductModel>> {
+        return mRemoteProductDataSource.fetchProducts(shoppingListsId)
+    }
+
+    override suspend fun saveProductRemote(productModel: ProductModel): State<Unit> {
+        return mRemoteProductDataSource.saveProductRemote(productModel)
+    }
+
+    override suspend fun updateProductRemote(productModel: ProductModel): State<Unit> {
+        return mRemoteProductDataSource.updateProductRemote(productModel)
+    }
+
+    override suspend fun deleteProductByIdRemote(deleteProductValue: DeleteProductValue): State<Unit> {
+        return mRemoteProductDataSource.deleteProductByIdRemote(deleteProductValue)
+    }
 
     override fun getProductsByShoppingListId(productsValue: ProductsValue): LiveData<StateHandler<PagedList<ProductModel>>> {
         return mLocalProductDataSource.getProductsByShoppingListId(productsValue)
@@ -29,8 +57,8 @@ class ProductRepository @Inject constructor(@Remote private val mRemoteProductDa
         return mLocalProductDataSource.saveProduct(saveProductValue)
     }
 
-    override suspend fun deleteProductsByShoppingList(deleteProductValue: DeleteProductValue): State<Int> {
-        return mLocalProductDataSource.deleteProductsByShoppingList(deleteProductValue)
+    override suspend fun deleteProductsByShoppingList(deleteProductsValue: DeleteProductsValue): State<Int> {
+        return mLocalProductDataSource.deleteProductsByShoppingList(deleteProductsValue)
     }
 
     override suspend fun updateProduct(productModel: ProductModel): State<Int> {

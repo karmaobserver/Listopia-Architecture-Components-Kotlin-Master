@@ -75,14 +75,6 @@ class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi:
         }
     }
 
-    override suspend fun fetchShoppingLists(): State<Unit> {
-        return try {
-            CoroutineAdapter(mListopiaApi.testCloudFunction(), mRetrofit)()
-        } catch (e: Exception) {
-            ErrorState(ExceptionError(e))
-        }
-    }
-
     override suspend fun fetchShoppingListsByUserId(fetchShoppingListsValue: FetchShoppingListsValue): State<List<ShoppingListModel>> {
         return try {
             CoroutineAdapter(mListopiaApi.fetchShoppingListsByUserId(fetchShoppingListsValue.userId), mRetrofit)()
@@ -94,6 +86,14 @@ class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi:
     override suspend fun updateShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit> {
         return try {
             CoroutineAdapter(mListopiaApi.updateShoppingList(shoppingListModel.mapToUpdateShoppingListRequest()), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
+
+    override suspend fun deleteShoppingListByIdRemote(shoppingListId: String): State<Unit> {
+        return try {
+            CoroutineAdapter(mListopiaApi.deleteShoppingListById(shoppingListId), mRetrofit)()
         } catch (e: Exception) {
             ErrorState(ExceptionError(e))
         }

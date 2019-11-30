@@ -25,7 +25,7 @@ class UpdateShoppingListUseCase @Inject constructor(private val mShoppingListRep
         when (val updateShoppingListRoom = mShoppingListRepository.updateShoppingList(value)) {
             is SuccessState -> {
                 value.isSynced = false
-                when (val saveShoppingListRemote = mShoppingListRepository.updateShoppingListRemote(value)) {
+                when (mShoppingListRepository.updateShoppingListRemote(value)) {
                     is SuccessState -> {
                         mShoppingListRepository.updateSyncShoppingList(value.id)
                         return updateShoppingListRoom
