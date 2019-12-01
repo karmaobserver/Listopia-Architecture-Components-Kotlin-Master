@@ -13,6 +13,7 @@ import com.aleksej.makaji.listopia.data.usecase.value.SaveFriendValue
  */
 interface UserDataSource {
     suspend fun fetchUser(userId: String): State<UserModel>
+    suspend fun fetchFriends(friendsId: List<String>): State<List<UserModel>>
     suspend fun saveUser(userModel: UserModel): State<Long>
     suspend fun saveUsers(users: List<UserModel>): State<List<Long>>
     suspend fun saveUserRemote(userModel: UserModel): State<Unit>

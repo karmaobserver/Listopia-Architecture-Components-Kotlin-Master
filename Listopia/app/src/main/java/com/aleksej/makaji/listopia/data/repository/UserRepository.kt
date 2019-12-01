@@ -18,6 +18,10 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(@Remote private val mRemoteUserDataSource: UserDataSource,
                                          @Local private val mLocalUserDataSource: UserDataSource): UserDataSource {
+    override suspend fun fetchFriends(friendsId: List<String>): State<List<UserModel>> {
+        return mRemoteUserDataSource.fetchFriends(friendsId)
+    }
+
     override suspend fun deleteEditor(deleteEditorValue: DeleteEditorValue): State<Unit> {
         return mLocalUserDataSource.deleteEditor(deleteEditorValue)
     }

@@ -216,6 +216,54 @@ app.post('/user/:userId/add-friend', (req, res) => {
   
 });
 
+
+app.post('/user/friends', (req, res) => {
+  console.log(req.body.friendsId);
+  try {
+    var friendsRef = [];
+    var friendsIds = req.body.friendsId;
+    friendsIds.forEach(function (friendId) {
+        friendsRef.push(db.collection('users').doc(friendId));
+    });
+    getAllFriends(res, friendsRef)
+  }catch(error) {
+    res.status(500).send(parseError("Failed to fetch"));
+  };
+});
+
+async function getAllFriends(res: any, friendsRef: any) {
+  var allFriends = [];
+  if (friendsRef.length != 0) {
+    var friendsDocuments = await getFriends(friendsRef)
+    for (let friendDocument of friendsDocuments) {
+      var friendData = friendDocument.data();
+      friendData.friends = null
+      allFriends.push(friendData)
+    }
+    console.log(allFriends)
+    res.status(200).json(allFriends);
+  } else {
+    console.log(allFriends)
+    res.status(200).json(allFriends);
+  }  
+}
+
+async function getFriends(friendsRef: any) {
+  return db.getAll(...friendsRef)
+}
+
+// async function getFriends(req: any, res: any, document: any, friends: any, isLastItem: boolean) {
+//   document.ref.collection("product").get().then((querySnapshot) => {
+//      querySnapshot.forEach((document) => {
+//       friends.push(document.data())
+//      });
+//      if (isLastItem) {
+//        console.log(friends)
+//        res.status(200).json(friends);
+//      }
+//    });
+//  }
+
 app.post('/shopping-list/add-editor', (req, res) => {
   var shoppingListRef = db.collection('shopping_lists').doc(req.body.shoppingListId)
   shoppingListRef.get().then(function(shoppingList) {
@@ -371,7 +419,6 @@ app.post('/products', (req, res) => {
 });
 
  async function getShopingingList(req: any, res: any, products: any, shoppingListId: any, isLastItem: boolean) {
-  console.log("test");
   db.collection('shopping_lists').doc(shoppingListId).get().then(document => {
     if (document.empty) {
       console.log("No matching documents for shoppings lists to fetch products");

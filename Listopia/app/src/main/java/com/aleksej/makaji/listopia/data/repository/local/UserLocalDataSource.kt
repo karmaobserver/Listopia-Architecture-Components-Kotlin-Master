@@ -155,4 +155,7 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao, pri
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override suspend fun fetchFriends(friendsId: List<String>): State<List<UserModel>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

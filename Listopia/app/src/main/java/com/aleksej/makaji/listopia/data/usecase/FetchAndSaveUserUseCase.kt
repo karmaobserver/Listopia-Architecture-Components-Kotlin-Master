@@ -15,14 +15,18 @@ import javax.inject.Inject
 /**
  * Created by Aleksej Makaji on 5/4/19.
  */
-class FetchAndSaveUserUseCase @Inject constructor(private val mUserRepository: UserRepository): UseCase<FetchAndSaveUserValue, Long>() {
+class FetchAndSaveUserUseCase @Inject constructor(private val mUserRepository: UserRepository): UseCase<FetchAndSaveUserValue, UserModel>() {
 
-    override suspend fun invoke(value: FetchAndSaveUserValue): State<Long> {
-        val returnValue : State<Long> = ErrorState(UnknownError)
+    override suspend fun invoke(value: FetchAndSaveUserValue): State<UserModel> {
+        val returnValue : State<UserModel> = ErrorState(UnknownError)
         when (val fetchedUser = mUserRepository.fetchUser(value.id)) {
             is SuccessState -> {
                 fetchedUser.data?.let {
-                    return mUserRepository.saveUser(it)
+                    return when (val userRoom = mUserRepository.saveUser(it)) {
+                        is SuccessState -> SuccessState(it)
+                        is LoadingState -> LoadingState()
+                        is ErrorState -> ErrorState(userRoom.error)
+                    }
                 }
             }
             is LoadingState -> {}
@@ -33,13 +37,14 @@ class FetchAndSaveUserUseCase @Inject constructor(private val mUserRepository: U
                     val newUserModel = UserModel(value.id, value.name, value.avatar)
                     when (val saveUserRoom = mUserRepository.saveUser(newUserModel)) {
                         is SuccessState -> {
-                            when (val saveUserRemote =  mUserRepository.saveUserRemote(newUserModel)) {
-                                is SuccessState -> {}
-                                is LoadingState -> {}
-                                is ErrorState -> return ErrorState(saveUserRemote.error)
+                            return when (val saveUserRemote =  mUserRepository.saveUserRemote(newUserModel)) {
+                                is SuccessState -> SuccessState(newUserModel)
+                                is LoadingState -> LoadingState()
+                                is ErrorState -> ErrorState(saveUserRemote.error)
                             }
                         }
-                        else -> return saveUserRoom
+                        is LoadingState -> {}
+                        is ErrorState -> return ErrorState(saveUserRoom.error)
                     }
                 } else {
                     return ErrorState(fetchedUser.error)

@@ -1,10 +1,7 @@
 package com.aleksej.makaji.listopia.data.api
 
 import com.aleksej.makaji.listopia.data.api.dto.request.*
-import com.aleksej.makaji.listopia.data.api.dto.response.EmptyResponse
-import com.aleksej.makaji.listopia.data.api.dto.response.ProductsResponse
-import com.aleksej.makaji.listopia.data.api.dto.response.ShoppingListsResponse
-import com.aleksej.makaji.listopia.data.api.dto.response.UserResponse
+import com.aleksej.makaji.listopia.data.api.dto.response.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -57,4 +54,7 @@ interface ListopiaApi {
 
     @DELETE("shopping-list/delete/{shoppingListId}")
     suspend fun deleteShoppingListById(@Path("shoppingListId") shoppingListId: String) : Response<EmptyResponse>
+
+    @POST("user/friends")
+    suspend fun fetchFriends(@Body fetchFriendsRequest: FetchFriendsRequest): Response<UsersResponse>
 }

@@ -3,6 +3,7 @@ package com.aleksej.makaji.listopia.viewmodel
 import androidx.lifecycle.*
 import com.aleksej.makaji.listopia.data.event.StateHandler
 import com.aleksej.makaji.listopia.data.repository.UserRepository
+import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.data.usecase.*
 import com.aleksej.makaji.listopia.data.usecase.value.*
 import kotlinx.coroutines.launch
@@ -16,14 +17,17 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
                                         private val mSaveFriendUseCase: SaveFriendUseCase,
                                         private val mDeleteFriendByIdUseCase: DeleteFriendByIdUseCase,
                                         private val mSaveEditorUseCase: SaveEditorUseCase,
-                                        private val mDeleteEditorUseCase: DeleteEditorUseCase) : ViewModel() {
+                                        private val mDeleteEditorUseCase: DeleteEditorUseCase,
+                                        private val mFetchAndSaveFriendsUseCase: FetchAndSaveFriendsUseCase) : ViewModel() {
 
     private val getUserTrigger = MutableLiveData<String>()
     val getUserLiveData = Transformations.switchMap(getUserTrigger) { mUserRepository.getUserById(it) }
 
-    private val fetchAndSaveUserTrigger = MutableLiveData<StateHandler<Long>>()
-    val fetchAndSaveUserLiveData : LiveData<StateHandler<Long>> = fetchAndSaveUserTrigger
+    private val fetchAndSaveUserTrigger = MutableLiveData<StateHandler<UserModel>>()
+    val fetchAndSaveUserLiveData : LiveData<StateHandler<UserModel>> = fetchAndSaveUserTrigger
 
+    private val fetchAndSaveFriendsTrigger = MutableLiveData<StateHandler<Unit>>()
+    val fetchAndSaveFriendsLiveData : LiveData<StateHandler<Unit>> = fetchAndSaveFriendsTrigger
 
     private val deleteFriendTrigger = MutableLiveData<StateHandler<Unit>>()
     val deleteFriendEventLiveData : LiveData<StateHandler<Unit>> = deleteFriendTrigger
@@ -50,8 +54,16 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
     }
 
     fun fetchAndSaveUser(fetchAndSaveUserValue: FetchAndSaveUserValue) {
+        fetchAndSaveUserTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             fetchAndSaveUserTrigger.value = StateHandler(mFetchAndSaveUserUseCase.invoke(fetchAndSaveUserValue))
+        }
+    }
+
+    fun fetchAndSaveFriends(fetchAndSaveFriendsValue: FetchAndSaveFriendsValue) {
+        fetchAndSaveFriendsTrigger.value = StateHandler.loading()
+        viewModelScope.launch {
+            fetchAndSaveFriendsTrigger.value = StateHandler(mFetchAndSaveFriendsUseCase.invoke(fetchAndSaveFriendsValue))
         }
     }
 

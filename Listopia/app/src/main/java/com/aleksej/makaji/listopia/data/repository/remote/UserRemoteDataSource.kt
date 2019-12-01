@@ -3,6 +3,7 @@ package com.aleksej.makaji.listopia.data.repository.remote
 import androidx.lifecycle.LiveData
 import com.aleksej.makaji.listopia.data.api.ListopiaApi
 import com.aleksej.makaji.listopia.data.api.callback.CoroutineAdapter
+import com.aleksej.makaji.listopia.data.api.dto.request.FetchFriendsRequest
 import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
@@ -86,6 +87,14 @@ class UserRemoteDataSource @Inject constructor(private val mListopiaApi: Listopi
     override suspend fun deleteEditorRemote(deleteEditorValue: DeleteEditorValue): State<Unit> {
         return try {
             CoroutineAdapter(mListopiaApi.deleteEditor(deleteEditorValue.mapToDeleteEditorRequest()), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
+
+    override suspend fun fetchFriends(friendsId: List<String>): State<List<UserModel>> {
+        return try {
+            CoroutineAdapter(mListopiaApi.fetchFriends(FetchFriendsRequest(friendsId)), mRetrofit)()
         } catch (e: Exception) {
             ErrorState(ExceptionError(e))
         }

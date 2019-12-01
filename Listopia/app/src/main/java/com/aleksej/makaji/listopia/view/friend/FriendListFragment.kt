@@ -153,6 +153,7 @@ class FriendListFragment: BaseFragment() {
 
     private fun observeFetchAndSaveUser() {
         observeSingle(mUserViewModel.fetchAndSaveUserLiveData, {
+            fetchFriends(it)
         }, onError = {
             showError(it)
         })
@@ -224,6 +225,14 @@ class FriendListFragment: BaseFragment() {
         mShoppingListId?.let {
             mShoppingListViewModel.getShoppingListById(ShoppingListByIdValue(it))
         }
+    }
+
+    private fun fetchFriends(userModel: UserModel) {
+        val friendsId = arrayListOf<String>()
+        userModel.friends?.forEach {
+            friendsId.add(it.id)
+        }
+        mUserViewModel.fetchAndSaveFriends(FetchAndSaveFriendsValue(friendsId))
     }
 
 }
