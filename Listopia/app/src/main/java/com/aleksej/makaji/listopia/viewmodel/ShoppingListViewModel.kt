@@ -1,11 +1,7 @@
 package com.aleksej.makaji.listopia.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.StateHandler
-import com.aleksej.makaji.listopia.data.event.SuccessState
-import com.aleksej.makaji.listopia.data.mapper.mapToShoppingListValue
 import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.usecase.*
@@ -13,7 +9,6 @@ import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.FetchShoppingListsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +18,7 @@ import javax.inject.Inject
 class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListByIdUseCase: DeleteShoppingListByIdUseCase,
                                                 private val mSaveShoppingListUseCase: SaveShoppingListUseCase,
                                                 private val mUpdateShoppingListUseCase: UpdateShoppingListUseCase,
-                                                private val mFetchAndSaveShoppingListUseCase: FetchAndSaveShoppingListUseCase,
+                                                private val mFetchAndSaveShoppingListsUseCase: FetchAndSaveShoppingListsUseCase,
                                                 private val mShoppingListRepository: ShoppingListRepository) : ViewModel() {
 
     var reloadEditData = true
@@ -55,7 +50,7 @@ class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListB
 
     fun fetchShoppingListsByUserId(userId: String) {
         viewModelScope.launch {
-            fetchShoppingListsTrigger.value = StateHandler(mFetchAndSaveShoppingListUseCase.invoke(FetchShoppingListsValue(userId)))
+            fetchShoppingListsTrigger.value = StateHandler(mFetchAndSaveShoppingListsUseCase.invoke(FetchShoppingListsValue(userId)))
         }
     }
 

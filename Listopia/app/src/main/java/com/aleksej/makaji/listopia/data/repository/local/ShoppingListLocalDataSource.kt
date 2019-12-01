@@ -169,4 +169,8 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
     override suspend fun deleteShoppingListByIdRemote(shoppingListId: String): State<Unit> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override suspend fun fetchShoppingListById(shoppingListId: String): State<ShoppingListModel> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

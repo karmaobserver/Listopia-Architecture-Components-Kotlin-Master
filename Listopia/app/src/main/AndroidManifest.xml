@@ -22,7 +22,7 @@
         </activity>
 
         <service
-            android:name="com.aleksej.makaji.listopia.service.ListopiaFirebaseService"
+            android:name="com.aleksej.makaji.listopia.service.firebase.ListopiaFirebaseService"
             android:enabled="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

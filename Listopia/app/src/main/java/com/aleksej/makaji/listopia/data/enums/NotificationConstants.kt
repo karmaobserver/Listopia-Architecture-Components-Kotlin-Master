@@ -6,6 +6,8 @@ package com.aleksej.makaji.listopia.data.enums
 class NotificationConstants{
     companion object {
         const val NOTIFICATION = "notification"
+        const val CONTENT = "content"
+        const val CONTENT_SHOPPING_LIST_ID = "shoppingListId"
         const val SHOPPING_LIST_UPDATED = "SHOPPING_LIST_UPDATED"
         const val PRODUCT_UPDATED = "PRODUCT_UPDATED"
         const val USER_UPDATED = "USER_UPDATED"

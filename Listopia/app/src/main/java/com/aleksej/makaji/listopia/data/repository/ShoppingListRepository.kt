@@ -17,6 +17,10 @@ import javax.inject.Singleton
 @Singleton
 class ShoppingListRepository @Inject constructor(@Remote private val mRemoteShoppingListDataSource: ShoppingListDataSource,
                                                  @Local private val mLocalShoppingListDataSource: ShoppingListDataSource): ShoppingListDataSource {
+    override suspend fun fetchShoppingListById(shoppingListId: String): State<ShoppingListModel> {
+        return mRemoteShoppingListDataSource.fetchShoppingListById(shoppingListId)
+    }
+
     override suspend fun deleteShoppingListByIdRemote(shoppingListId: String): State<Unit> {
         return mRemoteShoppingListDataSource.deleteShoppingListByIdRemote(shoppingListId)
     }

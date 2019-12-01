@@ -9,62 +9,56 @@ import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.data.repository.UserRepository
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
+import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.FetchShoppingListsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListEditorValue
+import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.error.UnknownError
 import javax.inject.Inject
 
 /**
- * Created by Aleksej Makaji on 2019-10-12.
+ * Created by Aleksej Makaji on 2019-12-01.
  */
 class FetchAndSaveShoppingListUseCase @Inject constructor(private val mShoppingListRepository: ShoppingListRepository,
-                                                          private val mUserRepository: UserRepository) : UseCase<FetchShoppingListsValue, List<String>>() {
+                                                           private val mUserRepository: UserRepository) : UseCase<FetchAndSaveShoppingListValue, String>() {
 
-    override suspend fun invoke(value: FetchShoppingListsValue): State<List<String>> {
-        when (val fetchedShoppingLists = mShoppingListRepository.fetchShoppingListsByUserId(value)) {
+    override suspend fun invoke(value: FetchAndSaveShoppingListValue): State<String> {
+        when (val fetchedShoppingList = mShoppingListRepository.fetchShoppingListById(value.shoppingListId)) {
             is SuccessState -> {
-                fetchedShoppingLists.data?.let { remoteShoppingLists ->
-                    when (val shoppingListsRoom = mShoppingListRepository.getShoppingListsSuspend()) {
+                fetchedShoppingList.data?.let { remoteShoppingList ->
+                    when (val shoppingListRoom = mShoppingListRepository.getShoppingListByIdSuspend(ShoppingListByIdValue(value.shoppingListId))) {
                         is SuccessState -> {
-                            val shoppingListsId = arrayListOf<String>()
-                            val roomShoppingLists = shoppingListsRoom.data
+                            val roomShoppingList = shoppingListRoom.data
                             val editorsToBeAdded = arrayListOf<UserModel>()
                             val shoppingListEditorsRef = arrayListOf<SaveShoppingListEditorValue>()
                             val shoppingListsToBeAdded = arrayListOf<ShoppingListModel>()
-                            remoteShoppingLists.forEach {
-                                shoppingListsId.add(it.id)
-                                it.editors?.forEach {editor ->
-                                    shoppingListEditorsRef.add(SaveShoppingListEditorValue(it.id, editor.id))
-                                    if (!editorsToBeAdded.contains(editor)) {
-                                        editorsToBeAdded.add(editor)
-                                    }
-                                }
-                                val index = roomShoppingLists?.indexOfFirst { roomShoppingListModel ->
-                                    roomShoppingListModel.id == it.id
-                                } // -1 if not found
-                                if (index != null && index >= 0) {
-                                    //If shopping list exists in database
-                                    //TODO Add additional rules
-                                    val roomShoppingListModel = roomShoppingLists[index]
-                                    if (it.timestamp > roomShoppingListModel.timestamp) {
-                                        it.isSynced = true
-                                        shoppingListsToBeAdded.add(it)
-                                    }
-                                } else {
-                                    //If shopping list does not exists in database
-                                    shoppingListsToBeAdded.add(it)
+                            remoteShoppingList.editors?.forEach {editor ->
+                                shoppingListEditorsRef.add(SaveShoppingListEditorValue(remoteShoppingList.id, editor.id))
+                                if (!editorsToBeAdded.contains(editor)) {
+                                    editorsToBeAdded.add(editor)
                                 }
                             }
+                            if (roomShoppingList != null) {
+                                //If shopping list exist in database
+                                //TODO Add additional rules
+                                if (remoteShoppingList.timestamp > roomShoppingList.timestamp) {
+                                    remoteShoppingList.isSynced = true
+                                    shoppingListsToBeAdded.add(remoteShoppingList)
+                                }
+                            } else {
+                                //If shopping list does not exist in database
+                                shoppingListsToBeAdded.add(remoteShoppingList)
+                            }
                             saveShoppingListsWithEditors(shoppingListsToBeAdded, editorsToBeAdded, shoppingListEditorsRef)
-                            return SuccessState(shoppingListsId)
+                            return SuccessState(remoteShoppingList.id)
 
                         }
-                        is ErrorState -> return ErrorState(shoppingListsRoom.error)
+                        is ErrorState -> return ErrorState(shoppingListRoom.error)
                         is LoadingState -> return LoadingState()
                     }
                 }
             }
-            is ErrorState -> return ErrorState(fetchedShoppingLists.error)
+            is ErrorState -> return ErrorState(fetchedShoppingList.error)
         }
         return ErrorState(UnknownError)
     }

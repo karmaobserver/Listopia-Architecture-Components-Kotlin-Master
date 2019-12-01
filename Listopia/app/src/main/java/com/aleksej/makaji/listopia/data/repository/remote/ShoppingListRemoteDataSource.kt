@@ -99,4 +99,12 @@ class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi:
         }
     }
 
+    override suspend fun fetchShoppingListById(shoppingListId: String): State<ShoppingListModel> {
+        return try {
+            CoroutineAdapter(mListopiaApi.fetchShoppingListById(shoppingListId), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
+
 }

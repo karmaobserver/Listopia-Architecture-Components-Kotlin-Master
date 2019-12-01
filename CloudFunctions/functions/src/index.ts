@@ -1,6 +1,7 @@
 'use strict';
 import { ErrorType } from "./errorType";
 import { NotificationType } from "./notificationsType";
+import { FirestoreConst } from "./firestoreConst";
 const dotenv = require('dotenv').config();
 if (dotenv.error) {
   throw dotenv.error
@@ -22,12 +23,6 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 
-
-// server.listen(5000, 'localhost');
-// server.on('listening', function() {
-//     console.log('Express server started on port %s at %s', server.address().port, server.address().address);
-// });
-
 const db = admin.firestore();
 
 // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
@@ -35,7 +30,7 @@ const db = admin.firestore();
 // `Authorization: Bearer <Firebase ID Token>`.
 // when decoded successfully, the ID Token content will be added as `req.user`.
 const validateFirebaseIdToken = async (req, res, next) => {
-  console.log('Check if request is authorized with Firebase ID token');
+  //console.log('Check if request is authorized with Firebase ID token');
 
   if ((!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) &&
       !(req.cookies && req.cookies.__session)) {
@@ -49,7 +44,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
 
   let idToken;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
-    console.log('Found "Authorization" header');
+    //console.log('Found "Authorization" header');
     // Read the ID Token from the Authorization header.
     idToken = req.headers.authorization.split('Bearer ')[1];
   } else if(req.cookies) {
@@ -96,13 +91,13 @@ app.get('/hello', (req, res) => {
 });
 
 app.get('/user/get/:userId', (req, res) => {
-  var userRef = db.collection('users').doc(req.params.userId)
+  var userRef = db.collection(FirestoreConst.USERS).doc(req.params.userId)
   userRef.get().then(function(doc) {
     if (doc.exists) {
       var friendsRef = []
       var user = doc.data()
       user.friends.forEach(function(id) {
-        friendsRef.push(db.collection('users').doc(id))
+        friendsRef.push(db.collection(FirestoreConst.USERS).doc(id))
       })
       var allFriends = []
       if (friendsRef.length != 0) {
@@ -142,13 +137,13 @@ app.get('/user/get/:userId', (req, res) => {
 });
 
 app.delete('/user/:userId/delete-friend/:friendId', (req, res) => {
-  var userRef = db.collection('users').doc(req.params.userId)
+  var userRef = db.collection(FirestoreConst.USERS).doc(req.params.userId)
   userRef.update({
     "friends": admin.firestore.FieldValue.arrayRemove(req.params.friendId)
   }).catch(error => {
     res.status(500).send(parseError("Failed to delete friend" + req.params.friendId));
   })
-  var friendRef = db.collection('users').doc(req.params.friendId)
+  var friendRef = db.collection(FirestoreConst.USERS).doc(req.params.friendId)
   friendRef.update({
     "friends": admin.firestore.FieldValue.arrayRemove(req.params.userId)
   }).catch(error => {
@@ -158,7 +153,7 @@ app.delete('/user/:userId/delete-friend/:friendId', (req, res) => {
 });
 
 app.post('/user/save', (req, res) => {
-  var userRef = db.collection('users').doc(req.body.id)
+  var userRef = db.collection(FirestoreConst.USERS).doc(req.body.id)
   userRef.get().then(function(thisDoc) {
     if (thisDoc.exists) {
       var updatedUser = {
@@ -187,7 +182,7 @@ app.post('/user/save', (req, res) => {
 });
 
 app.post('/user/:userId/add-friend', (req, res) => {
-  var friendRef = db.collection('users').doc(req.body.friendId)
+  var friendRef = db.collection(FirestoreConst.USERS).doc(req.body.friendId)
   friendRef.get().then(function(thisDoc) {
     if (thisDoc.exists) {
       friendRef.update({
@@ -195,11 +190,12 @@ app.post('/user/:userId/add-friend', (req, res) => {
       })
       console.log('Updated user document with ID: ', req.body.friendId);
 
-      var userRef = db.collection('users').doc(req.params.userId)
+      var userRef = db.collection(FirestoreConst.USERS).doc(req.params.userId)
       userRef.update({
         friends: admin.firestore.FieldValue.arrayUnion(req.body.friendId)
       }).then(function() {
-        console.log('Successfully added friend with ID: ', req.params.friendId);
+        console.log('Successfully added friend with ID: ', req.body.friendId);
+        thisDoc.data().friends = null
         res.status(201).send(thisDoc.data());
       }).catch(error => {
         console.log(error)
@@ -231,7 +227,7 @@ app.post('/user/friends', (req, res) => {
     var friendsRef = [];
     var friendsIds = req.body.friendsId;
     friendsIds.forEach(function (friendId) {
-        friendsRef.push(db.collection('users').doc(friendId));
+        friendsRef.push(db.collection(FirestoreConst.USERS).doc(friendId));
     });
     getAllFriends(res, friendsRef)
   }catch(error) {
@@ -261,7 +257,7 @@ async function getFriends(friendsRef: any) {
 }
 
 app.put('/user/firebase', (req, res) => {
-  var userRef = db.collection('users').doc(req.body.userId)
+  var userRef = db.collection(FirestoreConst.USERS).doc(req.body.userId)
   userRef.update({
     firebaseToken: req.body.token
   }).then(function() {
@@ -272,7 +268,7 @@ app.put('/user/firebase', (req, res) => {
 });
 
 app.post('/shopping-list/add-editor', (req, res) => {
-  var shoppingListRef = db.collection('shopping_lists').doc(req.body.shoppingListId)
+  var shoppingListRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.body.shoppingListId)
   shoppingListRef.get().then(function(shoppingList) {
     if (shoppingList.exists) {
       shoppingListRef.update({
@@ -290,7 +286,7 @@ app.post('/shopping-list/add-editor', (req, res) => {
 });
 
 app.put('/shopping-list/delete-editor', (req, res) => {
-  var shoppingListRef = db.collection('shopping_lists').doc(req.body.shoppingListId)
+  var shoppingListRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.body.shoppingListId)
   shoppingListRef.get().then(function(shoppingList) {
     if (shoppingList.exists) {
       shoppingListRef.update({
@@ -308,7 +304,7 @@ app.put('/shopping-list/delete-editor', (req, res) => {
 });
 
 app.post('/shopping-list/add', (req, res) => {
-  var shoppingListRef = db.collection('shopping_lists').doc(req.body.id)
+  var shoppingListRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.body.id)
   shoppingListRef.set(req.body).then(function() {
     res.status(201).json({});
   }).catch(error => {
@@ -317,7 +313,7 @@ app.post('/shopping-list/add', (req, res) => {
 });
 
 app.put('/shopping-list/update', (req, res) => {
-  var shoppingListRef = db.collection('shopping_lists').doc(req.body.id)
+  var shoppingListRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.body.id)
   shoppingListRef.update(req.body).then(function() {
     var payload = {
       data: {
@@ -325,7 +321,7 @@ app.put('/shopping-list/update', (req, res) => {
         shoppingListId: req.body.id
       }
     };
-    sendFCM(req.user.email, payload);
+    sendFCMtoEditors(req.user.email, req.body.id, payload);
     res.status(201).json({});
   }).catch(error => {
     res.status(500).send(parseError("Failed to update shopping list into Firestore with ID: " + req.body.id));
@@ -337,7 +333,7 @@ async function sendFCM(userId, payload) {
     priority: 'high',
     timeToLive: 60 * 60 * 24
   };
-  db.collection('users').doc(userId).get().then(document => {
+  db.collection(FirestoreConst.USERS).doc(userId).get().then(document => {
     if (document.empty) {
       console.log("No matching user");
       return
@@ -354,24 +350,56 @@ async function sendFCM(userId, payload) {
   });
 }
 
-// async function getToken(userId: string) {
-//    db.collection('users').doc(userId).get().then(document => {
-//     if (document.empty) {
-//       console.log("No matching user");
-//       return
-//     }
-//     return document.data().firebaseToken;
-//   });
-// }
+async function sendFCMtoEditors(senderId: string, shoppingListId: string, payload: any) {
+  db.collection(FirestoreConst.SHOPPING_LIST).doc(shoppingListId).get().then(document => {
+    if (document.empty) {
+      console.log("No matching shopping list");
+      return
+    }
+    var editors = document.data().editors
+    editors.push(document.data().ownerId)
+    const index = editors.indexOf(senderId, 0);
+    if (index > -1) {
+      editors.splice(index, 1);
+    }
 
+    var editorsRef = [];
+    editors.forEach(function(id) {
+      editorsRef.push(db.collection(FirestoreConst.USERS).doc(id));
+    });
+    getEditorsTokens(editorsRef, payload)
+  });
+}
+
+async function getEditorsTokens(editorsRef: any, payload: any) {
+  var allTokens = [];
+  if (editorsRef.length != 0) {
+    let editors = await getEditos(editorsRef)
+    for (let editor of editors) {
+        var editorData = editor.data();
+        allTokens.push(editorData.firebaseToken)
+    }
+    var options = {
+      priority: 'high',
+      timeToLive: 60 * 60 * 24
+    };
+    admin.messaging().sendToDevice(allTokens, payload, options)
+      .then((response) => {
+        console.log('Successfully sent message:', response);
+      })
+      .catch((error) => {
+        console.log('Error sending message:', error);
+      });
+  } 
+}
 
 app.delete('/shopping-list/delete/:shoppingListId', (req, res) => {
   try {
-    const shoppingListProductsCollection = db.collection('shopping_lists').doc(req.params.shoppingListId).collection('product')
+    const shoppingListProductsCollection = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.params.shoppingListId).collection(FirestoreConst.PRODUCTS)
     var deleted = new Promise((resolve, reject) => {
       deleteQueryBatch(shoppingListProductsCollection, 10, resolve, reject)
     }).then(function() {
-      db.collection('shopping_lists').doc(req.params.shoppingListId).delete();
+      db.collection(FirestoreConst.SHOPPING_LIST).doc(req.params.shoppingListId).delete();
       res.status(200).json({});
     }).catch(error => {
       res.status(500).send(parseError("Failed to delete shopping list" + req.params.shoppingListId));
@@ -383,7 +411,7 @@ app.delete('/shopping-list/delete/:shoppingListId', (req, res) => {
 
 app.delete('/product/delete/:shoppingListId/:productId', (req, res) => {
   try {
-    db.collection('shopping_lists').doc(req.params.shoppingListId).collection('product').doc(req.params.productId).delete();
+    db.collection(FirestoreConst.SHOPPING_LIST).doc(req.params.shoppingListId).collection(FirestoreConst.PRODUCTS).doc(req.params.productId).delete();
     res.status(200).json({});
   }catch(error) {
     res.status(500).send(parseError("Failed to delete product" + req.params.productId));
@@ -423,7 +451,7 @@ function deleteQueryBatch(query, batchSize, resolve, reject) {
 }
 
 app.put('/product/update', (req, res) => {
-  var productRef = db.collection('shopping_lists').doc(req.body.shoppingListId).collection('product').doc(req.body.id)
+  var productRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.body.shoppingListId).collection(FirestoreConst.PRODUCTS).doc(req.body.id)
   productRef.update(req.body).then(function() {
     res.status(201).json({});
   }).catch(error => {
@@ -432,7 +460,7 @@ app.put('/product/update', (req, res) => {
 });
 
 app.post('/product/add', (req, res) => {
-  var productRef = db.collection('shopping_lists').doc(req.body.shoppingListId).collection('product').doc(req.body.id)
+  var productRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.body.shoppingListId).collection(FirestoreConst.PRODUCTS).doc(req.body.id)
   productRef.set(req.body).then(function() {
     res.status(201).json({});
   }).catch(error => {
@@ -446,7 +474,7 @@ app.post('/products', (req, res) => {
     var products = [];
     var shoppingListids = req.body.shoppingListsId
     shoppingListids.forEach(function (shoppingListId, i) {
-      db.collection('shopping_lists').doc(shoppingListId).get().then(document => {
+      db.collection(FirestoreConst.SHOPPING_LIST).doc(shoppingListId).get().then(document => {
         if (document.empty) {
           console.log("No matching documents for shoppings lists to fetch products");
           res.status(204).json({});
@@ -465,7 +493,7 @@ app.post('/products', (req, res) => {
 });
 
  async function getShopingingList(req: any, res: any, products: any, shoppingListId: any, isLastItem: boolean) {
-  db.collection('shopping_lists').doc(shoppingListId).get().then(document => {
+  db.collection(FirestoreConst.SHOPPING_LIST).doc(shoppingListId).get().then(document => {
     if (document.empty) {
       console.log("No matching documents for shoppings lists to fetch products");
       res.status(204).json({});
@@ -487,30 +515,48 @@ async function getProducts(req: any, res: any, document: any, products: any, isL
   });
 }
 
-app.get('/shopping-list/:userId', (req, res) => {
+app.get('/shopping-list/get/:shoppingListId', (req, res) => {
+  db.collection(FirestoreConst.SHOPPING_LIST).doc(req.params.shoppingListId).get().then(document => {
+      if (document.empty) {
+        console.log("No matching document for shoppings list");
+        res.status(204).json({});
+        return
+      }
+      res.status(200).json(document.data());
+    }).catch(error => {
+      res.status(500).send(parseError("Failed to get shopping list Firestore"));
+    });
+});
+
+app.get('/shopping-list/get-all/:userId', (req, res) => {
   console.log(req.params.userId);
   try {
-    const shoppingListsRef = db.collection('shopping_lists');
-    shoppingListsRef.where('ownerId', '==', req.params.userId).get().then(snapshot => {
-      if (snapshot.empty) {
+    var shoppingListsRef = db.collection(FirestoreConst.SHOPPING_LIST);
+    var promise1 = shoppingListsRef.where('ownerId', '==', req.params.userId).get()
+    var promise2 = shoppingListsRef.where('editors', 'array-contains', req.params.userId).get()
+
+    Promise.all( [ promise1, promise2 ] ).then(function(values) {
+      var combinedSnapshots = [];
+      combinedSnapshots = values[0].docs.concat(values[1].docs)
+      if (combinedSnapshots.length == 0) {
         console.log("No matching documents for shoppings lists");
         res.status(204).json({});
         return
       }
-      var shoppingLists = getShoppingLists(req, snapshot, res)
-    });
+      var shoppingLists = getShoppingLists(req, combinedSnapshots, res)
+    })
   }catch(error) {
     res.status(500).send(parseError("Failed to get shopping lists Firestore"));
   };
 });
 
-async function getShoppingLists(req: any, snapshot: any, res: any) {
+async function getShoppingLists(req: any, combinedSnapshots: any, res: any) {
     var shoppingLists = [];
-    for (let snap of snapshot.docs) {
+    for (let snap of combinedSnapshots) {
       var shopingList = snap.data();
       var editorsRef = [];
       shopingList.editors.forEach(function(id) {
-        editorsRef.push(db.collection('users').doc(id));
+        editorsRef.push(db.collection(FirestoreConst.USERS).doc(id));
       });
       await getShoppingListsWithEditors(editorsRef, shopingList, shoppingLists)
     };
@@ -614,14 +660,14 @@ app.get('/generate-sample-data', (req, res) => {
 
   var batch = db.batch();
 
-  batch.set(db.collection('users').doc('qqqqqqqqq111111111'), user1);
-  batch.set(db.collection('users').doc('wwwwwwwwwwww22222222'), user2);
-  batch.set(db.collection('users').doc('eeeeeeeeeee3333333333'), user3);
-  batch.set(db.collection('shopping_lists').doc('111'), shoppingList1);
-  batch.set(db.collection('shopping_lists').doc('222'), shoppingList2);
-  batch.set(db.collection('shopping_lists').doc('111').collection('products').doc('111111111'), product1);
-  batch.set(db.collection('shopping_lists').doc('111').collection('products').doc('222222222'), product2);
-  batch.set(db.collection('shopping_lists').doc('222').collection('products').doc('333333333'), product3);
+  batch.set(db.collection(FirestoreConst.USERS).doc('qqqqqqqqq111111111'), user1);
+  batch.set(db.collection(FirestoreConst.USERS).doc('wwwwwwwwwwww22222222'), user2);
+  batch.set(db.collection(FirestoreConst.USERS).doc('eeeeeeeeeee3333333333'), user3);
+  batch.set(db.collection(FirestoreConst.SHOPPING_LIST).doc('111'), shoppingList1);
+  batch.set(db.collection(FirestoreConst.SHOPPING_LIST).doc('222'), shoppingList2);
+  batch.set(db.collection(FirestoreConst.SHOPPING_LIST).doc('111').collection(FirestoreConst.PRODUCTS).doc('111111111'), product1);
+  batch.set(db.collection(FirestoreConst.SHOPPING_LIST).doc('111').collection(FirestoreConst.PRODUCTS).doc('222222222'), product2);
+  batch.set(db.collection(FirestoreConst.SHOPPING_LIST).doc('222').collection(FirestoreConst.PRODUCTS).doc('333333333'), product3);
 
   batch.commit().then(function () {
     const testObject = {

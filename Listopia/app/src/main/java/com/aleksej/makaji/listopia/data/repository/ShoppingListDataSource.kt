@@ -26,4 +26,5 @@ interface ShoppingListDataSource {
     suspend fun updateShoppingList(shoppingListModel: ShoppingListModel): State<Int>
     suspend fun updateSyncShoppingList(shoppingListId: String): State<Int>
     suspend fun fetchShoppingListsByUserId(fetchShoppingListsValue: FetchShoppingListsValue): State<List<ShoppingListModel>>
+    suspend fun fetchShoppingListById(shoppingListId: String): State<ShoppingListModel>
 }

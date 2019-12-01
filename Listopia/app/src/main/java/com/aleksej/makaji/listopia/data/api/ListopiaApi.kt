@@ -30,8 +30,11 @@ interface ListopiaApi {
     @PUT("shopping-list/update")
     suspend fun updateShoppingList(@Body updateShoppingListRequest: UpdateShoppingListRequest) : Response<EmptyResponse>
 
-    @GET("shopping-list/{userId}")
+    @GET("shopping-list/get-all/{userId}")
     suspend fun fetchShoppingListsByUserId(@Path("userId") userId: String): Response<ShoppingListsResponse>
+
+    @GET("shopping-list/get/{shoppingListId}")
+    suspend fun fetchShoppingListById(@Path("shoppingListId") shoppingListId: String): Response<ShoppingListResponse>
 
     @POST("shopping-list/add-editor")
     suspend fun saveEditor(@Body saveEditorRequest: SaveEditorRequest): Response<EmptyResponse>

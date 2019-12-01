@@ -9,5 +9,4 @@ data class UpdateShoppingListRequest(val id: String,
                                    val name: String,
                                    val ownerId: String,
                                    val timestamp: Date,
-                                   val isDeleted: Boolean,
-                                   val editors: List<UserRequest>? = null)
+                                   val isDeleted: Boolean)

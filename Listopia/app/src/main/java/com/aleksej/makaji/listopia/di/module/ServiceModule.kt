@@ -1,6 +1,6 @@
 package com.aleksej.makaji.listopia.di.module
 
-import com.aleksej.makaji.listopia.service.ListopiaFirebaseService
+import com.aleksej.makaji.listopia.service.firebase.ListopiaFirebaseService
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

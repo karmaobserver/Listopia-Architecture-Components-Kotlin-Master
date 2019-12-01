@@ -1,7 +1,10 @@
-package com.aleksej.makaji.listopia.service
+package com.aleksej.makaji.listopia.service.firebase
 
 import com.aleksej.makaji.listopia.data.enums.NotificationConstants
+import com.aleksej.makaji.listopia.data.enums.NotificationConstants.Companion.CONTENT_SHOPPING_LIST_ID
+import com.aleksej.makaji.listopia.data.usecase.FetchAndSaveShoppingListUseCase
 import com.aleksej.makaji.listopia.data.usecase.UpdateFirebaseTokenUseCase
+import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveShoppingListValue
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.android.AndroidInjection
@@ -16,6 +19,9 @@ class ListopiaFirebaseService : FirebaseMessagingService() {
 
     @Inject
     lateinit var mUpdateFirebaseTokenUseCase: UpdateFirebaseTokenUseCase
+
+    @Inject
+    lateinit var mFetchAndSaveShoppingListUseCase: FetchAndSaveShoppingListUseCase
 
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -39,7 +45,10 @@ class ListopiaFirebaseService : FirebaseMessagingService() {
         GlobalScope.launch {
             when (notification) {
                 NotificationConstants.SHOPPING_LIST_UPDATED -> {
-                    "caeda"
+                    val shoppingListId = data[CONTENT_SHOPPING_LIST_ID]
+                    shoppingListId?.let {
+                        mFetchAndSaveShoppingListUseCase.invoke(FetchAndSaveShoppingListValue(it))
+                    }
                 }
                 NotificationConstants.PRODUCT_UPDATED -> {}
                 NotificationConstants.USER_UPDATED -> {}
