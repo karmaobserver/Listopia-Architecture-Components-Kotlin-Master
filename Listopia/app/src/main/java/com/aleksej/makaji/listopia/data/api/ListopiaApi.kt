@@ -57,4 +57,7 @@ interface ListopiaApi {
 
     @POST("user/friends")
     suspend fun fetchFriends(@Body fetchFriendsRequest: FetchFriendsRequest): Response<UsersResponse>
+
+    @PUT("user/firebase")
+    suspend fun updateFirebaseToken(@Body updateFirebaseTokenRequest: UpdateFirebaseTokenRequest) : Response<EmptyResponse>
 }

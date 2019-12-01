@@ -29,5 +29,6 @@ interface UserDataSource {
     suspend fun deleteEditor(deleteEditorValue: DeleteEditorValue): State<Unit>
     suspend fun deleteEditorRemote(deleteEditorValue: DeleteEditorValue): State<Unit>
     suspend fun clearDatabase(): State<Unit>
+    suspend fun updateFirebaseToken(token: String): State<Unit>
 }
 

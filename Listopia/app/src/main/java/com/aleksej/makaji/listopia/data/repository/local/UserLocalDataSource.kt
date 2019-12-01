@@ -169,4 +169,8 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao,
             ErrorState(RoomError(e))
         }
     }
+
+    override suspend fun updateFirebaseToken(token: String): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

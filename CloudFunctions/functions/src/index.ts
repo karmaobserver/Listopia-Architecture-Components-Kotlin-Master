@@ -1,5 +1,6 @@
 'use strict';
 import { ErrorType } from "./errorType";
+import { NotificationType } from "./notificationsType";
 const dotenv = require('dotenv').config();
 if (dotenv.error) {
   throw dotenv.error
@@ -8,7 +9,11 @@ console.log(dotenv.parsed)
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-admin.initializeApp();
+const serviceAccount = require("./../../services.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://listopia-f7bba.firebaseio.com"
+});
 const express = require('express');
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')();
@@ -16,6 +21,7 @@ const cors = require('cors')({origin: true});
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+
 
 // server.listen(5000, 'localhost');
 // server.on('listening', function() {
@@ -37,7 +43,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
         'Make sure you authorize your request by providing the following HTTP header:',
         'Authorization: Bearer <Firebase ID Token>',
         'or by passing a "__session" cookie.');
-    res.status(401).send(parseError("Unauthorized", "TokenError", "nema tokena bre"));
+    res.status(401).send(parseError("Unauthorized", "TokenError", "There is no token!"));
     return;
   }
 
@@ -59,7 +65,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
 
   try {
     const decodedIdToken = await admin.auth().verifyIdToken(idToken);
-    console.log('ID Token correctly decoded', decodedIdToken);
+    //console.log('ID Token correctly decoded', decodedIdToken);
     req.user = decodedIdToken;
     next();
     return;
@@ -73,7 +79,7 @@ const validateFirebaseIdToken = async (req, res, next) => {
 app.use(cors);
 app.use(cookieParser);
 app.disable('etag');
-//app.use(validateFirebaseIdToken);
+app.use(validateFirebaseIdToken);
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -157,7 +163,8 @@ app.post('/user/save', (req, res) => {
     if (thisDoc.exists) {
       var updatedUser = {
         avatar: req.body.avatar,
-        name: req.body.name
+        name: req.body.name,
+        accessToken: req.user
       };
       userRef.update(updatedUser)
       console.log('Updated user document with ID: ', req.body.id);
@@ -166,6 +173,7 @@ app.post('/user/save', (req, res) => {
         id: req.body.id,
         avatar: req.body.avatar,
         name: req.body.name,
+        accessToken: req.user,
         friends: []
       };
       userRef.set(newUser)
@@ -252,17 +260,16 @@ async function getFriends(friendsRef: any) {
   return db.getAll(...friendsRef)
 }
 
-// async function getFriends(req: any, res: any, document: any, friends: any, isLastItem: boolean) {
-//   document.ref.collection("product").get().then((querySnapshot) => {
-//      querySnapshot.forEach((document) => {
-//       friends.push(document.data())
-//      });
-//      if (isLastItem) {
-//        console.log(friends)
-//        res.status(200).json(friends);
-//      }
-//    });
-//  }
+app.put('/user/firebase', (req, res) => {
+  var userRef = db.collection('users').doc(req.body.userId)
+  userRef.update({
+    firebaseToken: req.body.token
+  }).then(function() {
+    res.status(201).json({});
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to update firebase token into Firestore with ID: " + req.body.userId));
+  });
+});
 
 app.post('/shopping-list/add-editor', (req, res) => {
   var shoppingListRef = db.collection('shopping_lists').doc(req.body.shoppingListId)
@@ -312,11 +319,50 @@ app.post('/shopping-list/add', (req, res) => {
 app.put('/shopping-list/update', (req, res) => {
   var shoppingListRef = db.collection('shopping_lists').doc(req.body.id)
   shoppingListRef.update(req.body).then(function() {
+    var payload = {
+      data: {
+        notification: NotificationType.SHOPPING_LIST_UPDATED,
+        shoppingListId: req.body.id
+      }
+    };
+    sendFCM(req.user.email, payload);
     res.status(201).json({});
   }).catch(error => {
     res.status(500).send(parseError("Failed to update shopping list into Firestore with ID: " + req.body.id));
   });
 });
+
+async function sendFCM(userId, payload) {
+  var options = {
+    priority: 'high',
+    timeToLive: 60 * 60 * 24
+  };
+  db.collection('users').doc(userId).get().then(document => {
+    if (document.empty) {
+      console.log("No matching user");
+      return
+    }
+    var token = document.data().firebaseToken;
+
+    admin.messaging().sendToDevice(token, payload, options)
+    .then((response) => {
+      console.log('Successfully sent message:', response);
+    })
+    .catch((error) => {
+      console.log('Error sending message:', error);
+    });
+  });
+}
+
+// async function getToken(userId: string) {
+//    db.collection('users').doc(userId).get().then(document => {
+//     if (document.empty) {
+//       console.log("No matching user");
+//       return
+//     }
+//     return document.data().firebaseToken;
+//   });
+// }
 
 
 app.delete('/shopping-list/delete/:shoppingListId', (req, res) => {

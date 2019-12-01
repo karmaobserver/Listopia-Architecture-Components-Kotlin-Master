@@ -19,6 +19,7 @@ import com.aleksej.makaji.listopia.databinding.FragmentShoppingListBinding
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
+import com.aleksej.makaji.listopia.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.item_shopping_list.view.*
 import javax.inject.Inject
 
@@ -32,6 +33,7 @@ class ShoppingListFragment: BaseFragment() {
 
     private lateinit var mShoppingListViewModel: ShoppingListViewModel
     private lateinit var mProductViewModel: ProductViewModel
+    private lateinit var mUserViewModel: UserViewModel
 
     private var binding by autoCleared<FragmentShoppingListBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
@@ -54,6 +56,7 @@ class ShoppingListFragment: BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         mShoppingListViewModel = viewModel(mViewModelFactory)
         mProductViewModel = viewModel(mViewModelFactory)
+        mUserViewModel = viewModel(mViewModelFactory)
         initRecyclerView()
         initObservers()
         initData()
@@ -77,6 +80,7 @@ class ShoppingListFragment: BaseFragment() {
     }
 
     private fun initData() {
+        updateFirebaseToken()
         binding.shoppingListViewModel = mShoppingListViewModel
         if (mSharedPreferenceManager.userId != "") {
             mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
@@ -159,5 +163,9 @@ class ShoppingListFragment: BaseFragment() {
             }
             popup.show()
         }
+    }
+
+    private fun updateFirebaseToken() {
+        mUserViewModel.updateFirebaseToken()
     }
 }

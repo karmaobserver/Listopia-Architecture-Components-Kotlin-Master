@@ -101,6 +101,8 @@ dependencies {
 
     //Firebase
     implementation "com.firebaseui:firebase-ui-auth:$rootProject.firebaseUi"
+    implementation "com.google.firebase:firebase-core:$rootProject.firebaseCoreVersion"
+    implementation "com.google.firebase:firebase-messaging:$rootProject.firebaseMessagingVersion"
 
     //Firestore
     implementation "com.firebaseui:firebase-ui-firestore:$rootProject.firebaseUi"

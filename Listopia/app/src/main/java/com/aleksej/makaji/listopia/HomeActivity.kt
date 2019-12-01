@@ -225,10 +225,11 @@ class HomeActivity : BaseActivity() {
         user.getIdToken(true).addOnSuccessListener {
             it.token?.let {
                 mSharedPreferenceManager.token = it
+                mUserViewModel.updateFirebaseToken()
+                mUserViewModel.fetchAndSaveUser(FetchAndSaveUserValue(user.email ?: "fake", user.displayName, user.photoUrl.toString()))
+                mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
             }
         }
-        mUserViewModel.fetchAndSaveUser(FetchAndSaveUserValue(user.email ?: "fake", user.displayName, user.photoUrl.toString()))
-        mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
     }
 
     private fun signOut() {

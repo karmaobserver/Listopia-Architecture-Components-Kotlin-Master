@@ -19,6 +19,7 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
                                         private val mDeleteFriendByIdUseCase: DeleteFriendByIdUseCase,
                                         private val mSaveEditorUseCase: SaveEditorUseCase,
                                         private val mDeleteEditorUseCase: DeleteEditorUseCase,
+                                        private val mUpdateFirebaseTokenUseCase: UpdateFirebaseTokenUseCase,
                                         private val mFetchAndSaveFriendsUseCase: FetchAndSaveFriendsUseCase) : ViewModel() {
 
     private val getUserTrigger = MutableLiveData<String>()
@@ -99,6 +100,12 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
     fun clearDatabase() {
         GlobalScope.launch {
             mUserRepository.clearDatabase()
+        }
+    }
+
+    fun updateFirebaseToken() {
+        GlobalScope.launch {
+            mUpdateFirebaseTokenUseCase.invoke(Unit)
         }
     }
 }

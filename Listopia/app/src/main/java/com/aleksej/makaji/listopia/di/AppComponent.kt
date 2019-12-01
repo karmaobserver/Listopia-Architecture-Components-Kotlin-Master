@@ -4,6 +4,7 @@ import android.app.Application
 import com.aleksej.makaji.listopia.ListopiaApp
 import com.aleksej.makaji.listopia.di.module.ActivityBindingModule
 import com.aleksej.makaji.listopia.di.module.AppModule
+import com.aleksej.makaji.listopia.di.module.ServiceModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -16,7 +17,8 @@ import javax.inject.Singleton
 @Component(modules = [
     (AppModule::class),
     (ActivityBindingModule::class),
-    (AndroidInjectionModule::class)])
+    (AndroidInjectionModule::class),
+    (ServiceModule::class)])
 interface AppComponent {
 
     @Component.Builder

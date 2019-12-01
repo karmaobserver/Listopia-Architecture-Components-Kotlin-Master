@@ -13,8 +13,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -122,4 +125,19 @@ fun Double.toDecimalString(): String {
     val decimalFormat = DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH))
     decimalFormat.maximumFractionDigits = 340
     return decimalFormat.format(this)
+}
+
+fun <T> Task<T>.asDeferred(): Deferred<T> {
+    val deferred = CompletableDeferred<T>()
+
+    deferred.invokeOnCompletion {
+        if (deferred.isCancelled) {
+            // optional, handle coroutine cancellation
+        }
+    }
+
+    this.addOnSuccessListener { result -> deferred.complete(result) }
+    this.addOnFailureListener { exception -> deferred.completeExceptionally(exception) }
+
+    return deferred
 }

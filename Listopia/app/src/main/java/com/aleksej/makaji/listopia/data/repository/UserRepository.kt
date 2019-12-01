@@ -18,6 +18,10 @@ import javax.inject.Singleton
 @Singleton
 class UserRepository @Inject constructor(@Remote private val mRemoteUserDataSource: UserDataSource,
                                          @Local private val mLocalUserDataSource: UserDataSource): UserDataSource {
+    override suspend fun updateFirebaseToken(token: String): State<Unit> {
+        return mRemoteUserDataSource.updateFirebaseToken(token)
+    }
+
     override suspend fun clearDatabase(): State<Unit> {
         return mLocalUserDataSource.clearDatabase()
     }
