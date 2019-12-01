@@ -18,12 +18,14 @@ import com.aleksej.makaji.listopia.databinding.ActivityHomeBinding
 import com.aleksej.makaji.listopia.databinding.HeaderDrawerBinding
 import com.aleksej.makaji.listopia.error.*
 import com.aleksej.makaji.listopia.util.*
+import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 import com.aleksej.makaji.listopia.viewmodel.UserViewModel
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_home.view.*
 import java.util.*
 import javax.inject.Inject
 
@@ -37,6 +39,8 @@ class HomeActivity : BaseActivity() {
     lateinit var mSharedPreferenceManager: SharedPreferenceManager
 
     private lateinit var mUserViewModel: UserViewModel
+
+    private lateinit var mShoppingListViewModel: ShoppingListViewModel
 
     private lateinit var binding: ActivityHomeBinding
 
@@ -52,6 +56,7 @@ class HomeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
         mUserViewModel = viewModel(mViewModelFactory)
+        mShoppingListViewModel = viewModel(mViewModelFactory)
 
         mNavController = Navigation.findNavController(this, R.id.fragment_navigation_host)
         mAppBarConfiguration = AppBarConfiguration(mNavController.graph, binding.drawerLayout)
@@ -187,7 +192,7 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun observeUser() {
-        observePeek(mUserViewModel.getUserLiveData, {
+        observeSingle(mUserViewModel.getUserLiveData, {
             headerBinding.userModel = it
         }, onError = {
             showError(it)
@@ -207,9 +212,11 @@ class HomeActivity : BaseActivity() {
             headerBinding.groupSignedIn.putVisibleOrGone(true)
             headerBinding.groupSignedOut.putVisibleOrGone(false)
             mUserViewModel.getUserById(mSharedPreferenceManager.userId)
+            shouldShowSignOut(true)
         } else {
             headerBinding.groupSignedIn.putVisibleOrGone(false)
             headerBinding.groupSignedOut.putVisibleOrGone(true)
+            shouldShowSignOut(false)
         }
     }
 
@@ -221,14 +228,15 @@ class HomeActivity : BaseActivity() {
             }
         }
         mUserViewModel.fetchAndSaveUser(FetchAndSaveUserValue(user.email ?: "fake", user.displayName, user.photoUrl.toString()))
+        mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
     }
 
     private fun signOut() {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener {
-                    mSharedPreferenceManager.userId = ""
-                    mSharedPreferenceManager.token = ""
+                    mSharedPreferenceManager.clearAll()
+                    mUserViewModel.clearDatabase()
                     checkIfUserLoggedIn()
                     showToast("Successfully Signed Out")
                 }
@@ -264,6 +272,10 @@ class HomeActivity : BaseActivity() {
 
     fun showToastLong(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun shouldShowSignOut(shouldShow: Boolean) {
+        navigation_view.menu.findItem(R.id.navigation_sign_out).isVisible = shouldShow
     }
 }
 

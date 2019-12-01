@@ -29,4 +29,8 @@ class SharedPreferenceManager constructor(private val sharedPreferences: SharedP
     var languageCode: String
         get() = sharedPreferences.getString(LANGUAGE_CODE, "en").orEmpty()
         set(languageCode) = sharedPreferences.edit().putString(LANGUAGE_CODE, languageCode).apply()
+
+    fun clearAll(){
+        sharedPreferences.edit().clear().apply()
+    }
 }

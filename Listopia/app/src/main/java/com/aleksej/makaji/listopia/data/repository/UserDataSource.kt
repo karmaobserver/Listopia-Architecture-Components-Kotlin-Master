@@ -28,5 +28,6 @@ interface UserDataSource {
     suspend fun saveEditorRemote(saveEditorValue: SaveEditorValue): State<Unit>
     suspend fun deleteEditor(deleteEditorValue: DeleteEditorValue): State<Unit>
     suspend fun deleteEditorRemote(deleteEditorValue: DeleteEditorValue): State<Unit>
+    suspend fun clearDatabase(): State<Unit>
 }
 

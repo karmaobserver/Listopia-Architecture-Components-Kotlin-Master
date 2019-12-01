@@ -11,6 +11,7 @@ import com.aleksej.makaji.listopia.data.mapper.mapToUser
 import com.aleksej.makaji.listopia.data.mapper.mapToUserModel
 import com.aleksej.makaji.listopia.data.repository.UserDataSource
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
+import com.aleksej.makaji.listopia.data.room.ListopiaDatabase
 import com.aleksej.makaji.listopia.data.room.dao.UserDao
 import com.aleksej.makaji.listopia.data.room.model.ShoppingListUserXRef
 import com.aleksej.makaji.listopia.data.room.model.UserUserXRef
@@ -29,7 +30,9 @@ import kotlin.coroutines.CoroutineContext
  * Created by Aleksej Makaji on 5/4/19.
  */
 @Singleton
-class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao, private val mSharedPreferenceManager: SharedPreferenceManager) : UserDataSource, CoroutineScope {
+class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao,
+                                              private val mSharedPreferenceManager: SharedPreferenceManager,
+                                              private val mListopiaDatabase: ListopiaDatabase) : UserDataSource, CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Job()
@@ -157,5 +160,13 @@ class UserLocalDataSource @Inject constructor(private val mUserDao: UserDao, pri
 
     override suspend fun fetchFriends(friendsId: List<String>): State<List<UserModel>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun clearDatabase(): State<Unit> {
+        return try {
+            SuccessState(mListopiaDatabase.clearAllTables())
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
     }
 }

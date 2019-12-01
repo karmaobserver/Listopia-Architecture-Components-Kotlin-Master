@@ -6,6 +6,7 @@ import com.aleksej.makaji.listopia.data.repository.UserRepository
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.data.usecase.*
 import com.aleksej.makaji.listopia.data.usecase.value.*
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -92,6 +93,12 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
         deleteEditorTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             deleteEditorTrigger.value = StateHandler(mDeleteEditorUseCase.invoke(deleteEditorValue))
+        }
+    }
+
+    fun clearDatabase() {
+        GlobalScope.launch {
+            mUserRepository.clearDatabase()
         }
     }
 }

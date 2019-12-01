@@ -82,8 +82,8 @@ class RepositoryModule {
     @Singleton
     @Provides
     @Local
-    fun bindUserLocalDataSource(userDao: UserDao, sharedPreferenceManager: SharedPreferenceManager): UserDataSource {
-        return UserLocalDataSource(userDao, sharedPreferenceManager)
+    fun bindUserLocalDataSource(userDao: UserDao, sharedPreferenceManager: SharedPreferenceManager, listopiaDatabase: ListopiaDatabase): UserDataSource {
+        return UserLocalDataSource(userDao, sharedPreferenceManager, listopiaDatabase)
     }
 
     @Singleton
