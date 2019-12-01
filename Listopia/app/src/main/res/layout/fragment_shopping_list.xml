@@ -28,7 +28,7 @@
             android:id="@+id/recycler_view_shopping_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            style="@style/RecyclerView.BackgroundGray10"
+            android:background="@color/grey_10"
             tools:listitem="@layout/item_shopping_list">
 
         </androidx.recyclerview.widget.RecyclerView>

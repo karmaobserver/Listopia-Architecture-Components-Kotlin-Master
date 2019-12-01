@@ -275,6 +275,15 @@
         <item name="android:layout_marginTop">@dimen/margin_20</item>
     </style>
 
+    <style name="ImageView.Size32">
+        <item name="android:layout_width">@dimen/image_32</item>
+        <item name="android:layout_height">@dimen/image_32</item>
+    </style>
+
+    <style name="ImageView.Size32.Margin4">
+        <item name="android:layout_margin">@dimen/margin_4</item>
+    </style>
+
     <style name="ImageView.Size64">
         <item name="android:layout_width">@dimen/image_64</item>
         <item name="android:layout_height">@dimen/image_64</item>

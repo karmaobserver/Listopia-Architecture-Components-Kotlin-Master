@@ -2,6 +2,7 @@ package com.aleksej.makaji.listopia.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -59,6 +60,9 @@ class FriendAdapter(private val mDataBindingComponent: DataBindingComponent, pri
             binding.constraintViewFriends.setBackgroundResource(R.color.colorPrimaryDark)
         } else {
             binding.constraintViewFriends.setBackgroundResource(R.color.grey_40)
+        }
+        if (item.avatar == null) {
+            binding.imageViewAvatar.setImageResource(R.drawable.background_header)
         }
     }
 

@@ -44,6 +44,7 @@
 
     <!--Image Size-->
     <dimen name="image_24">24dip</dimen>
+    <dimen name="image_32">32dip</dimen>
     <dimen name="image_48">48dip</dimen>
     <dimen name="image_64">64dip</dimen>
     <dimen name="image_70">70dip</dimen>

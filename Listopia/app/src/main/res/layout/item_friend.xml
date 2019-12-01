@@ -18,6 +18,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/image_view_avatar"
+                style="@style/ImageView.Size32.Margin4"
+                app:imageUrl="@{userModel.avatar}"
+                app:civ_border_width="2dp"
+                app:civ_shadow="true"
+                app:civ_shadow_radius="0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/text_view_friend_name"
                 style="@style/TextViewAppearanceBody1.Margin8"
@@ -25,7 +36,8 @@
                 android:layout_height="wrap_content"
                 android:text="@{userModel.id}"
                 app:layout_constraintEnd_toStartOf="@+id/image_button_options"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_view_avatar"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="User Name" />
 
@@ -37,6 +49,7 @@
                 app:layout_constraintStart_toEndOf="@+id/text_view_friend_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:srcCompat="@drawable/ic_dots_vertical_black" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
