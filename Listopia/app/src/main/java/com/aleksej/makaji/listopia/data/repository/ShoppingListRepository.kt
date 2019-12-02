@@ -57,7 +57,7 @@ class ShoppingListRepository @Inject constructor(@Remote private val mRemoteShop
         return mLocalShoppingListDataSource.getShoppingListById(shoppingListByIdValue)
     }
 
-    override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel> {
+    override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel?> {
         return mLocalShoppingListDataSource.getShoppingListByIdSuspend(shoppingListByIdValue)
     }
 

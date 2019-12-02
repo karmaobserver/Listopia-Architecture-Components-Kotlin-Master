@@ -273,9 +273,20 @@ app.post('/shopping-list/add-editor', (req, res) => {
     if (shoppingList.exists) {
       shoppingListRef.update({
         editors: admin.firestore.FieldValue.arrayUnion(req.body.editorId)
-      })
-      console.log('Added editor with ID: ', req.body.editorId);
-      res.status(201).json({});
+      }).then(function() {
+        var payload = {
+          data: {
+            notification: NotificationType.SHOPPING_LIST_UPDATED,
+            shoppingListId: req.body.shoppingListId
+          }
+        };
+        sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload);
+  
+        console.log('Added editor with ID: ', req.body.editorId);
+        res.status(201).json({});
+      }).catch(error => {
+        res.status(500).send(parseError("Failed to add editor into Firestore"));
+      });
     } else {
       res.status(404).send(parseError("ShoppingList does not exists in database with ID: " + req.body.shoppingListId));
     }

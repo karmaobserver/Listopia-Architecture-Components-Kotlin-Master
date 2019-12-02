@@ -12,6 +12,7 @@ import com.aleksej.makaji.listopia.data.event.SuccessState
 import com.aleksej.makaji.listopia.data.mapper.mapToShoppingList
 import com.aleksej.makaji.listopia.data.mapper.mapToShoppingListEditor
 import com.aleksej.makaji.listopia.data.mapper.mapToShoppingListModel
+import com.aleksej.makaji.listopia.data.mapper.mapToShoppingListModelAsSynced
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.room.dao.ShoppingListDao
@@ -150,9 +151,14 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
     }
 
 
-    override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel> {
+    override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel?> {
         return try {
-            SuccessState(mShoppingListDao.getShoppingListByIdSuspend(shoppingListByIdValue.id).mapToShoppingListModel())
+            val result = mShoppingListDao.getShoppingListByIdSuspend(shoppingListByIdValue.id)
+            if (result == null) {
+                SuccessState(null)
+            } else {
+                SuccessState(result.mapToShoppingListModelAsSynced())
+            }
         }catch (e: Exception){
             ErrorState(RoomError(e))
         }

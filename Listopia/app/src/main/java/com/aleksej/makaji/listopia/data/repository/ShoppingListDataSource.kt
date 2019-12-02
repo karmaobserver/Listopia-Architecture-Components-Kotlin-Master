@@ -14,7 +14,7 @@ interface ShoppingListDataSource {
     fun getShoppingLists(): LiveData<StateHandler<PagedList<ShoppingListModel>>>
     suspend fun getShoppingListsSuspend(): State<List<ShoppingListModel>>
     fun getShoppingListById(shoppingListByIdValue: ShoppingListByIdValue) : LiveData<StateHandler<ShoppingListModel>>
-    suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue) : State<ShoppingListModel>
+    suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel?>
     suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): State<Long>
     suspend fun saveShoppingLists(shoppingLists: List<ShoppingListModel>): State<List<Long>>
     suspend fun saveShoppingListsWithEditors(saveShoppingListEditorValue: List<SaveShoppingListEditorValue>): State<List<Long>>

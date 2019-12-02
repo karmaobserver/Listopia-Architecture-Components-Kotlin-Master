@@ -10,7 +10,6 @@ import com.aleksej.makaji.listopia.data.repository.UserRepository
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveShoppingListValue
-import com.aleksej.makaji.listopia.data.usecase.value.FetchShoppingListsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListEditorValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.error.UnknownError

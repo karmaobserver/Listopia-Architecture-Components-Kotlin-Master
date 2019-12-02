@@ -35,7 +35,7 @@ class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi:
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel> {
+    override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel?> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

@@ -10,7 +10,10 @@ import com.aleksej.makaji.listopia.util.mapTo
  * Created by Aleksej Makaji on 12/30/18.
  */
 fun ShoppingListWithEditors.mapToShoppingListModel(): ShoppingListModel = mapTo<ShoppingListModel>().copy(id = shoppingList.id, name = shoppingList.name, ownerId = shoppingList.ownerId,
-        isSynced = shoppingList.isSynced, timestamp = shoppingList.timestamp, editors = editors?.map { it.mapToUserModel() }, products = products?.map { it.mapToProductModel() })
+        isSynced = shoppingList.isSynced, timestamp = shoppingList.timestamp, editors = editors?.map { it.mapToUserModel() }, products = products?.map { it.mapToProductModel() }, isDeleted = shoppingList.isDeleted)
+
+fun ShoppingListWithEditors.mapToShoppingListModelAsSynced(): ShoppingListModel = mapTo<ShoppingListModel>().copy(id = shoppingList.id, name = shoppingList.name, ownerId = shoppingList.ownerId,
+        isSynced = true, timestamp = shoppingList.timestamp, editors = editors?.map { it.mapToUserModel() }, products = products?.map { it.mapToProductModel() }, isDeleted = shoppingList.isDeleted)
 
 fun ShoppingList.mapToShoppingListModel(): ShoppingListModel = mapTo<ShoppingListModel>().copy()
 

@@ -32,7 +32,7 @@ interface ShoppingListDao {
     fun getShoppingListById(id: String): LiveData<ShoppingListWithEditors>
 
     @Transaction @Query("SELECT * FROM shopping_list WHERE id = :shoppingListId")
-    suspend fun getShoppingListByIdSuspend(shoppingListId: String): ShoppingListWithEditors
+    suspend fun getShoppingListByIdSuspend(shoppingListId: String): ShoppingListWithEditors?
 
     @Query("DELETE FROM shopping_list")
     suspend fun deleteAllShoppingLists(): Int
