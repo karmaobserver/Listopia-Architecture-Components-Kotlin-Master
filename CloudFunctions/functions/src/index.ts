@@ -304,8 +304,10 @@ app.put('/shopping-list/delete-editor', (req, res) => {
 });
 
 app.post('/shopping-list/add', (req, res) => {
-  var shoppingListRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.body.id)
-  shoppingListRef.set(req.body).then(function() {
+  var newShoppingList = req.body
+  newShoppingList.editors.push(req.user.email)
+  var shoppingListRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(newShoppingList.id)
+  shoppingListRef.set(newShoppingList).then(function() {
     res.status(201).json({});
   }).catch(error => {
     res.status(500).send(parseError("Failed to add shopping list into Firestore with ID: " + req.body.id));
@@ -522,11 +524,37 @@ app.get('/shopping-list/get/:shoppingListId', (req, res) => {
         res.status(204).json({});
         return
       }
-      res.status(200).json(document.data());
+      getShoppingList(document, res)
     }).catch(error => {
       res.status(500).send(parseError("Failed to get shopping list Firestore"));
     });
 });
+
+async function getShoppingList(document: any, res: any) {
+  var shopingList = document.data();
+  var editorsRef = [];
+  shopingList.editors.forEach(function(id) {
+    editorsRef.push(db.collection(FirestoreConst.USERS).doc(id));
+  });
+  await getShoppingListWithEditors(editorsRef, shopingList)
+  console.log(shopingList)
+  res.status(200).json(shopingList);
+}
+
+async function getShoppingListWithEditors(editorsRef: any, shopingList: any) {
+  var allEditors = [];
+  if (editorsRef.length != 0) {
+    let editors = await getEditos(editorsRef)
+    for (let editor of editors) {
+        var editorData = editor.data();
+        delete editorData.friends;
+        allEditors.push(editorData)
+    }
+    shopingList.editors = allEditors
+  } else {
+    shopingList.editors = allEditors
+  }  
+}
 
 app.get('/shopping-list/get-all/:userId', (req, res) => {
   console.log(req.params.userId);
@@ -543,14 +571,14 @@ app.get('/shopping-list/get-all/:userId', (req, res) => {
         res.status(204).json({});
         return
       }
-      var shoppingLists = getShoppingLists(req, combinedSnapshots, res)
+      var shoppingLists = getShoppingLists(combinedSnapshots, res)
     })
   }catch(error) {
     res.status(500).send(parseError("Failed to get shopping lists Firestore"));
   };
 });
 
-async function getShoppingLists(req: any, combinedSnapshots: any, res: any) {
+async function getShoppingLists(combinedSnapshots: any, res: any) {
     var shoppingLists = [];
     for (let snap of combinedSnapshots) {
       var shopingList = snap.data();

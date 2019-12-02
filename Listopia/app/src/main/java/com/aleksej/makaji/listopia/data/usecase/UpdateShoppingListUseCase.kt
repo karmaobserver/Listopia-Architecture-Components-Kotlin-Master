@@ -7,6 +7,7 @@ import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.error.UnknownError
 import com.aleksej.makaji.listopia.util.Validator
+import com.aleksej.makaji.listopia.util.format
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject

@@ -94,7 +94,7 @@ class ShoppingListFragment: BaseFragment() {
         binding.recyclerViewShoppingList.layoutManager = layoutManager
         binding.recyclerViewShoppingList.setHasFixedSize(false)
 
-        mShoppingListAdapter = ShoppingListAdapter(mDataBindingComponent) {
+        mShoppingListAdapter = ShoppingListAdapter(mDataBindingComponent, mSharedPreferenceManager) {
             when (it) {
                 is ShoppingListAdapterEvents.ShoppingListClick ->{
                     findNavController().navigate(ShoppingListFragmentDirections.actionFragmentShoppingListToFragmentProductList(it.shoppingListId, it.shoppingListName))

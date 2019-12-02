@@ -20,6 +20,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -140,4 +141,10 @@ fun <T> Task<T>.asDeferred(): Deferred<T> {
     this.addOnFailureListener { exception -> deferred.completeExceptionally(exception) }
 
     return deferred
+}
+
+fun Date.format(): String {
+    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+    sdf.timeZone = TimeZone.getTimeZone("GMT")
+    return sdf.format(this)
 }

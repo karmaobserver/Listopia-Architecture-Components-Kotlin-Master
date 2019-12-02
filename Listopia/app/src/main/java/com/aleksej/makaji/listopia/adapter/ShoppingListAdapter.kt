@@ -11,6 +11,7 @@ import com.aleksej.makaji.listopia.R
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.databinding.ItemShoppingListBinding
+import com.aleksej.makaji.listopia.util.SharedPreferenceManager
 import com.aleksej.makaji.listopia.util.putVisibleOrGone
 import java.util.*
 
@@ -19,7 +20,7 @@ import java.util.*
 /**
  * Created by Aleksej Makaji on 1/8/19.
  */
-class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponent, private val mShoppingListAdapterEvents: (ShoppingListAdapterEvents) -> Unit) : DataBoundPagedListAdapter<ShoppingListModel, ItemShoppingListBinding>(
+class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponent, private val mSharedPreferenceManager: SharedPreferenceManager, private val mShoppingListAdapterEvents: (ShoppingListAdapterEvents) -> Unit) : DataBoundPagedListAdapter<ShoppingListModel, ItemShoppingListBinding>(
         diffCallback = object : DiffUtil.ItemCallback<ShoppingListModel>() {
             override fun areItemsTheSame(oldItem: ShoppingListModel, newItem: ShoppingListModel): Boolean {
                 return oldItem.id == newItem.id
@@ -105,14 +106,23 @@ class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponen
         binding.progressBarShoppingList.progress = countCheked
     }
 
-    private fun setEditorAdapter(binding: ItemShoppingListBinding, friends: List<UserModel>?) {
-        if (friends.isNullOrEmpty()) {
+    private fun setEditorAdapter(binding: ItemShoppingListBinding, editors: List<UserModel>?) {
+        if (editors.isNullOrEmpty()) {
             binding.recyclerViewEditors.putVisibleOrGone(false)
         } else {
             binding.recyclerViewEditors.putVisibleOrGone(true)
             val editorAdapter = EditorAdapter(mDataBindingComponent)
             binding.recyclerViewEditors.adapter = editorAdapter
-            editorAdapter.submitList(friends)
+
+            val editorsWithoutOwner = editors.toMutableList()
+            editors.forEach {
+                if (it.id == mSharedPreferenceManager.userId) {
+                    editorsWithoutOwner.remove(it)
+                    return@forEach
+                }
+            }
+
+            editorAdapter.submitList(editorsWithoutOwner)
         }
     }
 }
