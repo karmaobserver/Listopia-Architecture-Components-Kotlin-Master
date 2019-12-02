@@ -8,7 +8,7 @@ import java.util.*
 data class ShoppingListModel(val id: String,
                              var name: String,
                              val ownerId: String,
-                             val isDeleted: Boolean,
+                             var isDeleted: Boolean,
                              var isSynced: Boolean,
                              var timestamp: Date,
                              val editors: List<UserModel>? = null,

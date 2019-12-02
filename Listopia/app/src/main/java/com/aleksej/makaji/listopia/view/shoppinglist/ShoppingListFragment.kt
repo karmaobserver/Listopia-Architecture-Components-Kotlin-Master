@@ -100,7 +100,7 @@ class ShoppingListFragment: BaseFragment() {
                     findNavController().navigate(ShoppingListFragmentDirections.actionFragmentShoppingListToFragmentProductList(it.shoppingListId, it.shoppingListName))
                 }
                 is ShoppingListAdapterEvents.OptionsClick -> {
-                    setupOptionsPopupMenu(it.view, it.shoppingListId)
+                    setupOptionsPopupMenu(it.view, it.shoppingListModel)
                 }
             }
         }
@@ -110,7 +110,6 @@ class ShoppingListFragment: BaseFragment() {
     private fun initObservers() {
         observeShoppingLists()
         observeAddShoppingList()
-        observeDeleteShoppingListById()
         observeFetchAndSaveShoppingLists()
     }
 
@@ -136,25 +135,18 @@ class ShoppingListFragment: BaseFragment() {
         })
     }
 
-    private fun observeDeleteShoppingListById() {
-        observeSingle(mShoppingListViewModel.deleteShoppingListByIdLiveData, {
-            showToastLong(R.string.success_shopping_list_delete)
-        }, onError = {
-            showError(it)
-        })
-    }
-
-    private fun setupOptionsPopupMenu(view: View, shoppingListId: String) {
+    private fun setupOptionsPopupMenu(view: View, shoppingListModel: ShoppingListModel) {
         context?.let {
             val popup = PopupMenu(it, view)
             popup.inflate(R.menu.popup_menu_shopping_list)
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.popup_menu_rename_shopping_list -> {
-                        findNavController().navigate(ShoppingListFragmentDirections.actionFragmentShoppingListToFragmentShoppingListEdit(shoppingListId))
+                        findNavController().navigate(ShoppingListFragmentDirections.actionFragmentShoppingListToFragmentShoppingListEdit(shoppingListModel.id))
                     }
                     R.id.popup_menu_delete_shopping_list -> {
-                        mShoppingListViewModel.deleteShoppingListById(DeleteShoppingListValue(shoppingListId))
+                        shoppingListModel.isDeleted = true
+                        mShoppingListViewModel.updateShoppingList(shoppingListModel)
                     }
                     R.id.popup_menu_share_shopping_list -> {}
                     R.id.popup_menu_copy_shopping_list -> {}

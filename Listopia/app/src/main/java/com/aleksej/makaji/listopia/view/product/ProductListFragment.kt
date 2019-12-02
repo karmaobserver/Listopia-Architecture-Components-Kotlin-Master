@@ -107,7 +107,7 @@ class ProductListFragment: BaseFragment() {
                     mProductViewModel.updateProduct(it.productModel)
                 }
                 is ProductAdapterEvents.OptionsClick -> {
-                    setupOptionsPopupMenu(it.view, it.productId)
+                    setupOptionsPopupMenu(it.view, it.productModel)
                 }
             }
         }
@@ -118,15 +118,6 @@ class ProductListFragment: BaseFragment() {
         observeProducts()
         observeAddProduct()
         observeUpdateProduct()
-        observeDeleteProductById()
-    }
-
-    private fun observeDeleteProductById() {
-        observeSingle(mProductViewModel.deleteProductByIdLiveData, {
-            showToastLong(R.string.success_product_delete)
-        }, onError = {
-            showError(it)
-        })
     }
 
     private fun observeUpdateProduct() {
@@ -153,19 +144,18 @@ class ProductListFragment: BaseFragment() {
         })
     }
 
-    private fun setupOptionsPopupMenu(view: View, productId: String) {
+    private fun setupOptionsPopupMenu(view: View, productModel: ProductModel) {
         context?.let {
             val popup = PopupMenu(it, view)
             popup.inflate(R.menu.popup_menu_product_list)
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.popup_menu_edit_product_list -> {
-                        findNavController().navigate(ProductListFragmentDirections.actionFragmentProductListToFragmentProductEdit(productId))
+                        findNavController().navigate(ProductListFragmentDirections.actionFragmentProductListToFragmentProductEdit(productModel.id))
                     }
                     R.id.popup_menu_delete_product_list -> {
-                        mShoppingListId?.let {
-                            mProductViewModel.deleteProductById(DeleteProductValue(it, productId))
-                        }
+                        productModel.isDeleted = true
+                        mProductViewModel.updateProduct(productModel)
                     }
                 }
                 false

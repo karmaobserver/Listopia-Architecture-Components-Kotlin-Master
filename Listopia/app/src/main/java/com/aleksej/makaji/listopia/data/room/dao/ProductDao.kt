@@ -22,7 +22,7 @@ interface ProductDao {
     @Query("SELECT * FROM product WHERE id = :productId")
     fun getProductById(productId: String): LiveData<Product?>
 
-    @Query("SELECT * FROM product WHERE shoppingListId = :shoppingListId")
+    @Query("SELECT * FROM product WHERE shoppingListId = :shoppingListId AND isDeleted = 0")
     fun getProductsByShoppingListId(shoppingListId: String): DataSource.Factory<Int, Product>
 
     @Query("DELETE FROM product WHERE shoppingListId = :shoppingListId")

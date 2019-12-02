@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.aleksej.makaji.listopia.R
+import com.aleksej.makaji.listopia.data.repository.model.ProductModel
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.databinding.ItemShoppingListBinding
@@ -53,7 +54,7 @@ class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponen
         }
         binding.imageButtonShoppingListOptions.setOnClickListener { view ->
             binding.shoppingListModel?.let {
-                mShoppingListAdapterEvents.invoke(ShoppingListAdapterEvents.OptionsClick(view, it.id))
+                mShoppingListAdapterEvents.invoke(ShoppingListAdapterEvents.OptionsClick(view, it))
             }
         }
 
@@ -88,18 +89,24 @@ class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponen
     }
 
     private fun countCheckedProducts(binding: ItemShoppingListBinding, shoppingListModel: ShoppingListModel) {
-        if (shoppingListModel.products.isNullOrEmpty()) {
+        val productsNotDeleted = arrayListOf<ProductModel>()
+        shoppingListModel.products?.forEach {
+            if (!it.isDeleted) {
+                productsNotDeleted.add(it)
+            }
+        }
+        if (productsNotDeleted.isNullOrEmpty()) {
             binding.textViewMaxProducts.text = "0"
             binding.textViewCheckedProducts.text = "0"
             binding.progressBarShoppingList.max = 0
             return
         } else {
-            val maxProducts = shoppingListModel.products.size
+            val maxProducts = productsNotDeleted.size
             binding.textViewMaxProducts.text = maxProducts.toString()
             binding.progressBarShoppingList.max = maxProducts
         }
         var countCheked = 0
-        shoppingListModel.products.forEach {
+        productsNotDeleted.forEach {
             if (it.isChecked) countCheked++
         }
         binding.textViewCheckedProducts.text = countCheked.toString()

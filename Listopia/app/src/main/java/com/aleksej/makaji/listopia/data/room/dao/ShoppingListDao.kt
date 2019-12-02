@@ -25,9 +25,6 @@ interface ShoppingListDao {
     @Update
     suspend fun updateShoppingList(shoppingList: ShoppingList): Int
 
-    @Query("SELECT * FROM shopping_list")
-    fun getShoppingLists(): DataSource.Factory<Int, ShoppingList>
-
     @Query("SELECT * FROM shopping_list WHERE id = :id")
     fun getShoppingListById(id: String): LiveData<ShoppingListWithEditors>
 
@@ -43,7 +40,7 @@ interface ShoppingListDao {
     @Query("UPDATE shopping_list SET isSynced = 1 WHERE id = :shoppingListId")
     suspend fun updateSyncShoppingList(shoppingListId: String):  Int
 
-    @Transaction @Query("SELECT * FROM shopping_list")
+    @Transaction @Query("SELECT * FROM shopping_list WHERE isDeleted = 0")
     fun getShoppingListsWithEditors(): DataSource.Factory<Int, ShoppingListWithEditors>
 
     @Transaction @Query("SELECT * FROM shopping_list")
