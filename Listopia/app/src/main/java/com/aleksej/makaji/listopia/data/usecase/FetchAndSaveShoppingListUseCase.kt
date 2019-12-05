@@ -9,17 +9,20 @@ import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.data.repository.UserRepository
 import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
+import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListEditorValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.error.UnknownError
+import com.aleksej.makaji.listopia.util.SharedPreferenceManager
 import javax.inject.Inject
 
 /**
  * Created by Aleksej Makaji on 2019-12-01.
  */
 class FetchAndSaveShoppingListUseCase @Inject constructor(private val mShoppingListRepository: ShoppingListRepository,
-                                                           private val mUserRepository: UserRepository) : UseCase<FetchAndSaveShoppingListValue, String>() {
+                                                          private val mUserRepository: UserRepository,
+                                                          private val mSharedPreferenceManager: SharedPreferenceManager) : UseCase<FetchAndSaveShoppingListValue, String>() {
 
     override suspend fun invoke(value: FetchAndSaveShoppingListValue): State<String> {
         when (val fetchedShoppingList = mShoppingListRepository.fetchShoppingListById(value.shoppingListId)) {
@@ -64,7 +67,17 @@ class FetchAndSaveShoppingListUseCase @Inject constructor(private val mShoppingL
 
     @Transaction
     private suspend fun saveShoppingListsWithEditors(shoppingListsToBeAdded: List<ShoppingListModel>, editorsToBeAdded: List<UserModel>, shoppingListEditorsRef: List<SaveShoppingListEditorValue>) {
-        if (shoppingListsToBeAdded.isNotEmpty()) mShoppingListRepository.saveShoppingLists(shoppingListsToBeAdded)
+        val editorsId = arrayListOf<String>()
+        editorsToBeAdded.forEach {
+            editorsId.add(it.id)
+        }
+        if (editorsToBeAdded.isNotEmpty() && !editorsId.contains(mSharedPreferenceManager.userId) ) {
+            mShoppingListRepository.deleteShoppingListById(DeleteShoppingListValue(shoppingListsToBeAdded[0].id))
+            mShoppingListRepository.deleteShoppingListsWithEditorsById(DeleteShoppingListValue(shoppingListsToBeAdded[0].id))
+        } else if (shoppingListsToBeAdded.isNotEmpty()) {
+            mShoppingListRepository.deleteShoppingListsWithEditorsById(DeleteShoppingListValue(shoppingListsToBeAdded[0].id))
+            mShoppingListRepository.saveShoppingLists(shoppingListsToBeAdded)
+        }
         if (editorsToBeAdded.isNotEmpty()) mUserRepository.saveUsers(editorsToBeAdded)
         if (shoppingListEditorsRef.isNotEmpty()) mShoppingListRepository.saveShoppingListsWithEditors(shoppingListEditorsRef)
     }

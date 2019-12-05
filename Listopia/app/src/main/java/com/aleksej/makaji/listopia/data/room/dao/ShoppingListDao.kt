@@ -37,9 +37,13 @@ interface ShoppingListDao {
     @Query("DELETE FROM shopping_list WHERE id = :id")
     suspend fun deleteShoppingListById(id: String): Int
 
+    @Query("DELETE FROM editors WHERE shoppingListId = :id")
+    suspend fun deleteShoppingListsWithEditorsById(id: String): Int
+
     @Query("UPDATE shopping_list SET isSynced = 1 WHERE id = :shoppingListId")
     suspend fun updateSyncShoppingList(shoppingListId: String):  Int
 
+    //@Transaction @Query("SELECT * FROM shopping_list INNER JOIN editors ON shopping_list.id = editors.shoppingListId WHERE isDeleted = 0 ")
     @Transaction @Query("SELECT * FROM shopping_list WHERE isDeleted = 0")
     fun getShoppingListsWithEditors(): DataSource.Factory<Int, ShoppingListWithEditors>
 

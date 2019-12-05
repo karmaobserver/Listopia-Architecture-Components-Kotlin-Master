@@ -122,7 +122,7 @@ class ShoppingListFragment: BaseFragment() {
     }
 
     private fun observeShoppingLists() {
-        observePeek(mShoppingListViewModel.getShoppingListsLiveData, {
+        observeSingle(mShoppingListViewModel.getShoppingListsLiveData, {
             mShoppingListAdapter.submitList(it)
         }, onError = {
             showError(it)

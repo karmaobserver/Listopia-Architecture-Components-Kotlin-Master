@@ -164,6 +164,14 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
         }
     }
 
+    override suspend fun deleteShoppingListsWithEditorsById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {
+        return try {
+            SuccessState(mShoppingListDao.deleteShoppingListsWithEditorsById(deleteShoppingListValue.id))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
     override suspend fun updateShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

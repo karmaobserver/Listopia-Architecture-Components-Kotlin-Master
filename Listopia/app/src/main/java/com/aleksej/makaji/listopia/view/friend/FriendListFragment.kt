@@ -24,6 +24,7 @@ import com.aleksej.makaji.listopia.databinding.FragmentFriendListBinding
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 import com.aleksej.makaji.listopia.viewmodel.UserViewModel
+import java.util.*
 import javax.inject.Inject
 
 class FriendListFragment: BaseFragment() {
@@ -211,13 +212,13 @@ class FriendListFragment: BaseFragment() {
 
     private fun addFriendAsEditor(userModel: UserModel) {
         mShoppingListId?.let {
-            mUserViewModel.saveEditor(SaveEditorValue(userModel.id, it))
+            mUserViewModel.saveEditor(SaveEditorValue(userModel.id, it, Date()))
         }
     }
 
     private fun deleteEditorFromList(userModel: UserModel) {
         mShoppingListId?.let {
-            mUserViewModel.deleteEditor(DeleteEditorValue(userModel.id, it))
+            mUserViewModel.deleteEditor(DeleteEditorValue(userModel.id, it, Date()))
         }
     }
 

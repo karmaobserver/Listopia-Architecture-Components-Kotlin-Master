@@ -21,6 +21,7 @@ interface ShoppingListDataSource {
     suspend fun saveShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit>
     suspend fun updateShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit>
     suspend fun deleteAllShoppingLists(): State<Int>
+    suspend fun deleteShoppingListsWithEditorsById(deleteShoppingListValue: DeleteShoppingListValue): State<Int>
     suspend fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue): State<Int>
     suspend fun deleteShoppingListByIdRemote(shoppingListId: String): State<Unit>
     suspend fun updateShoppingList(shoppingListModel: ShoppingListModel): State<Int>

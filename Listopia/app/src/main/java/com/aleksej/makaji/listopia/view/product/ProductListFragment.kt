@@ -136,7 +136,7 @@ class ProductListFragment: BaseFragment() {
     }
 
     private fun observeProducts() {
-        observePeek(mProductViewModel.getProductsByShoppingIdLiveData, {
+        observeSingle(mProductViewModel.getProductsByShoppingIdLiveData, {
             mProductAdapter.submitList(it)
             calculateTotalPriceList(it)
         }, onError = {

@@ -195,8 +195,9 @@ app.post('/user/:userId/add-friend', (req, res) => {
         friends: admin.firestore.FieldValue.arrayUnion(req.body.friendId)
       }).then(function() {
         console.log('Successfully added friend with ID: ', req.body.friendId);
-        thisDoc.data().friends = null
-        res.status(201).send(thisDoc.data());
+        var user = thisDoc.data()
+        user.friends = null
+        res.status(201).send(user);
       }).catch(error => {
         console.log(error)
         res.status(500).send(parseError("Failed to add friend into Firestore"));
@@ -272,6 +273,7 @@ app.post('/shopping-list/add-editor', (req, res) => {
   shoppingListRef.get().then(function(shoppingList) {
     if (shoppingList.exists) {
       shoppingListRef.update({
+        timestamp: req.body.timestamp,
         editors: admin.firestore.FieldValue.arrayUnion(req.body.editorId)
       }).then(function() {
         var payload = {
@@ -298,13 +300,32 @@ app.post('/shopping-list/add-editor', (req, res) => {
 
 app.put('/shopping-list/delete-editor', (req, res) => {
   var shoppingListRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.body.shoppingListId)
+  var payload = {
+    data: {
+      notification: NotificationType.SHOPPING_LIST_UPDATED,
+      shoppingListId: req.body.shoppingListId
+    }
+  };
+  sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload);
   shoppingListRef.get().then(function(shoppingList) {
     if (shoppingList.exists) {
       shoppingListRef.update({
+        timestamp: req.body.timestamp,
         editors: admin.firestore.FieldValue.arrayRemove(req.body.editorId)
-      })
-      console.log('Deleted editor with ID: ', req.body.editorId);
-      res.status(201).json({});
+      }).then(function() {
+        // var payload = {
+        //   data: {
+        //     notification: NotificationType.SHOPPING_LIST_UPDATED,
+        //     shoppingListId: req.body.shoppingListId
+        //   }
+        // };
+        // sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload);
+  
+        console.log('Deleted editor with ID: ', req.body.editorId);
+        res.status(201).json({});
+      }).catch(error => {
+        res.status(500).send(parseError("Failed to delete editor from Firestore"));
+      });
     } else {
       res.status(404).send(parseError("ShoppingList does not exists in database with ID: " + req.body.shoppingListId));
     }

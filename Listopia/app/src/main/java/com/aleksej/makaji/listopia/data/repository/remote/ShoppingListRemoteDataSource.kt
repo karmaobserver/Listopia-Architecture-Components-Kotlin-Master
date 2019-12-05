@@ -22,6 +22,9 @@ import javax.inject.Singleton
  */
 @Singleton
 class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi: ListopiaApi, private val mRetrofit: Retrofit) : ShoppingListDataSource {
+    override suspend fun deleteShoppingListsWithEditorsById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override suspend fun saveShoppingLists(shoppingLists: List<ShoppingListModel>): State<List<Long>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
