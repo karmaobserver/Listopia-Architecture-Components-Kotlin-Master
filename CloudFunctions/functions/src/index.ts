@@ -487,6 +487,14 @@ function deleteQueryBatch(query, batchSize, resolve, reject) {
 app.put('/product/update', (req, res) => {
   var productRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.body.shoppingListId).collection(FirestoreConst.PRODUCTS).doc(req.body.id)
   productRef.update(req.body).then(function() {
+    var payload = {
+      data: {
+        notification: NotificationType.PRODUCT_UPDATED,
+        productId: req.body.id,
+        shoppingListId: req.body.shoppingListId
+      }
+    };
+    sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload);
     res.status(201).json({});
   }).catch(error => {
     res.status(500).send(parseError("Failed to update product into Firestore with ID: " + req.body.id));
