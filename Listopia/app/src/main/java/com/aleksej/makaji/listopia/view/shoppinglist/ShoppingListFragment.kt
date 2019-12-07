@@ -79,9 +79,8 @@ class ShoppingListFragment: BaseFragment() {
     }
 
     private fun initData() {
-        updateFirebaseToken()
         binding.shoppingListViewModel = mShoppingListViewModel
-        if (mSharedPreferenceManager.userId != "") {
+        if (mSharedPreferenceManager.userId.isNotEmpty() && mSharedPreferenceManager.token.isNotEmpty()) {
             mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
         }
         mShoppingListViewModel.getShoppingLists()
@@ -163,9 +162,5 @@ class ShoppingListFragment: BaseFragment() {
             }
             popup.show()
         }
-    }
-
-    private fun updateFirebaseToken() {
-        mUserViewModel.updateFirebaseToken()
     }
 }

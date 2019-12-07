@@ -65,7 +65,7 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
 
     fun fetchAndSaveUser(fetchAndSaveUserValue: FetchAndSaveUserValue) {
         fetchAndSaveUserTrigger.value = StateHandler.loading()
-        viewModelScope.launch {
+        GlobalScope.launch {
             fetchAndSaveUserTrigger.value = StateHandler(mFetchAndSaveUserUseCase.invoke(fetchAndSaveUserValue))
         }
     }

@@ -91,6 +91,7 @@ app.get('/hello', (req, res) => {
 });
 
 app.get('/user/get/:userId', (req, res) => {
+  console.log("CALL: /user/get/:userId");
   var userRef = db.collection(FirestoreConst.USERS).doc(req.params.userId)
   userRef.get().then(function(doc) {
     if (doc.exists) {
@@ -153,12 +154,13 @@ app.delete('/user/:userId/delete-friend/:friendId', (req, res) => {
 });
 
 app.post('/user/save', (req, res) => {
+  console.log("CALL: /user/save");
   var userRef = db.collection(FirestoreConst.USERS).doc(req.body.id)
   userRef.get().then(function(thisDoc) {
     if (thisDoc.exists) {
       var updatedUser = {
-        avatar: req.body.avatar,
-        name: req.body.name,
+        avatar: req.user.picture,
+        name: req.user.name,
         accessToken: req.user
       };
       userRef.update(updatedUser)
@@ -169,6 +171,7 @@ app.post('/user/save', (req, res) => {
         avatar: req.body.avatar,
         name: req.body.name,
         accessToken: req.user,
+        firebaseToken: "",
         friends: []
       };
       userRef.set(newUser)
@@ -258,12 +261,14 @@ async function getFriends(friendsRef: any) {
 }
 
 app.put('/user/firebase', (req, res) => {
+  console.log("CALL: /user/firebase");
   var userRef = db.collection(FirestoreConst.USERS).doc(req.body.userId)
   userRef.update({
     firebaseToken: req.body.token
   }).then(function() {
     res.status(201).json({});
   }).catch(error => {
+    console.log(error)
     res.status(500).send(parseError("Failed to update firebase token into Firestore with ID: " + req.body.userId));
   });
 });
@@ -619,6 +624,7 @@ async function getShoppingListWithEditors(editorsRef: any, shopingList: any) {
 }
 
 app.get('/shopping-list/get-all/:userId', (req, res) => {
+  console.log("CALL: /shopping-list/get-all/:userId");
   try {
     var shoppingListsRef = db.collection(FirestoreConst.SHOPPING_LIST);
     var promise1 = shoppingListsRef.where('ownerId', '==', req.params.userId).get()

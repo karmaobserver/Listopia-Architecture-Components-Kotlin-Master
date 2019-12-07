@@ -180,7 +180,7 @@ class HomeActivity : BaseActivity() {
                     AuthUI.getInstance()
                             .createSignInIntentBuilder()
                             .setAvailableProviders(providers)
-                            .setLogo(R.drawable.ic_favorites)
+                            .setLogo(R.mipmap.ic_launcher)
                             .build(),
                     REQUEST_CODE_SIGN_IN)
         }
@@ -212,6 +212,8 @@ class HomeActivity : BaseActivity() {
     private fun observeSaveUser() {
         observeSingle(mUserViewModel.fetchAndSaveUserLiveData, {
             checkIfUserLoggedIn()
+            mUserViewModel.updateFirebaseToken()
+            mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
         }, onError = {
             showError(it)
         })
@@ -235,9 +237,7 @@ class HomeActivity : BaseActivity() {
         user.getIdToken(true).addOnSuccessListener {
             it.token?.let {
                 mSharedPreferenceManager.token = it
-                mUserViewModel.updateFirebaseToken()
                 mUserViewModel.fetchAndSaveUser(FetchAndSaveUserValue(user.email ?: "fake", user.displayName, user.photoUrl.toString()))
-                mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
             }
         }
     }
