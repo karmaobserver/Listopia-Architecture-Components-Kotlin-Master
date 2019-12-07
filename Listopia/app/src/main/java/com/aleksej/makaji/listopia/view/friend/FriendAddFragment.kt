@@ -27,8 +27,6 @@ class FriendAddFragment: BaseFragment() {
     @Inject
     lateinit var mDialogController: DialogController
 
-    private lateinit var mUserViewModel: UserViewModel
-
     private var binding by autoCleared<FragmentFriendAddBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 

@@ -49,6 +49,7 @@ class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListB
     }
 
     fun fetchShoppingListsByUserId(userId: String) {
+        fetchShoppingListsTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             fetchShoppingListsTrigger.value = StateHandler(mFetchAndSaveShoppingListsUseCase.invoke(FetchShoppingListsValue(userId)))
         }
@@ -76,6 +77,7 @@ class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListB
     }
 
     fun deleteShoppingListById(deleteShoppingListValue: DeleteShoppingListValue) {
+        deleteShoppingListByIdTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             deleteShoppingListByIdTrigger.value = StateHandler(mDeleteShoppingListByIdUseCase.invoke(deleteShoppingListValue))
         }

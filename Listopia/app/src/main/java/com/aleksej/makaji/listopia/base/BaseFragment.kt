@@ -1,5 +1,6 @@
 package com.aleksej.makaji.listopia.base
 
+import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -7,6 +8,8 @@ import com.aleksej.makaji.listopia.HomeActivity
 import com.aleksej.makaji.listopia.R
 import com.aleksej.makaji.listopia.di.Injectable
 import com.aleksej.makaji.listopia.error.*
+import com.aleksej.makaji.listopia.util.viewModel
+import com.aleksej.makaji.listopia.viewmodel.UserViewModel
 import javax.inject.Inject
 
 /**
@@ -16,6 +19,13 @@ open class BaseFragment : Fragment(), Injectable {
 
     @Inject
     lateinit var mViewModelFactory: ViewModelProvider.Factory
+
+    lateinit var mUserViewModel: UserViewModel
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        mUserViewModel = viewModel(mViewModelFactory)
+    }
 
     fun showToast(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
@@ -42,7 +52,7 @@ open class BaseFragment : Fragment(), Injectable {
                 showToast(error.exception.localizedMessage)
             }
             is UnauthorizedError ->{
-                showToast("Unauthorized")
+                mUserViewModel.removeSession()
             }
             is RoomError -> {
                 showToast(R.string.error_room)

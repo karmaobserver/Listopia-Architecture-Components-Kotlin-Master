@@ -1,10 +1,14 @@
 package com.aleksej.makaji.listopia.service.firebase
 
 import com.aleksej.makaji.listopia.data.enums.NotificationConstants
+import com.aleksej.makaji.listopia.data.enums.NotificationConstants.Companion.CONTENT_PRODUCT_ID
 import com.aleksej.makaji.listopia.data.enums.NotificationConstants.Companion.CONTENT_SHOPPING_LIST_ID
+import com.aleksej.makaji.listopia.data.usecase.FetchAndSaveProductUseCase
 import com.aleksej.makaji.listopia.data.usecase.FetchAndSaveShoppingListUseCase
 import com.aleksej.makaji.listopia.data.usecase.UpdateFirebaseTokenUseCase
+import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveShoppingListValue
+import com.aleksej.makaji.listopia.util.safeLet
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.android.AndroidInjection
@@ -22,6 +26,9 @@ class ListopiaFirebaseService : FirebaseMessagingService() {
 
     @Inject
     lateinit var mFetchAndSaveShoppingListUseCase: FetchAndSaveShoppingListUseCase
+
+    @Inject
+    lateinit var mFetchAndSaveProductUseCase: FetchAndSaveProductUseCase
 
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -50,12 +57,15 @@ class ListopiaFirebaseService : FirebaseMessagingService() {
                         mFetchAndSaveShoppingListUseCase.invoke(FetchAndSaveShoppingListValue(it))
                     }
                 }
-                NotificationConstants.PRODUCT_UPDATED -> {}
-                NotificationConstants.USER_UPDATED -> {}
-                NotificationConstants.SHOPPING_LIST_DELETED -> {}
-                NotificationConstants.PRODUCT_DELETED -> {}
-                NotificationConstants.SHOPPING_LIST_SHARE_ALLOWED -> {}
-                NotificationConstants.SHOPPING_LIST_SHARE_CANCEL -> {}
+                NotificationConstants.PRODUCT_UPDATED -> {
+                    val shoppingListId = data[CONTENT_SHOPPING_LIST_ID]
+                    val productId = data[CONTENT_PRODUCT_ID]
+                    safeLet(shoppingListId, productId) { shoppingListId, productId ->
+                        GlobalScope.launch {
+                            mFetchAndSaveProductUseCase.invoke(FetchAndSaveProductValue(shoppingListId, productId))
+                        }
+                    }
+                }
             }
         }
     }

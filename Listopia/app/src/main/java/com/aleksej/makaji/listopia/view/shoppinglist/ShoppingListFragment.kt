@@ -33,7 +33,6 @@ class ShoppingListFragment: BaseFragment() {
 
     private lateinit var mShoppingListViewModel: ShoppingListViewModel
     private lateinit var mProductViewModel: ProductViewModel
-    private lateinit var mUserViewModel: UserViewModel
 
     private var binding by autoCleared<FragmentShoppingListBinding>()
     private var mDataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
@@ -111,7 +110,16 @@ class ShoppingListFragment: BaseFragment() {
         observeShoppingLists()
         observeAddShoppingList()
         observeFetchAndSaveShoppingLists()
+        observeFirebaseToken()
     }
+
+    private fun observeFirebaseToken() {
+        observeSingle(mUserViewModel.updateTokenEventLiveData, {
+        }, onError = {
+            showError(it)
+        })
+    }
+
 
     private fun observeFetchAndSaveShoppingLists() {
         observeSingle(mShoppingListViewModel.fetchShoppingListsLiveData, {

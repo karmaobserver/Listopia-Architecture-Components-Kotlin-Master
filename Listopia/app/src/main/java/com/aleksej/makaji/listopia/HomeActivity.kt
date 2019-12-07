@@ -189,6 +189,16 @@ class HomeActivity : BaseActivity() {
     private fun initObservers() {
         observeUser()
         observeSaveUser()
+        observeRemoveSession()
+    }
+
+    private fun observeRemoveSession() {
+        observeSingle(mUserViewModel.removeSessioEventLiveData, {
+            checkIfUserLoggedIn()
+            showToast(R.string.success_logout)
+        }, onError = {
+            showError(it)
+        })
     }
 
     private fun observeUser() {
@@ -236,10 +246,7 @@ class HomeActivity : BaseActivity() {
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener {
-                    mSharedPreferenceManager.clearAll()
-                    mUserViewModel.clearDatabase()
-                    checkIfUserLoggedIn()
-                    showToast("Successfully Signed Out")
+                    mUserViewModel.removeSession()
                 }
     }
 

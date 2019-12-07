@@ -35,7 +35,7 @@ interface ProductDao {
     suspend fun getProductsSuspend(): List<Product>
 
     @Query("SELECT * FROM product WHERE id = :productId")
-    suspend fun getProductByIdSuspend(productId: String): Product
+    suspend fun getProductByIdSuspend(productId: String): Product?
 
     @Query("UPDATE product SET isSynced = 1 WHERE id = :productId")
     suspend fun updateSyncProduct(productId: String):  Int

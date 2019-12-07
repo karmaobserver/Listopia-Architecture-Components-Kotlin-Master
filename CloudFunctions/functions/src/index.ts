@@ -496,6 +496,14 @@ app.put('/product/update', (req, res) => {
 app.post('/product/add', (req, res) => {
   var productRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.body.shoppingListId).collection(FirestoreConst.PRODUCTS).doc(req.body.id)
   productRef.set(req.body).then(function() {
+    var payload = {
+      data: {
+        notification: NotificationType.PRODUCT_UPDATED,
+        productId: req.body.id,
+        shoppingListId: req.body.shoppingListId
+      }
+    };
+    sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload);
     res.status(201).json({});
   }).catch(error => {
     res.status(500).send(parseError("Failed to add product into Firestore with ID: " + req.body.id));
@@ -503,7 +511,6 @@ app.post('/product/add', (req, res) => {
 });
 
 app.post('/products', (req, res) => {
-  console.log(req.body.shoppingListsId);
   try {
     var products = [];
     var shoppingListids = req.body.shoppingListsId
@@ -526,6 +533,23 @@ app.post('/products', (req, res) => {
   };
 });
 
+app.get('/shopping-list/:shoppingListId/product/:productId', (req, res) => {
+  try {
+    var productRef = db.collection(FirestoreConst.SHOPPING_LIST).doc(req.params.shoppingListId).collection(FirestoreConst.PRODUCTS).doc(req.params.productId)
+    productRef.get().then(document => {
+      if (document.empty) {
+        console.log("No matching document for product");
+        res.status(204).json({});
+        return
+      }
+      var product = document.data();
+      res.status(200).json(product);
+    });
+  }catch(error) {
+    res.status(500).send(parseError("Failed to fetch"));
+  };
+});
+
  async function getShopingingList(req: any, res: any, products: any, shoppingListId: any, isLastItem: boolean) {
   db.collection(FirestoreConst.SHOPPING_LIST).doc(shoppingListId).get().then(document => {
     if (document.empty) {
@@ -543,7 +567,6 @@ async function getProducts(req: any, res: any, document: any, products: any, isL
       products.push(document.data())
     });
     if (isLastItem) {
-      console.log(products)
       res.status(200).json(products);
     }
   });
@@ -569,7 +592,6 @@ async function getShoppingList(document: any, res: any) {
     editorsRef.push(db.collection(FirestoreConst.USERS).doc(id));
   });
   await getShoppingListWithEditors(editorsRef, shopingList)
-  console.log(shopingList)
   res.status(200).json(shopingList);
 }
 
@@ -589,7 +611,6 @@ async function getShoppingListWithEditors(editorsRef: any, shopingList: any) {
 }
 
 app.get('/shopping-list/get-all/:userId', (req, res) => {
-  console.log(req.params.userId);
   try {
     var shoppingListsRef = db.collection(FirestoreConst.SHOPPING_LIST);
     var promise1 = shoppingListsRef.where('ownerId', '==', req.params.userId).get()
@@ -620,7 +641,6 @@ async function getShoppingLists(combinedSnapshots: any, res: any) {
       });
       await getShoppingListsWithEditors(editorsRef, shopingList, shoppingLists)
     };
-    console.log(shoppingLists)
     res.status(200).json(shoppingLists);
     return shoppingLists
 }

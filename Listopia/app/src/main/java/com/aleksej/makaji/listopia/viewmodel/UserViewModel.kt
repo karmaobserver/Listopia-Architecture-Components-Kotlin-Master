@@ -20,7 +20,8 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
                                         private val mSaveEditorUseCase: SaveEditorUseCase,
                                         private val mDeleteEditorUseCase: DeleteEditorUseCase,
                                         private val mUpdateFirebaseTokenUseCase: UpdateFirebaseTokenUseCase,
-                                        private val mFetchAndSaveFriendsUseCase: FetchAndSaveFriendsUseCase) : ViewModel() {
+                                        private val mFetchAndSaveFriendsUseCase: FetchAndSaveFriendsUseCase,
+                                        private val mRemoveSessionUseCase: RemoveSessionUseCase) : ViewModel() {
 
     private val getUserTrigger = MutableLiveData<String>()
     val getUserLiveData = Transformations.switchMap(getUserTrigger) { mUserRepository.getUserById(it) }
@@ -33,6 +34,13 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
 
     private val deleteFriendTrigger = MutableLiveData<StateHandler<Unit>>()
     val deleteFriendEventLiveData : LiveData<StateHandler<Unit>> = deleteFriendTrigger
+
+    private val removeSessionTrigger = MutableLiveData<StateHandler<Unit>>()
+    val removeSessioEventLiveData : LiveData<StateHandler<Unit>> = removeSessionTrigger
+
+
+    private val updateTokenTrigger = MutableLiveData<StateHandler<Unit>>()
+    val updateTokenEventLiveData : LiveData<StateHandler<Unit>> = updateTokenTrigger
 
     private val saveFriendTrigger = MutableLiveData<StateHandler<Long>>()
     val saveFriendLiveData : LiveData<StateHandler<Long>> = saveFriendTrigger
@@ -97,15 +105,16 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
         }
     }
 
-    fun clearDatabase() {
+    fun updateFirebaseToken() {
         GlobalScope.launch {
-            mUserRepository.clearDatabase()
+            updateTokenTrigger.postValue(StateHandler(mUpdateFirebaseTokenUseCase.invoke((Unit))))
         }
     }
 
-    fun updateFirebaseToken() {
+    fun removeSession() {
+        removeSessionTrigger.value = StateHandler.loading()
         GlobalScope.launch {
-            mUpdateFirebaseTokenUseCase.invoke(Unit)
+            removeSessionTrigger.postValue(StateHandler(mRemoveSessionUseCase.invoke(Unit)))
         }
     }
 }

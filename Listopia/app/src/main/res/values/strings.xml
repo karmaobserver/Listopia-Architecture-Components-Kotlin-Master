@@ -63,6 +63,7 @@
     <string name="success_friend_delete">Successfully deleted friend.</string>
     <string name="success_editor_deleted">Editor has been removed from the list</string>
     <string name="success_editor_added">Editor has been added to the list</string>
+    <string name="success_logout">Successfully Signed Out</string>
 
     <!--Errors-->
     <string name="error_room">Error with Room operation.</string>

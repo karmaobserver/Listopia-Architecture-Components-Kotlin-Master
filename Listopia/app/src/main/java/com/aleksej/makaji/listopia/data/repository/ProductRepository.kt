@@ -17,6 +17,10 @@ import javax.inject.Singleton
 @Singleton
 class ProductRepository @Inject constructor(@Remote private val mRemoteProductDataSource: ProductDataSource,
                                                  @Local private val mLocalProductDataSource: ProductDataSource): ProductDataSource {
+    override suspend fun fetchProductById(fetchAndSaveProductValue: FetchAndSaveProductValue): State<ProductModel> {
+        return mRemoteProductDataSource.fetchProductById(fetchAndSaveProductValue)
+    }
+
     override suspend fun getProductByIdSuspend(productId: String): State<ProductModel> {
         return mLocalProductDataSource.getProductByIdSuspend(productId)
     }

@@ -32,8 +32,6 @@ class FriendListFragment: BaseFragment() {
     @Inject
     lateinit var mSharedPreferenceManager: SharedPreferenceManager
 
-    private lateinit var mUserViewModel: UserViewModel
-
     private lateinit var mShoppingListViewModel: ShoppingListViewModel
 
     private var binding by autoCleared<FragmentFriendListBinding>()

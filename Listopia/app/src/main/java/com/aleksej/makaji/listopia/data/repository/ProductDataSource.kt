@@ -22,6 +22,7 @@ interface ProductDataSource {
     suspend fun deleteProductById(productValue: ProductValue): State<Int>
     suspend fun updateSyncProduct(productId: String): State<Int>
     suspend fun fetchProducts(shoppingListsId: List<String>): State<List<ProductModel>>
+    suspend fun fetchProductById(fetchAndSaveProductValue: FetchAndSaveProductValue): State<ProductModel>
     suspend fun saveProductRemote(productModel: ProductModel): State<Unit>
     suspend fun updateProductRemote(productModel: ProductModel): State<Unit>
     suspend fun deleteProductByIdRemote(deleteProductValue: DeleteProductValue): State<Unit>

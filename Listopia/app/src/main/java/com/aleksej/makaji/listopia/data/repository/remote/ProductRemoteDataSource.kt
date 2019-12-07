@@ -23,6 +23,14 @@ import javax.inject.Singleton
  */
 @Singleton
 class ProductRemoteDataSource @Inject constructor(private val mListopiaApi: ListopiaApi, private val mRetrofit: Retrofit) : ProductDataSource {
+    override suspend fun fetchProductById(fetchAndSaveProductValue: FetchAndSaveProductValue): State<ProductModel> {
+        return try {
+            CoroutineAdapter(mListopiaApi.fetchProductById(fetchAndSaveProductValue.shoppingListId, fetchAndSaveProductValue.productId), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
+
     override suspend fun getProductByIdSuspend(productId: String): State<ProductModel> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

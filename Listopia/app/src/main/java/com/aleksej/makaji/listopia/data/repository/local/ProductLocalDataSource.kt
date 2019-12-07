@@ -127,7 +127,12 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
 
     override suspend fun getProductByIdSuspend(productId: String): State<ProductModel> {
         return try {
-            SuccessState(mProductDao.getProductByIdSuspend(productId).mapToProductModel())
+            val result = mProductDao.getProductByIdSuspend(productId)
+            if (result == null) {
+                SuccessState(null)
+            } else {
+                SuccessState(result.mapToProductModel())
+            }
         }catch (e: Exception){
             ErrorState(RoomError(e))
         }
@@ -154,6 +159,10 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
     }
 
     override suspend fun deleteProductByIdRemote(deleteProductValue: DeleteProductValue): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun fetchProductById(fetchAndSaveProductValue: FetchAndSaveProductValue): State<ProductModel> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

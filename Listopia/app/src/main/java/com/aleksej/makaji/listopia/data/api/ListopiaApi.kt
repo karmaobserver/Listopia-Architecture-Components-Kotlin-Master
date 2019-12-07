@@ -48,6 +48,10 @@ interface ListopiaApi {
     @POST("products")
     suspend fun fetchProducts(@Body fetchProductsRequest: FetchProductsRequest): Response<ProductsResponse>
 
+    @GET("shopping-list/{shoppingListId}/product/{productId}")
+    suspend fun fetchProductById( @Path("shoppingListId") shoppingListId: String,
+                                  @Path("productId") productId: String): Response<ProductResponse>
+
     @PUT("product/update")
     suspend fun updateProduct(@Body updateProductRequest: UpdateProductRequest) : Response<EmptyResponse>
 

@@ -31,8 +31,10 @@ class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponen
                 return oldItem.name == newItem.name
                         && oldItem.ownerId == newItem.ownerId
                         && oldItem.isSynced == newItem.isSynced
+                        && oldItem.isDeleted == newItem.isDeleted
                         && oldItem.timestamp == newItem.timestamp
                         && oldItem.editors == newItem.editors
+                        && oldItem.products == newItem.products
             }
         }
 ) {
