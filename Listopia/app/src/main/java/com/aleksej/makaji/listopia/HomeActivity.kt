@@ -1,6 +1,9 @@
 package com.aleksej.makaji.listopia
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -70,6 +73,7 @@ class HomeActivity : BaseActivity() {
 
         setupNavigationDrawerMenu()
         setupNavigationListener()
+        initData()
         initClickListener()
         initObservers()
     }
@@ -112,6 +116,10 @@ class HomeActivity : BaseActivity() {
             }
             checkIfUserLoggedIn()
         }
+    }
+
+    private fun initData() {
+        listenForNetworkConnection()
     }
 
     private fun setupNavigationDrawerMenu() {
@@ -267,7 +275,7 @@ class HomeActivity : BaseActivity() {
                 showToast(error.exception.localizedMessage)
             }
             is UnauthorizedError ->{
-                showToast("Unauthorized")
+                mUserViewModel.removeSession()
             }
             is RoomError -> {
                 showToast(R.string.error_room)
@@ -284,6 +292,20 @@ class HomeActivity : BaseActivity() {
 
     private fun shouldShowSignOut(shouldShow: Boolean) {
         navigation_view.menu.findItem(R.id.navigation_sign_out).isVisible = shouldShow
+    }
+
+    private fun listenForNetworkConnection() {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        connectivityManager?.let {
+            it.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    NotificationBarHandler.clearNoInternetConnection(this@HomeActivity)
+                }
+                override fun onLost(network: Network?) {
+                    NotificationBarHandler.showNotificationNoInternetConnection(getString(R.string.notification_no_internent_connection_title), getString(R.string.notification_no_internent_connection_body), this@HomeActivity)
+                }
+            })
+        }
     }
 }
 

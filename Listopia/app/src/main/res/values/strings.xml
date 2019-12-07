@@ -94,4 +94,11 @@
     <!--Dialog-->
     <string name="dialog_title_friend_invitation">Friend invitation</string>
     <string name="dialog_message_friend_invitation">User does not exists in the system, do you want to send them an E-mail invitation?</string>
+
+    <!--Notifications -->
+    <string name="notification_shopping_list_updated">Shopping list has been updated</string>
+    <string name="notification_shopping_list_updated_name">With unknown name.</string>
+    <string name="notification_no_internent_connection_title">No internet connection</string>
+    <string name="notification_no_internent_connection_body">Your lists are not synchronize with our servers.</string>
+
 </resources>

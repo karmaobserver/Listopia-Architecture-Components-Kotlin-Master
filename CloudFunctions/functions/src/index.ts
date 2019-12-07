@@ -87,7 +87,6 @@ app.get('/hello', (req, res) => {
   }
    console.error('Success', "Yey");
   res.json(testObject);
-   //res.send(`Hellow ${req.user.name}`);
 });
 
 app.get('/user/get/:userId', (req, res) => {
@@ -109,8 +108,6 @@ app.get('/user/get/:userId', (req, res) => {
             allFriends.push(friendData)
           })
           user.friends = allFriends
-          //user.friends = JSON.stringify(allFriends)
-          console.log(user)
           res.status(200).json(user);
         })     
       } else {
@@ -118,14 +115,6 @@ app.get('/user/get/:userId', (req, res) => {
         res.status(200).json(user);
       }  
     } else {
-      // var newUser = {
-      //   id: req.params.userId,
-      //   avatar: null,
-      //   name: null,
-      //   friends: []
-      // };
-      // userRef.set(newUser)
-      // console.log('Added user document with ID: ', req.body.id);
       res.status(404).json({
         code: 404,
         message: "User not found"
@@ -226,7 +215,6 @@ app.post('/user/:userId/add-friend', (req, res) => {
 
 
 app.post('/user/friends', (req, res) => {
-  console.log(req.body.friendsId);
   try {
     var friendsRef = [];
     var friendsIds = req.body.friendsId;
@@ -396,7 +384,7 @@ async function sendFCMtoEditors(senderId: string, shoppingListId: string, payloa
       return
     }
     var editors = document.data().editors
-    editors.push(document.data().ownerId)
+    //editors.push(document.data().ownerId)
     const index = editors.indexOf(senderId, 0);
     if (index > -1) {
       editors.splice(index, 1);

@@ -73,6 +73,12 @@ class ProductAddFragment: BaseFragment() {
                 is ProductNameError -> binding.textInputLayoutProductName.error = getString(it.resourceId)
                 else -> showError(it)
             }
+        }, onLoading = {
+            showLoading()
+            button_add_product.isEnabled = false
+        }, onHideLoading = {
+            button_add_product.isEnabled = true
+            hideLoading()
         })
     }
 

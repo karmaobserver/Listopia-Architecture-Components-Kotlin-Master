@@ -4,7 +4,7 @@ buildscript {
     ext {
         // Sdk and tools
         compileSdkVersion = 28
-        minSdkVersion = 21
+        minSdkVersion = 24
         targetSdkVersion = 28
 
         // App dependencies
@@ -41,17 +41,22 @@ buildscript {
         firebaseDatebaseVersion = '19.1.0'
 
         gsonVersion = '2.8.2'
+
+        crashlyticsPluginVersion = '1.31.2'
+        crashlyticsVersion = '2.10.1'
     }
     repositories {
         google()
         jcenter()
         maven { url 'http://dl.bintray.com/kotlin/kotlin-eap' }
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "com.google.gms:google-services:$googleServiceVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
+        classpath "io.fabric.tools:gradle:$crashlyticsPluginVersion"
     }
 }
 

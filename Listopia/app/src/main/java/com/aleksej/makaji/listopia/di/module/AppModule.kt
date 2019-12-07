@@ -23,6 +23,13 @@ class AppModule {
 
     @Singleton
     @Provides
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
+
+
+    @Singleton
+    @Provides
     fun provideSharedPreferences(application: Application): SharedPreferences {
         return application.getSharedPreferences("com.aleksej.makaji.listopia.prefs", Context.MODE_PRIVATE)
     }

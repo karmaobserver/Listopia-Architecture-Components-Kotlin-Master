@@ -6,6 +6,7 @@ import android.app.Service
 import android.content.BroadcastReceiver
 import com.aleksej.makaji.listopia.di.AppInjector
 import com.facebook.stetho.Stetho
+import com.google.firebase.FirebaseApp
 import dagger.android.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -28,10 +29,15 @@ class ListopiaApp : Application(), HasActivityInjector, HasServiceInjector, HasB
     override fun onCreate() {
         super.onCreate()
         AppInjector.init(this)
+        initializeCrashlytics()
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this)
             Timber.plant(Timber.DebugTree())
         }
+    }
+
+    private fun initializeCrashlytics() {
+        FirebaseApp.initializeApp(this)
     }
 
     override fun activityInjector() = dispatchingAndroidInjector

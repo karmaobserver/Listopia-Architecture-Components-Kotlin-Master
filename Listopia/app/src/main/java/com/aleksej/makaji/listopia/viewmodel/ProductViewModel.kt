@@ -59,6 +59,7 @@ class ProductViewModel @Inject constructor(private val mUpdateProductUseCase: Up
     }
 
     fun addProduct(saveProductValue: SaveProductValue) {
+        addProductTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             addProductTrigger.value = StateHandler(mSaveProductUseCase.invoke(saveProductValue))
         }
@@ -69,12 +70,14 @@ class ProductViewModel @Inject constructor(private val mUpdateProductUseCase: Up
     }
 
     fun updateProduct(productModel: ProductModel) {
+        updateProductTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             updateProductTrigger.value = StateHandler(mUpdateProductUseCase.invoke(productModel))
         }
     }
 
     fun deleteProductById(deleteProductValue: DeleteProductValue) {
+        deleteProductByIdTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             deleteProductByIdTrigger.value = StateHandler(mDeleteProductByIdUseCase.invoke(deleteProductValue))
         }

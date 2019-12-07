@@ -1,6 +1,8 @@
 package com.aleksej.makaji.listopia.data.usecase
 
+import android.content.Context
 import androidx.room.Transaction
+import com.aleksej.makaji.listopia.R
 import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.LoadingState
 import com.aleksej.makaji.listopia.data.event.State
@@ -12,7 +14,9 @@ import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ProductValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
 import com.aleksej.makaji.listopia.error.UnknownError
+import com.aleksej.makaji.listopia.util.NotificationBarHandler
 import com.aleksej.makaji.listopia.util.SharedPreferenceManager
+import com.aleksej.makaji.listopia.util.isForeground
 import javax.inject.Inject
 
 /**
@@ -20,7 +24,8 @@ import javax.inject.Inject
  */
 class FetchAndSaveProductUseCase @Inject constructor(private val mProductRepository: ProductRepository,
                                                      private val mShoppingListRepository: ShoppingListRepository,
-                                                     private val mSharedPreferenceManager: SharedPreferenceManager) : UseCase<FetchAndSaveProductValue, String>() {
+                                                     private val mSharedPreferenceManager: SharedPreferenceManager,
+                                                     private val mContext: Context) : UseCase<FetchAndSaveProductValue, String>() {
 
     override suspend fun invoke(value: FetchAndSaveProductValue): State<String> {
         when (val fetchedProduct = mProductRepository.fetchProductById(value)) {
@@ -69,6 +74,9 @@ class FetchAndSaveProductUseCase @Inject constructor(private val mProductReposit
                     mProductRepository.deleteProductById(ProductValue(productsToBeAdded[0].id))
                 } else if (productsToBeAdded.isNotEmpty()) {
                     mProductRepository.saveProducts(productsToBeAdded)
+                    if (!mContext.isForeground()) {
+                        NotificationBarHandler.showShoppingListMesssageNotification(mContext.getString(R.string.notification_shopping_list_updated), shoppingList.data?.name ?: mContext.getString(R.string.notification_shopping_list_updated_name), mContext, productsToBeAdded[0].shoppingListId)
+                    }
                 }
             }
         }

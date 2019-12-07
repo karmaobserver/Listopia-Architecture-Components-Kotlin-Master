@@ -1,7 +1,9 @@
 package com.aleksej.makaji.listopia.util
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
+import android.net.ConnectivityManager
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +12,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.*
-import com.aleksej.makaji.listopia.data.event.State
-import com.aleksej.makaji.listopia.data.event.StateHandler
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.GsonBuilder
@@ -151,4 +153,32 @@ fun Date.format(): String {
 
 fun <T1 : Any, T2 : Any, R : Any> safeLet(p1: T1?, p2: T2?, block: (T1, T2) -> R?): R? {
     return if (p1 != null && p2 != null) block(p1, p2) else null
+}
+
+fun Context.isConnectedToNetwork(): Boolean {
+    try {
+        val connectivityManager = applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val activeNetwork = connectivityManager.activeNetworkInfo
+            return activeNetwork != null && activeNetwork.isConnected
+        }
+        return false
+    } catch (e: Exception) {
+        return false
+    }
+}
+
+fun Context.isForeground(): Boolean {
+    val activityManager = this.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    val runningAppProcesses = activityManager.runningAppProcesses
+    runningAppProcesses.forEach {
+        if (it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+            it.pkgList.forEach {
+                if (it == this.packageName) {
+                    return true
+                }
+            }
+        }
+    }
+    return false
 }

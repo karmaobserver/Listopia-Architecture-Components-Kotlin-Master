@@ -56,6 +56,7 @@ class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListB
     }
 
     fun updateShoppingList(shoppingListModel: ShoppingListModel) {
+        updateShoppingListTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             updateShoppingListTrigger.value = StateHandler(mUpdateShoppingListUseCase.invoke(shoppingListModel))
         }

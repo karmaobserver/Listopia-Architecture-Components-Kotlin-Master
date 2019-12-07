@@ -16,6 +16,7 @@ import com.aleksej.makaji.listopia.databinding.FragmentShoppingListEditBinding
 import com.aleksej.makaji.listopia.error.ListNameError
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
+import kotlinx.android.synthetic.main.fragment_shopping_list_edit.*
 
 /**
  * Created by Aleksej Makaji on 1/27/19.
@@ -78,6 +79,12 @@ class ShoppingListEditFragment: BaseFragment() {
                 is ListNameError -> binding.textInputLayoutListName.error = getString(it.resourceId)
                 else -> showError(it)
             }
+        }, onLoading = {
+            showLoading()
+            button_edit_list.isEnabled = false
+        }, onHideLoading = {
+            button_edit_list.isEnabled = true
+            hideLoading()
         })
     }
 
