@@ -16,6 +16,7 @@ import com.aleksej.makaji.listopia.databinding.FragmentProductEditBinding
 import com.aleksej.makaji.listopia.error.ProductNameError
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
+import kotlinx.android.synthetic.main.fragment_product_edit.*
 import kotlinx.android.synthetic.main.fragment_shopping_list_edit.*
 
 /**
@@ -81,9 +82,9 @@ class ProductEditFragment: BaseFragment() {
             }
         }, onLoading = {
             showLoading()
-            button_edit_list.isEnabled = false
+            button_edit_product.isEnabled = false
         }, onHideLoading = {
-            button_edit_list.isEnabled = true
+            button_edit_product.isEnabled = true
             hideLoading()
         })
     }

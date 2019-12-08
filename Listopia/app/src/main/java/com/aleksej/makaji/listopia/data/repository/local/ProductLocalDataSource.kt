@@ -138,12 +138,34 @@ class ProductLocalDataSource @Inject constructor(private val mProductDao: Produc
         }
     }
 
+    override suspend fun getProductsNotSyncedSuspend(): State<List<ProductModel>> {
+        return try {
+            SuccessState(mProductDao.getProductsNotSyncedSuspend().map {
+                it.mapToProductModel()
+            })
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
     override suspend fun updateSyncProduct(productId: String): State<Int> {
         return try {
             SuccessState(mProductDao.updateSyncProduct(productId))
         }catch (e: Exception){
             ErrorState(RoomError(e))
         }
+    }
+
+    override suspend fun updateSyncProducts(productIds: List<String>): State<Int> {
+        return try {
+            SuccessState(mProductDao.updateSyncProducts(productIds))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun saveOrUpdateProductsRemote(productModels: List<ProductModel>): State<Unit> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override suspend fun fetchProducts(shoppingListsId: List<String>): State<List<ProductModel>> {

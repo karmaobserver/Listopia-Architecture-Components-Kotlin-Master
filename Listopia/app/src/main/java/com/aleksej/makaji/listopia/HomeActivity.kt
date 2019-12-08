@@ -21,6 +21,7 @@ import com.aleksej.makaji.listopia.databinding.ActivityHomeBinding
 import com.aleksej.makaji.listopia.databinding.HeaderDrawerBinding
 import com.aleksej.makaji.listopia.error.*
 import com.aleksej.makaji.listopia.util.*
+import com.aleksej.makaji.listopia.viewmodel.ProductViewModel
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 import com.aleksej.makaji.listopia.viewmodel.UserViewModel
 import com.aleksej.makaji.listopia.worker.WorkerUtil
@@ -29,7 +30,6 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.activity_home.view.*
 import java.util.*
 import javax.inject.Inject
 
@@ -46,6 +46,8 @@ class HomeActivity : BaseActivity() {
 
     private lateinit var mShoppingListViewModel: ShoppingListViewModel
 
+    private lateinit var mProductViewModel: ProductViewModel
+
     private lateinit var binding: ActivityHomeBinding
 
     private lateinit var headerBinding: HeaderDrawerBinding
@@ -61,6 +63,7 @@ class HomeActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView<ActivityHomeBinding>(this, R.layout.activity_home)
         mUserViewModel = viewModel(mViewModelFactory)
         mShoppingListViewModel = viewModel(mViewModelFactory)
+        mProductViewModel = viewModel(mViewModelFactory)
 
         mNavController = Navigation.findNavController(this, R.id.fragment_navigation_host)
         mAppBarConfiguration = AppBarConfiguration(mNavController.graph, binding.drawerLayout)
@@ -199,6 +202,7 @@ class HomeActivity : BaseActivity() {
         observeUser()
         observeSaveUser()
         observeRemoveSession()
+        observeFetchAndSaveShoppingLists()
     }
 
     private fun observeRemoveSession() {
@@ -218,15 +222,22 @@ class HomeActivity : BaseActivity() {
         })
     }
 
+    private fun observeFetchAndSaveShoppingLists() {
+        observeSingle(mShoppingListViewModel.fetchShoppingListsLiveData, {
+            mProductViewModel.fetchProducts(it)
+        }, onError = {
+            showError(it)
+        })
+    }
+
     private fun observeSaveUser() {
         observeSingle(mUserViewModel.fetchAndSaveUserLiveData, {
             checkIfUserLoggedIn()
             mUserViewModel.updateFirebaseToken()
             mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
             applicationContext?.let {
-                //if (!it.isConnectedToNetwork()) {
-                    WorkerUtil.createShoppingListSyncronizeWorker(it)
-                //}
+                WorkerUtil.createShoppingListSynchronizeWorker(it)
+                WorkerUtil.createProductSynchronizeWorker(it)
             }
         }, onError = {
             showError(it)

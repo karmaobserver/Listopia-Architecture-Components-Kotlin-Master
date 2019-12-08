@@ -139,7 +139,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_add_product"
+            android:id="@+id/button_edit_product"
             style="@style/ButtonTextMaterial.Margin16NoTop"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

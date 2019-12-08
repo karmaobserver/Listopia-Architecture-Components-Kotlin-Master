@@ -381,9 +381,40 @@ app.post('/shopping-list/save-update', (req, res) => {
     });
     res.status(201).json({});
   }).catch(error => {
-    res.status(500).send(parseError("Failed to update shopping list into Firestore with ID: " + req.body.id));
+    res.status(500).send(parseError("Failed to add/update shopping lists into Firestore"));
   });
 });
+
+app.post('/product/save-update', (req, res) => {
+  console.log("CALL: /product/save-update")
+  var products = req.body;
+  let batch = db.batch();
+  var shoppingListIds = [];
+  products.forEach(product => {
+    shoppingListIds.push(product.shoppingListId)
+    batch.set(db.collection(FirestoreConst.SHOPPING_LIST).doc(product.shoppingListId).collection(FirestoreConst.PRODUCTS).doc(product.id), product, {merge: true})
+  });
+  batch.commit().then(function() {
+    //var shoppingListIdsUniqe = shoppingListIds.filter( onlyUnique );
+    products.forEach(product => {
+      var payload = {
+        data: {
+          notification: NotificationType.PRODUCT_UPDATED,
+          productId: product.id,
+          shoppingListId: product.shoppingListId
+        }
+      };
+      sendFCMtoEditors(req.user.email, product.shoppingListId, payload);
+    });
+    res.status(201).json({});
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to add/update products into Firestore"));
+  });
+});
+
+function onlyUnique(value, index, self) { 
+  return self.indexOf(value) === index;
+}
 
 async function sendFCM(userId, payload) {
   var options = {
@@ -541,7 +572,7 @@ app.post('/product/add', (req, res) => {
   });
 });
 
-app.post('/products', (req, res) => {
+app.post('/product/get-all', (req, res) => {
   try {
     var products = [];
     var shoppingListids = req.body.shoppingListsId
@@ -593,7 +624,7 @@ app.get('/shopping-list/:shoppingListId/product/:productId', (req, res) => {
 }
 
 async function getProducts(req: any, res: any, document: any, products: any, isLastItem: boolean) {
- document.ref.collection("product").get().then((querySnapshot) => {
+ document.ref.collection(FirestoreConst.PRODUCTS).get().then((querySnapshot) => {
     querySnapshot.forEach((document) => {
       products.push(document.data())
     });

@@ -8,19 +8,32 @@ import androidx.work.*
  */
 object WorkerUtil {
 
-    private const val SHOPPING_LIST_CREATE_WORKER = "SHOPPING_LIST_CREATE_WORKER"
+    private const val SHOPPING_LIST_SYNCHRONIZE_WORKER = "SHOPPING_LIST_SYNCHRONIZE_WORKER"
+    private const val PRODUCT_SYNCHRONIZE_WORKER = "PRODUCT_SYNCHRONIZE_WORKER"
 
-    fun createShoppingListSyncronizeWorker(context: Context) {
+    fun createShoppingListSynchronizeWorker(context: Context) {
         val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
-        val request = OneTimeWorkRequestBuilder<ShoppingListSyncronizeWorker>()
-                .addTag(SHOPPING_LIST_CREATE_WORKER)
+        val request = OneTimeWorkRequestBuilder<ShoppingListSynchronizeWorker>()
+                .addTag(SHOPPING_LIST_SYNCHRONIZE_WORKER)
                 .setConstraints(constraints)
                 .build()
 
         WorkManager.getInstance(context).enqueue(request)
     }
 
+    fun createProductSynchronizeWorker(context: Context) {
+        val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+        val request = OneTimeWorkRequestBuilder<ProductSynchronizeWorker>()
+                .addTag(PRODUCT_SYNCHRONIZE_WORKER)
+                .setConstraints(constraints)
+                .build()
+
+        WorkManager.getInstance(context).enqueue(request)
+    }
 }

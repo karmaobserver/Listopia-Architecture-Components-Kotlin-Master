@@ -33,7 +33,7 @@ class UpdateShoppingListUseCase @Inject constructor(private val mShoppingListRep
             is SuccessState -> {
                 if (mSharedPreferenceManager.userId.isBlank()) return updateShoppingListRoom
                 if (!mContext.isConnectedToNetwork()) {
-                    WorkerUtil.createShoppingListSyncronizeWorker(mContext)
+                    WorkerUtil.createShoppingListSynchronizeWorker(mContext)
                     return SuccessState(1)
                 } else {
                     when (val updateShoppingListRemote  = mShoppingListRepository.updateShoppingListRemote(value)) {

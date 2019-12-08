@@ -45,7 +45,7 @@ interface ListopiaApi {
     @POST("product/add")
     suspend fun saveProduct(@Body saveProductRequest: SaveProductRequest): Response<EmptyResponse>
 
-    @POST("products")
+    @POST("product/get-all")
     suspend fun fetchProducts(@Body fetchProductsRequest: FetchProductsRequest): Response<ProductsResponse>
 
     @GET("shopping-list/{shoppingListId}/product/{productId}")
@@ -70,4 +70,7 @@ interface ListopiaApi {
 
     @POST("shopping-list/save-update")
     suspend fun saveOrUpdateShoppingLists(@Body saveShoppingListsRequest: List<SaveShoppingListRequest>): Response<EmptyResponse>
+
+    @POST("product/save-update")
+    suspend fun saveOrUpdateProducts(@Body saveProductsRequest: List<SaveProductRequest>): Response<EmptyResponse>
 }

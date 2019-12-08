@@ -25,22 +25,4 @@ class DaggerWorkerFactory @Inject constructor(
         return factory.get().create(workerParameters)
     }
 }
-/*class DaggerWorkerFactory(private val mShoppingListRepository: ShoppingListRepository) : WorkerFactory() {
-
-    override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters): ListenableWorker? {
-
-        val workerClass = Class.forName(workerClassName).asSubclass(Worker::class.java)
-        val constructor = workerClass.getDeclaredConstructor(Context::class.java, WorkerParameters::class.java)
-        val instance = constructor.newInstance(appContext, workerParameters)
-
-        when (instance) {
-            is ShoppingListCreateWorker -> {
-                instance.mUserRepository = userRepository
-            }
-            // optionally, handle other workers
-        }
-
-        return instance
-    }
-}*/
 

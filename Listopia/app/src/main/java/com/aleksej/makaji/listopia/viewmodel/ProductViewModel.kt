@@ -9,6 +9,7 @@ import com.aleksej.makaji.listopia.data.usecase.FetchAndSaveProductsUseCase
 import com.aleksej.makaji.listopia.data.usecase.SaveProductUseCase
 import com.aleksej.makaji.listopia.data.usecase.UpdateProductUseCase
 import com.aleksej.makaji.listopia.data.usecase.value.*
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -53,8 +54,8 @@ class ProductViewModel @Inject constructor(private val mUpdateProductUseCase: Up
     }
 
     fun fetchProducts(shoppingListsId: List<String>) {
-        viewModelScope.launch {
-            fetchProductsTrigger.value = StateHandler(mFetchAndSaveProductsUseCase.invoke(FetchProductsValue(shoppingListsId)))
+        GlobalScope.launch {
+            fetchProductsTrigger.postValue(StateHandler(mFetchAndSaveProductsUseCase.invoke(FetchProductsValue(shoppingListsId))))
         }
     }
 

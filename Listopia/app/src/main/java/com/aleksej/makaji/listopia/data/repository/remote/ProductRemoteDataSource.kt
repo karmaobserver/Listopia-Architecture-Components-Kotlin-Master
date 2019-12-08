@@ -8,6 +8,7 @@ import com.aleksej.makaji.listopia.data.api.dto.request.FetchProductsRequest
 import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.mapper.mapProductsModelToRequest
 import com.aleksej.makaji.listopia.data.mapper.mapToSaveProductRequest
 import com.aleksej.makaji.listopia.data.mapper.mapToUpdateProductRequest
 import com.aleksej.makaji.listopia.data.repository.ProductDataSource
@@ -23,6 +24,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class ProductRemoteDataSource @Inject constructor(private val mListopiaApi: ListopiaApi, private val mRetrofit: Retrofit) : ProductDataSource {
+
     override suspend fun fetchProductById(fetchAndSaveProductValue: FetchAndSaveProductValue): State<ProductModel> {
         return try {
             CoroutineAdapter(mListopiaApi.fetchProductById(fetchAndSaveProductValue.shoppingListId, fetchAndSaveProductValue.productId), mRetrofit)()
@@ -73,6 +75,22 @@ class ProductRemoteDataSource @Inject constructor(private val mListopiaApi: List
         } catch (e: Exception) {
             ErrorState(ExceptionError(e))
         }
+    }
+
+    override suspend fun saveOrUpdateProductsRemote(productModels: List<ProductModel>): State<Unit> {
+        return try {
+            CoroutineAdapter(mListopiaApi.saveOrUpdateProducts(mapProductsModelToRequest(productModels)), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
+
+    override suspend fun updateSyncProducts(productIds: List<String>): State<Int> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun getProductsNotSyncedSuspend(): State<List<ProductModel>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override suspend fun updateSyncProduct(productId: String): State<Int> {

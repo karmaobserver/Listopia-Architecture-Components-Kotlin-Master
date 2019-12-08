@@ -1,7 +1,6 @@
 package com.aleksej.makaji.listopia.data.usecase
 
 import android.content.Context
-import android.util.Log
 import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.LoadingState
 import com.aleksej.makaji.listopia.data.event.State
@@ -14,7 +13,6 @@ import com.aleksej.makaji.listopia.util.SharedPreferenceManager
 import com.aleksej.makaji.listopia.util.Validator
 import com.aleksej.makaji.listopia.util.isConnectedToNetwork
 import com.aleksej.makaji.listopia.worker.WorkerUtil
-import java.lang.Error
 import javax.inject.Inject
 
 /**
@@ -36,7 +34,7 @@ class SaveShoppingListUseCase @Inject constructor(private val mShoppingListRepos
                     is SuccessState -> {
                         getShoppingListRoom.data?.let {
                             if (!mContext.isConnectedToNetwork()) {
-                                WorkerUtil.createShoppingListSyncronizeWorker(mContext)
+                                WorkerUtil.createShoppingListSynchronizeWorker(mContext)
                                 return SuccessState(1L)
                             } else {
                                 when (val saveShoppingListRemote = mShoppingListRepository.saveShoppingListRemote(it)) {

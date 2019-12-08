@@ -9,6 +9,7 @@ import com.aleksej.makaji.listopia.data.usecase.value.DeleteShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.FetchShoppingListsValue
 import com.aleksej.makaji.listopia.data.usecase.value.SaveShoppingListValue
 import com.aleksej.makaji.listopia.data.usecase.value.ShoppingListByIdValue
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,8 +51,8 @@ class ShoppingListViewModel @Inject constructor(private val mDeleteShoppingListB
 
     fun fetchShoppingListsByUserId(userId: String) {
         fetchShoppingListsTrigger.value = StateHandler.loading()
-        viewModelScope.launch {
-            fetchShoppingListsTrigger.value = StateHandler(mFetchAndSaveShoppingListsUseCase.invoke(FetchShoppingListsValue(userId)))
+        GlobalScope.launch {
+            fetchShoppingListsTrigger.postValue(StateHandler(mFetchAndSaveShoppingListsUseCase.invoke(FetchShoppingListsValue(userId))))
         }
     }
 

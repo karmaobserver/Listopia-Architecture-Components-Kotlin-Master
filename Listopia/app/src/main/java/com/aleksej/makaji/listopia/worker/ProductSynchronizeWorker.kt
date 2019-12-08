@@ -6,6 +6,7 @@ import androidx.work.WorkerParameters
 import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.LoadingState
 import com.aleksej.makaji.listopia.data.event.SuccessState
+import com.aleksej.makaji.listopia.data.repository.ProductRepository
 import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
 import com.aleksej.makaji.listopia.util.SharedPreferenceManager
 import kotlinx.coroutines.Dispatchers
@@ -15,32 +16,30 @@ import javax.inject.Inject
 /**
  * Created by Aleksej Makaji on 2019-12-08.
  */
-class ShoppingListSyncronizeWorker(context: Context,
-                                   params: WorkerParameters,
-                                   private val mShoppingListRepository: ShoppingListRepository,
-                                   private val mSharedPreferenceManager: SharedPreferenceManager): Worker(context, params) {
+class ProductSynchronizeWorker(context: Context,
+                               params: WorkerParameters,
+                               private val mShoppingListRepository: ShoppingListRepository,
+                               private val mProductRepository: ProductRepository,
+                               private val mSharedPreferenceManager: SharedPreferenceManager): Worker(context, params) {
     override fun doWork(): Result {
         return heavyWork()
     }
 
     private fun heavyWork(): Result = runBlocking(Dispatchers.IO) {
-        when (val getShoppingListsNotSyncedRoom = mShoppingListRepository.getShoppingListsNotSyncedSuspend()) {
+        when (val getProductsNotSyncedRoom = mProductRepository.getProductsNotSyncedSuspend()) {
             is SuccessState -> {
-                getShoppingListsNotSyncedRoom.data?.let {
+                getProductsNotSyncedRoom.data?.let {
                     if (it.isEmpty()) return@runBlocking Result.success()
 
-                    val shoppingListIds = arrayListOf<String>()
-                    val roomShoppingLists = it
-                    roomShoppingLists.forEach {
-                        shoppingListIds.add(it.id)
-                        if (it.ownerId == "") {
-                            it.ownerId = mSharedPreferenceManager.userId
-                        }
+                    val productIds = arrayListOf<String>()
+                    val roomProducts = it
+                    roomProducts.forEach {
+                        productIds.add(it.id)
                     }
 
-                    when (mShoppingListRepository.saveOrUpdateShoppingListsRemote(roomShoppingLists)) {
+                    when (mProductRepository.saveOrUpdateProductsRemote(roomProducts)) {
                         is SuccessState -> {
-                            mShoppingListRepository.updateSyncShoppingLists(shoppingListIds)
+                            mProductRepository.updateSyncProducts(productIds)
                             return@runBlocking Result.success()
                         }
                         is LoadingState -> {}
@@ -59,10 +58,11 @@ class ShoppingListSyncronizeWorker(context: Context,
     class Factory @Inject constructor(
             private val context: Context,
             private val shoppingListRepository: ShoppingListRepository,
+            private val productRepository: ProductRepository,
             private val sharedPreferenceManager: SharedPreferenceManager
-    ) : IWorkerFactory<ShoppingListSyncronizeWorker> {
-        override fun create(params: WorkerParameters): ShoppingListSyncronizeWorker {
-            return ShoppingListSyncronizeWorker(context, params, shoppingListRepository, sharedPreferenceManager)
+    ) : IWorkerFactory<ProductSynchronizeWorker> {
+        override fun create(params: WorkerParameters): ProductSynchronizeWorker {
+            return ProductSynchronizeWorker(context, params, shoppingListRepository, productRepository, sharedPreferenceManager)
         }
     }
 }

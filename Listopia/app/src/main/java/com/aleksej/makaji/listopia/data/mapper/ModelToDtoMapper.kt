@@ -15,6 +15,10 @@ fun mapShoppingListsModelToRequest(shoppingListModels: List<ShoppingListModel>):
     return shoppingListModels.map { it.mapToSaveShoppingListRequest() }
 }
 
+fun mapProductsModelToRequest(productModels: List<ProductModel>): List<SaveProductRequest> {
+    return productModels.map { it.mapToSaveProductRequest() }
+}
+
 fun ShoppingListModel.mapToUpdateShoppingListRequest(): UpdateShoppingListRequest = mapTo<UpdateShoppingListRequest>().copy()
 
 fun UserModel.mapToSaveUserRequest(): SaveUserRequest = mapTo<SaveUserRequest>().copy()
