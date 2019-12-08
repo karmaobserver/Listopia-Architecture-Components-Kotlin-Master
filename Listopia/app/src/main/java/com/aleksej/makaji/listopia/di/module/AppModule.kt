@@ -4,6 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
+import androidx.work.WorkerFactory
+import com.aleksej.makaji.listopia.data.repository.ShoppingListRepository
+import com.aleksej.makaji.listopia.factory.DaggerWorkerFactory
 import com.aleksej.makaji.listopia.util.SharedPreferenceManager
 import dagger.Module
 import dagger.Provides
@@ -26,7 +29,6 @@ class AppModule {
     fun provideContext(application: Application): Context {
         return application.applicationContext
     }
-
 
     @Singleton
     @Provides
