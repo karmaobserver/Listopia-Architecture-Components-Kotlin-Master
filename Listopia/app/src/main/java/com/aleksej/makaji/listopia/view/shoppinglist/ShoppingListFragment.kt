@@ -80,8 +80,10 @@ class ShoppingListFragment: BaseFragment() {
 
     private fun initData() {
         binding.shoppingListViewModel = mShoppingListViewModel
-        if (mSharedPreferenceManager.userId.isNotEmpty() && mSharedPreferenceManager.token.isNotEmpty()) {
-            mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
+        context?.let {
+            if (mSharedPreferenceManager.userId.isNotEmpty() && mSharedPreferenceManager.token.isNotEmpty() && it.isConnectedToNetwork()) {
+                mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
+            }
         }
         mShoppingListViewModel.getShoppingLists()
     }

@@ -355,6 +355,36 @@ app.put('/shopping-list/update', (req, res) => {
   });
 });
 
+app.post('/shopping-list/save-update', (req, res) => {
+  console.log("CALL: /shopping-list/save-update")
+  var shoppingLists = req.body;
+  let batch = db.batch();
+  shoppingLists.forEach(shoppingList => {
+    if (shoppingList.editors.length != 0) {
+      var editorsIds = [];
+      shoppingList.editors.forEach(element => {
+        editorsIds.push(element.id);
+      });
+      shoppingList.editors = editorsIds;
+    }
+    batch.set(db.collection(FirestoreConst.SHOPPING_LIST).doc(shoppingList.id), shoppingList, {merge: true})
+  });
+  batch.commit().then(function() {
+    shoppingLists.forEach(shoppingList => {
+      var payload = {
+        data: {
+          notification: NotificationType.SHOPPING_LIST_UPDATED,
+          shoppingListId: shoppingList.id
+        }
+      };
+      sendFCMtoEditors(req.user.email, shoppingList.id, payload);
+    });
+    res.status(201).json({});
+  }).catch(error => {
+    res.status(500).send(parseError("Failed to update shopping list into Firestore with ID: " + req.body.id));
+  });
+});
+
 async function sendFCM(userId, payload) {
   var options = {
     priority: 'high',

@@ -67,4 +67,7 @@ interface ListopiaApi {
 
     @PUT("user/firebase")
     suspend fun updateFirebaseToken(@Body updateFirebaseTokenRequest: UpdateFirebaseTokenRequest) : Response<EmptyResponse>
+
+    @POST("shopping-list/save-update")
+    suspend fun saveOrUpdateShoppingLists(@Body saveShoppingListsRequest: List<SaveShoppingListRequest>): Response<EmptyResponse>
 }

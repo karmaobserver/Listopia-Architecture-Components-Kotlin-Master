@@ -7,7 +7,7 @@ import java.util.*
  */
 data class ShoppingListModel(val id: String,
                              var name: String,
-                             val ownerId: String,
+                             var ownerId: String,
                              var isDeleted: Boolean,
                              var isSynced: Boolean,
                              var timestamp: Date,

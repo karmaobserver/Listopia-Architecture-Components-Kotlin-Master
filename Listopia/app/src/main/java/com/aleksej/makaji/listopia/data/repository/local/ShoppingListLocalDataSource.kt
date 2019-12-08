@@ -150,6 +150,13 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
         }
     }
 
+    override suspend fun updateSyncShoppingLists(shoppingListIds: List<String>): State<Int> {
+        return try {
+            SuccessState(mShoppingListDao.updateSyncShoppingLists(shoppingListIds))
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
 
     override suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel?> {
         return try {
@@ -185,6 +192,20 @@ class ShoppingListLocalDataSource @Inject constructor(private val mShoppingListD
     }
 
     override suspend fun fetchShoppingListById(shoppingListId: String): State<ShoppingListModel> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun getShoppingListsNotSyncedSuspend(): State<List<ShoppingListModel>> {
+        return try {
+            SuccessState(mShoppingListDao.getShoppingListsNotSyncedSuspend().map {
+                it.mapToShoppingListModel()
+            })
+        }catch (e: Exception){
+            ErrorState(RoomError(e))
+        }
+    }
+
+    override suspend fun saveOrUpdateShoppingListsRemote(shoppingListModels: List<ShoppingListModel>): State<Unit> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

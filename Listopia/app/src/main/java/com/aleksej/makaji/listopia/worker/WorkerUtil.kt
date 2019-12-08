@@ -10,19 +10,14 @@ object WorkerUtil {
 
     private const val SHOPPING_LIST_CREATE_WORKER = "SHOPPING_LIST_CREATE_WORKER"
 
-    const val SHOPPING_LIST_ID_WORKER = "SHOPPING_LIST_ID_WORKER"
-
-    fun createShoppingListCreateWorker(context: Context, shoppingListId: String) {
-        val data = workDataOf(SHOPPING_LIST_ID_WORKER to shoppingListId)
-
+    fun createShoppingListSyncronizeWorker(context: Context) {
         val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
-        val request = OneTimeWorkRequestBuilder<ShoppingListCreateWorker>()
+        val request = OneTimeWorkRequestBuilder<ShoppingListSyncronizeWorker>()
                 .addTag(SHOPPING_LIST_CREATE_WORKER)
                 .setConstraints(constraints)
-                .setInputData(data)
                 .build()
 
         WorkManager.getInstance(context).enqueue(request)

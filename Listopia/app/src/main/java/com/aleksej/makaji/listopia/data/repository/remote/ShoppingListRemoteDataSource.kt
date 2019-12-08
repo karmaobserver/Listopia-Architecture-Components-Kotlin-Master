@@ -7,6 +7,7 @@ import com.aleksej.makaji.listopia.data.api.callback.CoroutineAdapter
 import com.aleksej.makaji.listopia.data.event.ErrorState
 import com.aleksej.makaji.listopia.data.event.State
 import com.aleksej.makaji.listopia.data.event.StateHandler
+import com.aleksej.makaji.listopia.data.mapper.mapShoppingListsModelToRequest
 import com.aleksej.makaji.listopia.data.mapper.mapToSaveShoppingListRequest
 import com.aleksej.makaji.listopia.data.mapper.mapToUpdateShoppingListRequest
 import com.aleksej.makaji.listopia.data.repository.ShoppingListDataSource
@@ -22,6 +23,14 @@ import javax.inject.Singleton
  */
 @Singleton
 class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi: ListopiaApi, private val mRetrofit: Retrofit) : ShoppingListDataSource {
+    override suspend fun updateSyncShoppingLists(shoppingListIds: List<String>): State<Int> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override suspend fun getShoppingListsNotSyncedSuspend(): State<List<ShoppingListModel>> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override suspend fun deleteShoppingListsWithEditorsById(deleteShoppingListValue: DeleteShoppingListValue): State<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -73,6 +82,14 @@ class ShoppingListRemoteDataSource @Inject constructor(private val mListopiaApi:
     override suspend fun saveShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit> {
         return try {
             CoroutineAdapter(mListopiaApi.saveShoppingList(shoppingListModel.mapToSaveShoppingListRequest()), mRetrofit)()
+        } catch (e: Exception) {
+            ErrorState(ExceptionError(e))
+        }
+    }
+
+    override suspend fun saveOrUpdateShoppingListsRemote(shoppingListModels: List<ShoppingListModel>): State<Unit> {
+        return try {
+            CoroutineAdapter(mListopiaApi.saveOrUpdateShoppingLists(mapShoppingListsModelToRequest(shoppingListModels)), mRetrofit)()
         } catch (e: Exception) {
             ErrorState(ExceptionError(e))
         }

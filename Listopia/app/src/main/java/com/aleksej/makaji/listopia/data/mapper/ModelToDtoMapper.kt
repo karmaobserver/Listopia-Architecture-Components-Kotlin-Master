@@ -11,6 +11,10 @@ import com.aleksej.makaji.listopia.util.mapTo
  */
 fun ShoppingListModel.mapToSaveShoppingListRequest(): SaveShoppingListRequest = mapTo<SaveShoppingListRequest>().copy()
 
+fun mapShoppingListsModelToRequest(shoppingListModels: List<ShoppingListModel>): List<SaveShoppingListRequest> {
+    return shoppingListModels.map { it.mapToSaveShoppingListRequest() }
+}
+
 fun ShoppingListModel.mapToUpdateShoppingListRequest(): UpdateShoppingListRequest = mapTo<UpdateShoppingListRequest>().copy()
 
 fun UserModel.mapToSaveUserRequest(): SaveUserRequest = mapTo<SaveUserRequest>().copy()

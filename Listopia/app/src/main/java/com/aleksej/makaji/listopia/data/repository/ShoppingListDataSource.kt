@@ -13,12 +13,14 @@ import com.aleksej.makaji.listopia.data.usecase.value.*
 interface ShoppingListDataSource {
     fun getShoppingLists(): LiveData<StateHandler<PagedList<ShoppingListModel>>>
     suspend fun getShoppingListsSuspend(): State<List<ShoppingListModel>>
+    suspend fun getShoppingListsNotSyncedSuspend(): State<List<ShoppingListModel>>
     fun getShoppingListById(shoppingListByIdValue: ShoppingListByIdValue) : LiveData<StateHandler<ShoppingListModel>>
     suspend fun getShoppingListByIdSuspend(shoppingListByIdValue: ShoppingListByIdValue): State<ShoppingListModel?>
     suspend fun saveShoppingList(saveShoppingListValue: SaveShoppingListValue): State<Long>
     suspend fun saveShoppingLists(shoppingLists: List<ShoppingListModel>): State<List<Long>>
     suspend fun saveShoppingListsWithEditors(saveShoppingListEditorValue: List<SaveShoppingListEditorValue>): State<List<Long>>
     suspend fun saveShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit>
+    suspend fun saveOrUpdateShoppingListsRemote(shoppingListModels: List<ShoppingListModel>): State<Unit>
     suspend fun updateShoppingListRemote(shoppingListModel: ShoppingListModel): State<Unit>
     suspend fun deleteAllShoppingLists(): State<Int>
     suspend fun deleteShoppingListsWithEditorsById(deleteShoppingListValue: DeleteShoppingListValue): State<Int>
@@ -26,6 +28,7 @@ interface ShoppingListDataSource {
     suspend fun deleteShoppingListByIdRemote(shoppingListId: String): State<Unit>
     suspend fun updateShoppingList(shoppingListModel: ShoppingListModel): State<Int>
     suspend fun updateSyncShoppingList(shoppingListId: String): State<Int>
+    suspend fun updateSyncShoppingLists(shoppingListIds: List<String>): State<Int>
     suspend fun fetchShoppingListsByUserId(fetchShoppingListsValue: FetchShoppingListsValue): State<List<ShoppingListModel>>
     suspend fun fetchShoppingListById(shoppingListId: String): State<ShoppingListModel>
 }

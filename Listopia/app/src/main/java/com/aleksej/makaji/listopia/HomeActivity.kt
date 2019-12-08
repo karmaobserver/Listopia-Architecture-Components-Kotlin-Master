@@ -23,6 +23,7 @@ import com.aleksej.makaji.listopia.error.*
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
 import com.aleksej.makaji.listopia.viewmodel.UserViewModel
+import com.aleksej.makaji.listopia.worker.WorkerUtil
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
@@ -222,6 +223,11 @@ class HomeActivity : BaseActivity() {
             checkIfUserLoggedIn()
             mUserViewModel.updateFirebaseToken()
             mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
+            applicationContext?.let {
+                //if (!it.isConnectedToNetwork()) {
+                    WorkerUtil.createShoppingListSyncronizeWorker(it)
+                //}
+            }
         }, onError = {
             showError(it)
         })

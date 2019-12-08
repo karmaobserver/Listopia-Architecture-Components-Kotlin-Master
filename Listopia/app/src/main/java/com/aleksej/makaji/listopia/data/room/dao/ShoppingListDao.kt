@@ -43,10 +43,16 @@ interface ShoppingListDao {
     @Query("UPDATE shopping_list SET isSynced = 1 WHERE id = :shoppingListId")
     suspend fun updateSyncShoppingList(shoppingListId: String):  Int
 
+    @Query("UPDATE shopping_list SET isSynced = 1 WHERE id IN (:shoppingListIds)")
+    suspend fun updateSyncShoppingLists(shoppingListIds: List<String>):  Int
+
     //@Transaction @Query("SELECT * FROM shopping_list INNER JOIN editors ON shopping_list.id = editors.shoppingListId WHERE isDeleted = 0 ")
     @Transaction @Query("SELECT * FROM shopping_list WHERE isDeleted = 0")
     fun getShoppingListsWithEditors(): DataSource.Factory<Int, ShoppingListWithEditors>
 
     @Transaction @Query("SELECT * FROM shopping_list")
     suspend fun getShoppingListsSuspend(): List<ShoppingListWithEditors>
+
+    @Transaction @Query("SELECT * FROM shopping_list WHERE shopping_list.isSynced = 0")
+    suspend fun getShoppingListsNotSyncedSuspend(): List<ShoppingListWithEditors>
 }
