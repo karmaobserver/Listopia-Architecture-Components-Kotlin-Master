@@ -8,9 +8,12 @@
             type="com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel"/>
     </data>
     <androidx.cardview.widget.CardView
-        style="@style/CardViewMaterial.BackgroundRipple.Margin4"
+        style="@style/CardViewMaterial.BackgroundRipple.Margin6"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="6dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardElevation="6dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -18,7 +21,7 @@
 
             <TextView
                 android:id="@+id/text_view_shopping_list_name"
-                style="@style/TextViewAppearanceBody1.Margin8"
+                style="@style/TextViewAppearanceBody1.Margin12"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{shoppingListModel.name}"

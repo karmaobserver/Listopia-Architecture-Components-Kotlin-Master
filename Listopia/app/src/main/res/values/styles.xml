@@ -69,8 +69,18 @@
         <item name="android:layout_marginEnd">@dimen/margin_8</item>
     </style>
 
+    <style name="TextViewAppearanceBody1.Grey.Margin8NoTop">
+        <item name="android:layout_marginStart">@dimen/margin_8</item>
+        <item name="android:layout_marginEnd">@dimen/margin_8</item>
+        <item name="android:layout_marginBottom">@dimen/margin_8</item>
+    </style>
+
     <style name="TextViewAppearanceBody1.Margin8">
         <item name="android:layout_margin">@dimen/margin_8</item>
+    </style>
+
+    <style name="TextViewAppearanceBody1.Margin12">
+        <item name="android:layout_margin">@dimen/margin_12</item>
     </style>
 
     <style name="TextViewAppearanceBody1.Bold">
@@ -86,6 +96,10 @@
         <item name="android:layout_marginStart">@dimen/margin_8</item>
         <item name="android:layout_marginEnd">@dimen/margin_8</item>
         <item name="android:layout_marginTop">@dimen/margin_8</item>
+    </style>
+
+    <style name="TextViewAppearanceBody1.Bold.Margin8">
+        <item name="android:layout_margin">@dimen/margin_8</item>
     </style>
 
     <style name="TextViewAppearanceBody1.Margin8StartEnd">
@@ -198,6 +212,10 @@
 
     <style name="EditText.MaxLine1.maxLength20">
         <item name="android:maxLength">20</item>
+    </style>
+
+    <style name="EditText.MaxLine1.maxLength60">
+        <item name="android:maxLength">60</item>
     </style>
 
     <style name="EditText.MaxLine1.maxLength5">
@@ -337,8 +355,8 @@
         <item name="android:background">@drawable/background_ripple_rectangle</item>
     </style>
 
-    <style name="CardViewMaterial.BackgroundRipple.Margin4">
-        <item name="android:layout_margin">@dimen/margin_4</item>
+    <style name="CardViewMaterial.BackgroundRipple.Margin6">
+        <item name="android:layout_margin">@dimen/margin_6</item>
     </style>
 
     <!--ProgressBar styles-->

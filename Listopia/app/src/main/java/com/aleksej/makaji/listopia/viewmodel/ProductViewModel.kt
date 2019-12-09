@@ -71,7 +71,6 @@ class ProductViewModel @Inject constructor(private val mUpdateProductUseCase: Up
     }
 
     fun updateProduct(productModel: ProductModel) {
-        updateProductTrigger.value = StateHandler.loading()
         viewModelScope.launch {
             updateProductTrigger.value = StateHandler(mUpdateProductUseCase.invoke(productModel))
         }

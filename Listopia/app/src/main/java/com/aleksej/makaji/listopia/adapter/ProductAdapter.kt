@@ -3,6 +3,7 @@ package com.aleksej.makaji.listopia.adapter
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.marginBottom
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -13,6 +14,9 @@ import com.aleksej.makaji.listopia.util.SharedPreferenceManager
 import com.aleksej.makaji.listopia.util.margin
 import com.aleksej.makaji.listopia.util.toDecimalString
 import javax.inject.Inject
+import androidx.constraintlayout.widget.ConstraintSet
+
+
 
 /**
  * Created by Aleksej Makaji on 1/20/19.
@@ -67,7 +71,7 @@ class ProductAdapter(private val mDataBindingComponent: DataBindingComponent,
     override fun bind(binding: ItemProductBinding, item: ProductModel) {
         binding.currency = mSharedPreferenceManager.currency
         binding.productModel = item
-        shouldSetBottomMargins(binding, item)
+        //shouldSetBottomMargins(binding, item)
         if (item.quantity == 0.0 || item.quantity == null) {
             binding.textViewProductPrice.text = item.price.toDecimalString()
         } else {
@@ -109,9 +113,24 @@ class ProductAdapter(private val mDataBindingComponent: DataBindingComponent,
 
     private fun shouldSetBottomMargins(binding: ItemProductBinding, productModel: ProductModel) {
         if (productModel.notes.trim() == "" && productModel.quantity == 0.0 && productModel.unit.trim() == "" && productModel.price == 0.0) {
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.constraintLayoutProduct)
+            constraintSet.connect(binding.textViewProductName.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+            constraintSet.applyTo(binding.constraintLayoutProduct)
             binding.textViewProductName.margin(8f, 8f, 8f, 8f)
         } else if (productModel.quantity == 0.0 && productModel.unit.trim() == "" && productModel.price == 0.0) {
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.constraintLayoutProduct)
+            constraintSet.connect(binding.textViewProductNotes.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+            constraintSet.applyTo(binding.constraintLayoutProduct)
             binding.textViewProductNotes.margin(8f, 0f, 8f, 8f)
+        } else if (productModel.notes.trim() == "" && productModel.quantity == 0.0 && productModel.unit.trim() == "") {
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.constraintLayoutProduct)
+            constraintSet.connect(binding.textViewProductPrice.id, ConstraintSet.BOTTOM, binding.textViewProductName.id, ConstraintSet.BOTTOM, 0)
+            constraintSet.connect(binding.textViewProductPrice.id, ConstraintSet.TOP, binding.textViewProductName.id, ConstraintSet.TOP, 0)
+            constraintSet.applyTo(binding.constraintLayoutProduct)
+            binding.textViewProductName.margin(8f, 8f, 8f, 8f)
         }
     }
 }
