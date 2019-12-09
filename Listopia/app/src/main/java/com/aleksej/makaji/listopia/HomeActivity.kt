@@ -16,7 +16,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.aleksej.makaji.listopia.base.BaseActivity
-import com.aleksej.makaji.listopia.data.usecase.value.FetchAndSaveUserValue
+import com.aleksej.makaji.listopia.data.usecase.value.SaveUserValue
 import com.aleksej.makaji.listopia.databinding.ActivityHomeBinding
 import com.aleksej.makaji.listopia.databinding.HeaderDrawerBinding
 import com.aleksej.makaji.listopia.error.*
@@ -231,7 +231,7 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun observeSaveUser() {
-        observeSingle(mUserViewModel.fetchAndSaveUserLiveData, {
+        observeSingle(mUserViewModel.saveUserLiveData, {
             checkIfUserLoggedIn()
             mUserViewModel.updateFirebaseToken()
             mShoppingListViewModel.fetchShoppingListsByUserId(mSharedPreferenceManager.userId)
@@ -262,7 +262,7 @@ class HomeActivity : BaseActivity() {
         user.getIdToken(true).addOnSuccessListener {
             it.token?.let {
                 mSharedPreferenceManager.token = it
-                mUserViewModel.fetchAndSaveUser(FetchAndSaveUserValue(user.email ?: "fake", user.displayName, user.photoUrl.toString()))
+                mUserViewModel.saveUser(SaveUserValue(user.email ?: "fake", user.displayName, user.photoUrl.toString()))
             }
         }
     }

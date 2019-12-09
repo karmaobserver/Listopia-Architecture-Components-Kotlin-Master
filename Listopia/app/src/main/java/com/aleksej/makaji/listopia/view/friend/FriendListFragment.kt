@@ -17,13 +17,11 @@ import com.aleksej.makaji.listopia.adapter.FriendAdapter
 import com.aleksej.makaji.listopia.adapter.FriendAdapterEvents
 import com.aleksej.makaji.listopia.base.BaseFragment
 import com.aleksej.makaji.listopia.binding.FragmentDataBindingComponent
-import com.aleksej.makaji.listopia.data.repository.model.ShoppingListModel
 import com.aleksej.makaji.listopia.data.repository.model.UserModel
 import com.aleksej.makaji.listopia.data.usecase.value.*
 import com.aleksej.makaji.listopia.databinding.FragmentFriendListBinding
 import com.aleksej.makaji.listopia.util.*
 import com.aleksej.makaji.listopia.viewmodel.ShoppingListViewModel
-import com.aleksej.makaji.listopia.viewmodel.UserViewModel
 import java.util.*
 import javax.inject.Inject
 
@@ -181,7 +179,7 @@ class FriendListFragment: BaseFragment() {
     }
 
     private fun reFetchUserData() {
-        mUserViewModel.fetchAndSaveUser(FetchAndSaveUserValue(mSharedPreferenceManager.userId))
+        mUserViewModel.fetchAndSaveUser()
     }
 
     private fun setupOptionsPopupMenu(view: View, friendId: String) {

@@ -13,7 +13,7 @@ import javax.inject.Inject
 /**
  * Created by Aleksej Makaji on 5/4/19.
  */
-class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: FetchAndSaveUserUseCase,
+class UserViewModel @Inject constructor(private val mSaveUserUseCase: SaveUserUseCase,
                                         private val mUserRepository: UserRepository,
                                         private val mSaveFriendUseCase: SaveFriendUseCase,
                                         private val mDeleteFriendByIdUseCase: DeleteFriendByIdUseCase,
@@ -21,13 +21,17 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
                                         private val mDeleteEditorUseCase: DeleteEditorUseCase,
                                         private val mUpdateFirebaseTokenUseCase: UpdateFirebaseTokenUseCase,
                                         private val mFetchAndSaveFriendsUseCase: FetchAndSaveFriendsUseCase,
-                                        private val mRemoveSessionUseCase: RemoveSessionUseCase) : ViewModel() {
+                                        private val mRemoveSessionUseCase: RemoveSessionUseCase,
+                                        private val mFetchAndSaveUserUseCase: FetchAndSaveUserUseCase) : ViewModel() {
 
     private val getUserTrigger = MutableLiveData<String>()
     val getUserLiveData = Transformations.switchMap(getUserTrigger) { mUserRepository.getUserById(it) }
 
     private val fetchAndSaveUserTrigger = MutableLiveData<StateHandler<UserModel>>()
     val fetchAndSaveUserLiveData : LiveData<StateHandler<UserModel>> = fetchAndSaveUserTrigger
+
+    private val saveUserTrigger = MutableLiveData<StateHandler<UserModel>>()
+    val saveUserLiveData : LiveData<StateHandler<UserModel>> = saveUserTrigger
 
     private val fetchAndSaveFriendsTrigger = MutableLiveData<StateHandler<Unit>>()
     val fetchAndSaveFriendsLiveData : LiveData<StateHandler<Unit>> = fetchAndSaveFriendsTrigger
@@ -63,17 +67,24 @@ class UserViewModel @Inject constructor(private val mFetchAndSaveUserUseCase: Fe
         getUserTrigger.postValue(userId)
     }
 
-    fun fetchAndSaveUser(fetchAndSaveUserValue: FetchAndSaveUserValue) {
+    fun saveUser(saveUserValue: SaveUserValue) {
+        saveUserTrigger.postValue(StateHandler.loading())
+        GlobalScope.launch {
+            saveUserTrigger.postValue(StateHandler(mSaveUserUseCase.invoke(saveUserValue)))
+        }
+    }
+
+    fun fetchAndSaveUser() {
         fetchAndSaveUserTrigger.postValue(StateHandler.loading())
         GlobalScope.launch {
-            fetchAndSaveUserTrigger.postValue(StateHandler(mFetchAndSaveUserUseCase.invoke(fetchAndSaveUserValue)))
+            fetchAndSaveUserTrigger.postValue(StateHandler(mFetchAndSaveUserUseCase.invoke(Unit)))
         }
     }
 
     fun fetchAndSaveFriends(fetchAndSaveFriendsValue: FetchAndSaveFriendsValue) {
-        fetchAndSaveFriendsTrigger.value = StateHandler.loading()
-        viewModelScope.launch {
-            fetchAndSaveFriendsTrigger.value = StateHandler(mFetchAndSaveFriendsUseCase.invoke(fetchAndSaveFriendsValue))
+        fetchAndSaveFriendsTrigger.postValue(StateHandler.loading())
+        GlobalScope.launch {
+            fetchAndSaveFriendsTrigger.postValue(StateHandler(mFetchAndSaveFriendsUseCase.invoke(fetchAndSaveFriendsValue)))
         }
     }
 
