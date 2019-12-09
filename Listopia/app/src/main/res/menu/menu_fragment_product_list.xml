@@ -7,16 +7,4 @@
         app:showAsAction="ifRoom"
         android:title="@string/label_friends">
     </item>
-    <item
-        android:id="@+id/options"
-        android:icon="@drawable/ic_options"
-        app:showAsAction="always"
-        android:title="@string/label_options">
-        <menu>
-            <item
-                android:id="@+id/submenu_options_delete_all"
-                android:title="@string/submenu_product_options_delete_all">
-            </item>
-        </menu>
-    </item>
 </menu>

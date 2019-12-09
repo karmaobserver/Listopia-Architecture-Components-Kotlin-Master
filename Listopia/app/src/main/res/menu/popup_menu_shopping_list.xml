@@ -8,12 +8,4 @@
         android:id="@+id/popup_menu_delete_shopping_list"
         android:title="@string/popup_menu_delete_shopping_list">
     </item>
-    <item
-        android:id="@+id/popup_menu_share_shopping_list"
-        android:title="@string/popup_menu_share_shopping_list">
-    </item>
-    <item
-        android:id="@+id/popup_menu_copy_shopping_list"
-        android:title="@string/popup_menu_copy_shopping_list">
-    </item>
 </menu>

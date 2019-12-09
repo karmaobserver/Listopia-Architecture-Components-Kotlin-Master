@@ -67,17 +67,6 @@ class FriendListFragment: BaseFragment() {
         inflater.inflate(R.menu.menu_fragment_friend_list, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.submenu_options_delete_all -> {
-                //TODO Delete all friends
-                showToastLong("All friends has been deleted")
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun initData() {
         getArgs()
         getShoppingListById()

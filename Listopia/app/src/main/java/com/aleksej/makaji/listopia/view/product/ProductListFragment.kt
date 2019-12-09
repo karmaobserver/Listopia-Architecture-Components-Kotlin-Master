@@ -70,11 +70,6 @@ class ProductListFragment: BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.submenu_options_delete_all -> {
-                //TODO delete all prodcuts
-                showToastLong("DELETING ALL PRODUCTS")
-                true
-            }
             R.id.friends -> {
                 mShoppingListId?.let {
                     findNavController().navigate(ProductListFragmentDirections.actionFragmentProductListToFriendListFragment(it))

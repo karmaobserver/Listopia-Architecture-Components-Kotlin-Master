@@ -68,16 +68,6 @@ class ShoppingListFragment: BaseFragment() {
         inflater.inflate(R.menu.menu_fragment_shopping_list, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.submenu_options_delete_all -> {
-                showToastLong("DELETE")
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun initData() {
         binding.shoppingListViewModel = mShoppingListViewModel
         context?.let {
@@ -157,8 +147,6 @@ class ShoppingListFragment: BaseFragment() {
                         shoppingListModel.isDeleted = true
                         mShoppingListViewModel.updateShoppingList(shoppingListModel)
                     }
-                    R.id.popup_menu_share_shopping_list -> {}
-                    R.id.popup_menu_copy_shopping_list -> {}
                 }
                 false
             }
