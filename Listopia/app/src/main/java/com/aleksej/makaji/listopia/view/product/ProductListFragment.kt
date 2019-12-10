@@ -99,6 +99,7 @@ class ProductListFragment: BaseFragment() {
         mProductAdapter = ProductAdapter(mDataBindingComponent, mSharedPreferenceManager) {
             when (it) {
                 is ProductAdapterEvents.ProductClick -> {
+                    it.productModel.isChecked = !it.productModel.isChecked
                     mProductViewModel.updateProduct(it.productModel)
                 }
                 is ProductAdapterEvents.OptionsClick -> {

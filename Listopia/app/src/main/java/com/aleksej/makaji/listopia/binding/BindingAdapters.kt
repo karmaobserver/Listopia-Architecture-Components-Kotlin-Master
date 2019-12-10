@@ -64,6 +64,5 @@ object BindingAdapters {
             view.paintFlags = view.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             view.isEnabled = true
         }
-
     }
 }

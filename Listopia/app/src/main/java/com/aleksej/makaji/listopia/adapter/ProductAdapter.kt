@@ -3,7 +3,7 @@ package com.aleksej.makaji.listopia.adapter
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.marginBottom
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -13,8 +13,7 @@ import com.aleksej.makaji.listopia.databinding.ItemProductBinding
 import com.aleksej.makaji.listopia.util.SharedPreferenceManager
 import com.aleksej.makaji.listopia.util.margin
 import com.aleksej.makaji.listopia.util.toDecimalString
-import javax.inject.Inject
-import androidx.constraintlayout.widget.ConstraintSet
+
 
 
 
@@ -35,10 +34,24 @@ class ProductAdapter(private val mDataBindingComponent: DataBindingComponent,
                         && oldItem.unit == newItem.unit
                         && oldItem.price == newItem.price
                         && oldItem.notes == newItem.notes
+                        && oldItem.timestamp == newItem.timestamp
+                        && oldItem.isDeleted == newItem.isDeleted
                         && oldItem.isChecked == newItem.isChecked
             }
         }
 ) {
+
+    companion object {
+        const val MARGIN_ITEM = 12f
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
 
     override fun createBinding(parent: ViewGroup): ItemProductBinding {
         val binding = DataBindingUtil.inflate<ItemProductBinding>(
@@ -51,10 +64,8 @@ class ProductAdapter(private val mDataBindingComponent: DataBindingComponent,
         binding.root.setOnClickListener {
             binding.productModel?.let {
                 if (it.isChecked) {
-                    it.isChecked = false
                     markItemAsUnchecked(binding)
                 } else {
-                    it.isChecked = true
                     markItemAsChecked(binding)
                 }
                 mProductAdapterEvents.invoke(ProductAdapterEvents.ProductClick(it))
@@ -71,11 +82,17 @@ class ProductAdapter(private val mDataBindingComponent: DataBindingComponent,
     override fun bind(binding: ItemProductBinding, item: ProductModel) {
         binding.currency = mSharedPreferenceManager.currency
         binding.productModel = item
-        //shouldSetBottomMargins(binding, item)
+        changeMarginsAndConstraintOnMissingFields(binding, item)
+
         if (item.quantity == 0.0 || item.quantity == null) {
             binding.textViewProductPrice.text = item.price.toDecimalString()
         } else {
             binding.textViewProductPrice.text = (item.price * item.quantity).toDecimalString()
+        }
+        if (item.isChecked) {
+            markItemAsChecked(binding)
+        } else {
+            markItemAsUnchecked(binding)
         }
     }
 
@@ -111,26 +128,48 @@ class ProductAdapter(private val mDataBindingComponent: DataBindingComponent,
         binding.textViewCurrency.isEnabled = true
     }
 
-    private fun shouldSetBottomMargins(binding: ItemProductBinding, productModel: ProductModel) {
-        if (productModel.notes.trim() == "" && productModel.quantity == 0.0 && productModel.unit.trim() == "" && productModel.price == 0.0) {
+    private fun changeMarginsAndConstraintOnMissingFields(binding: ItemProductBinding, productModel: ProductModel) {
+        if (productModel.notes.trim().isBlank() && productModel.quantity == 0.0 && productModel.unit.trim().isBlank() && productModel.price == 0.0) {
+            //Only name visible
             val constraintSet = ConstraintSet()
             constraintSet.clone(binding.constraintLayoutProduct)
             constraintSet.connect(binding.textViewProductName.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
             constraintSet.applyTo(binding.constraintLayoutProduct)
-            binding.textViewProductName.margin(8f, 8f, 8f, 8f)
-        } else if (productModel.quantity == 0.0 && productModel.unit.trim() == "" && productModel.price == 0.0) {
-            val constraintSet = ConstraintSet()
-            constraintSet.clone(binding.constraintLayoutProduct)
-            constraintSet.connect(binding.textViewProductNotes.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
-            constraintSet.applyTo(binding.constraintLayoutProduct)
-            binding.textViewProductNotes.margin(8f, 0f, 8f, 8f)
-        } else if (productModel.notes.trim() == "" && productModel.quantity == 0.0 && productModel.unit.trim() == "") {
+            binding.textViewProductName.margin(MARGIN_ITEM, MARGIN_ITEM, MARGIN_ITEM, MARGIN_ITEM)
+        } else if (productModel.notes.trim().isBlank() && productModel.quantity == 0.0 && productModel.unit.trim().isBlank()) {
+            //Name and price visible
             val constraintSet = ConstraintSet()
             constraintSet.clone(binding.constraintLayoutProduct)
             constraintSet.connect(binding.textViewProductPrice.id, ConstraintSet.BOTTOM, binding.textViewProductName.id, ConstraintSet.BOTTOM, 0)
             constraintSet.connect(binding.textViewProductPrice.id, ConstraintSet.TOP, binding.textViewProductName.id, ConstraintSet.TOP, 0)
             constraintSet.applyTo(binding.constraintLayoutProduct)
-            binding.textViewProductName.margin(8f, 8f, 8f, 8f)
+            binding.textViewProductName.margin(MARGIN_ITEM, MARGIN_ITEM, MARGIN_ITEM, MARGIN_ITEM)
+        }else if (productModel.quantity == 0.0 && productModel.unit.trim().isBlank() && productModel.price == 0.0) {
+            //Name and Notes only
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.constraintLayoutProduct)
+            constraintSet.connect(binding.textViewProductNotes.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0)
+            constraintSet.applyTo(binding.constraintLayoutProduct)
+            binding.textViewProductNotes.margin(MARGIN_ITEM, 0f, MARGIN_ITEM, MARGIN_ITEM)
+        } else if (productModel.quantity == 0.0 && productModel.notes.trim().isBlank()) {
+            //Name and Unit only
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.constraintLayoutProduct)
+            constraintSet.connect(binding.textViewProductName.id, ConstraintSet.BOTTOM, binding.textViewProductUnit.id, ConstraintSet.TOP, 0)
+            constraintSet.connect(binding.textViewProductUnit.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
+            constraintSet.connect(binding.textViewProductUnit.id, ConstraintSet.TOP, binding.textViewProductName.id, ConstraintSet.BOTTOM, 0)
+            constraintSet.applyTo(binding.constraintLayoutProduct)
+            binding.textViewProductUnit.margin(MARGIN_ITEM, 0f, MARGIN_ITEM, MARGIN_ITEM)
+        }
+        else if (productModel.quantity == 0.0) {
+            //No quantity
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.constraintLayoutProduct)
+            constraintSet.connect(binding.textViewProductNotes.id, ConstraintSet.BOTTOM, binding.textViewProductUnit.id, ConstraintSet.TOP, 0)
+            constraintSet.connect(binding.textViewProductUnit.id, ConstraintSet.TOP, binding.textViewProductNotes.id, ConstraintSet.BOTTOM, 0)
+            constraintSet.connect(binding.textViewProductUnit.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 0)
+            constraintSet.applyTo(binding.constraintLayoutProduct)
+            binding.textViewProductUnit.margin(MARGIN_ITEM, 0f, MARGIN_ITEM, MARGIN_ITEM)
         }
     }
 }

@@ -140,6 +140,10 @@
         <item name="android:layout_marginBottom">@dimen/margin_8</item>
     </style>
 
+    <style name="TextViewAppearanceBody1.Primary.Bold.Margin8">
+        <item name="android:layout_margin">@dimen/margin_8</item>
+    </style>
+
     <style name="TextViewAppearanceBody1.Primary.Size18">
         <item name="android:textSize">@dimen/text_size_18</item>
     </style>

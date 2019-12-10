@@ -1,5 +1,5 @@
 'use strict';
-import { ErrorType } from "./errorType";
+import { ErrorTypes } from "./errorTypes";
 import { NotificationType } from "./notificationsType";
 import { FirestoreConst } from "./firestoreConst";
 const dotenv = require('dotenv').config();
@@ -10,7 +10,9 @@ console.log(dotenv.parsed)
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const serviceAccount = require("./../../services.json");
+// const serviceAccount = require('./services.json');
+const fs = require('fs')
+let serviceAccount = JSON.parse(fs.readFileSync('services.json', 'utf-8'))
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://listopia-f7bba.firebaseio.com"
@@ -204,7 +206,7 @@ app.post('/user/:userId/add-friend', (req, res) => {
       // friendRef.set(newUser)
       // console.log('Added user document with ID: ', req.body.friendId);
       
-      res.status(404).send(parseError("User does not exists in system", ErrorType.USER_DOES_NOT_EXISTS));
+      res.status(404).send(parseError("User does not exists in system", ErrorTypes.USER_DOES_NOT_EXISTS));
     }
   }).catch(error => {
     console.log(error)
@@ -221,7 +223,7 @@ app.post('/user/friends', (req, res) => {
     friendsIds.forEach(function (friendId) {
         friendsRef.push(db.collection(FirestoreConst.USERS).doc(friendId));
     });
-    getAllFriends(res, friendsRef)
+    getAllFriends(res, friendsRef).then().catch();
   }catch(error) {
     res.status(500).send(parseError("Failed to fetch"));
   };
@@ -275,7 +277,7 @@ app.post('/shopping-list/add-editor', (req, res) => {
             shoppingListId: req.body.shoppingListId
           }
         };
-        sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload);
+        sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload).then().catch();
   
         console.log('Added editor with ID: ', req.body.editorId);
         res.status(201).json({});
@@ -299,7 +301,7 @@ app.put('/shopping-list/delete-editor', (req, res) => {
       shoppingListId: req.body.shoppingListId
     }
   };
-  sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload);
+  sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload).then().catch();
   shoppingListRef.get().then(function(shoppingList) {
     if (shoppingList.exists) {
       shoppingListRef.update({
@@ -348,7 +350,7 @@ app.put('/shopping-list/update', (req, res) => {
         shoppingListId: req.body.id
       }
     };
-    sendFCMtoEditors(req.user.email, req.body.id, payload);
+    sendFCMtoEditors(req.user.email, req.body.id, payload).then().catch();
     res.status(201).json({});
   }).catch(error => {
     res.status(500).send(parseError("Failed to update shopping list into Firestore with ID: " + req.body.id));
@@ -377,7 +379,7 @@ app.post('/shopping-list/save-update', (req, res) => {
           shoppingListId: shoppingList.id
         }
       };
-      sendFCMtoEditors(req.user.email, shoppingList.id, payload);
+      sendFCMtoEditors(req.user.email, shoppingList.id, payload).then().catch();
     });
     res.status(201).json({});
   }).catch(error => {
@@ -404,7 +406,7 @@ app.post('/product/save-update', (req, res) => {
           shoppingListId: product.shoppingListId
         }
       };
-      sendFCMtoEditors(req.user.email, product.shoppingListId, payload);
+      sendFCMtoEditors(req.user.email, product.shoppingListId, payload).then().catch();
     });
     res.status(201).json({});
   }).catch(error => {
@@ -455,7 +457,7 @@ async function sendFCMtoEditors(senderId: string, shoppingListId: string, payloa
     editors.forEach(function(id) {
       editorsRef.push(db.collection(FirestoreConst.USERS).doc(id));
     });
-    getEditorsTokens(editorsRef, payload)
+    getEditorsTokens(editorsRef, payload).then().catch();
   });
 }
 
@@ -548,7 +550,7 @@ app.put('/product/update', (req, res) => {
         shoppingListId: req.body.shoppingListId
       }
     };
-    sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload);
+    sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload).then().catch();
     res.status(201).json({});
   }).catch(error => {
     res.status(500).send(parseError("Failed to update product into Firestore with ID: " + req.body.id));
@@ -565,7 +567,7 @@ app.post('/product/add', (req, res) => {
         shoppingListId: req.body.shoppingListId
       }
     };
-    sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload);
+    sendFCMtoEditors(req.user.email, req.body.shoppingListId, payload).then().catch();
     res.status(201).json({});
   }).catch(error => {
     res.status(500).send(parseError("Failed to add product into Firestore with ID: " + req.body.id));
@@ -584,9 +586,9 @@ app.post('/product/get-all', (req, res) => {
           return
         }
         if (i == shoppingListids.length - 1) {
-          getProducts(req, res, document, products, true)
+          getProducts(req, res, document, products, true).then().catch();
         } else {
-          getProducts(req, res, document, products, false)
+          getProducts(req, res, document, products, false).then().catch();
         }
       });
     }); 
@@ -619,14 +621,14 @@ app.get('/shopping-list/:shoppingListId/product/:productId', (req, res) => {
       res.status(204).json({});
       return
     }
-    getProducts(req, res, document, products, isLastItem)
+    getProducts(req, res, document, products, isLastItem).then().catch();
   });
 }
 
 async function getProducts(req: any, res: any, document: any, products: any, isLastItem: boolean) {
  document.ref.collection(FirestoreConst.PRODUCTS).get().then((querySnapshot) => {
-    querySnapshot.forEach((document) => {
-      products.push(document.data())
+    querySnapshot.forEach((productDocument) => {
+      products.push(productDocument.data())
     });
     if (isLastItem) {
       res.status(200).json(products);
@@ -641,7 +643,7 @@ app.get('/shopping-list/get/:shoppingListId', (req, res) => {
         res.status(204).json({});
         return
       }
-      getShoppingList(document, res)
+      getShoppingList(document, res).then().catch();
     }).catch(error => {
       res.status(500).send(parseError("Failed to get shopping list Firestore"));
     });
@@ -688,7 +690,7 @@ app.get('/shopping-list/get-all/:userId', (req, res) => {
         return
       }
       var shoppingLists = getShoppingLists(combinedSnapshots, res)
-    })
+    }).catch();
   }catch(error) {
     res.status(500).send(parseError("Failed to get shopping lists Firestore"));
   };

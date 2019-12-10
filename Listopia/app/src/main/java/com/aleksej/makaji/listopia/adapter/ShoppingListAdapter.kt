@@ -84,6 +84,14 @@ class ShoppingListAdapter(private val mDataBindingComponent: DataBindingComponen
         return binding
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     override fun bind(binding: ItemShoppingListBinding, item: ShoppingListModel) {
         binding.shoppingListModel = item
         countCheckedProducts(binding, item)

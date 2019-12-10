@@ -8,9 +8,12 @@ import com.aleksej.makaji.listopia.HomeActivity
 import com.aleksej.makaji.listopia.R
 import com.aleksej.makaji.listopia.di.Injectable
 import com.aleksej.makaji.listopia.error.*
+import com.aleksej.makaji.listopia.util.observeSingle
 import com.aleksej.makaji.listopia.util.viewModel
 import com.aleksej.makaji.listopia.viewmodel.UserViewModel
 import javax.inject.Inject
+
+
 
 /**
  * Created by Aleksej Makaji on 12/30/18.
@@ -25,6 +28,7 @@ open class BaseFragment : Fragment(), Injectable {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mUserViewModel = viewModel(mViewModelFactory)
+        observeRemoveSession()
     }
 
     fun showToast(message: String) {
@@ -61,6 +65,14 @@ open class BaseFragment : Fragment(), Injectable {
                 showToast(R.string.error_unknown)
             }
         }
+    }
+
+    private fun observeRemoveSession() {
+        observeSingle(mUserViewModel.removeSessioEventLiveData, {
+            (activity as HomeActivity).signOutUiLogic()
+        }, onError = {
+            showError(it)
+        })
     }
 
     open fun showLoading() {

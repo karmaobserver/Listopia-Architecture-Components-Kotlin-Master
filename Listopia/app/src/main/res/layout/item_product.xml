@@ -34,7 +34,6 @@
                 app:layout_constraintEnd_toStartOf="@+id/view_line_image_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:strikeThrough="@{productModel.isChecked}"
                 tools:text="Product Name" />
 
             <TextView
@@ -44,59 +43,54 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{productModel.notes}"
-                app:layout_constraintBottom_toTopOf="@+id/text_view_product_price"
+                app:layout_constraintBottom_toTopOf="@+id/text_view_product_quantity"
                 app:layout_constraintEnd_toStartOf="@+id/view_line_image_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_product_name"
-                app:strikeThrough="@{productModel.isChecked}"
                 tools:text="Product Notes" />
 
             <TextView
                 android:id="@+id/text_view_product_quantity"
                 style="@style/TextViewAppearanceBody1.Margin8NoTop"
                 visibleGone="@{productModel.quantity != 0.0}"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{productModel.quantity}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:strikeThrough="@{productModel.isChecked}"
                 tools:text="Quantity" />
 
             <TextView
                 android:id="@+id/text_view_product_unit"
                 style="@style/TextViewAppearanceBody1.Italic.Margin2StartMargin8Bottom"
                 visibleGone="@{!productModel.unit.trim().isEmpty()}"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{productModel.unit}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/text_view_product_quantity"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_product_notes"
-                app:strikeThrough="@{productModel.isChecked}"
                 tools:text="Unit" />
 
             <TextView
                 android:id="@+id/text_view_product_price"
-                style="@style/TextViewAppearanceBody1.Primary.Bold.Margin8NoTop"
+                style="@style/TextViewAppearanceBody1.Primary.Bold.Margin8"
                 visibleGone="@{productModel.price != 0.0}"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/view_line_image_button"
-                app:strikeThrough="@{productModel.isChecked}"
                 tools:text="Price" />
 
             <TextView
                 android:id="@+id/text_view_currency"
                 style="@style/TextViewAppearanceBody1.Primary.Bold"
                 visibleGone="@{productModel.price != 0.0}"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{currency}"
                 app:layout_constraintBottom_toBottomOf="@+id/text_view_product_price"
                 app:layout_constraintEnd_toStartOf="@+id/text_view_product_price"
-                app:strikeThrough="@{productModel.isChecked}"
                 tools:text="$" />
 
             <View

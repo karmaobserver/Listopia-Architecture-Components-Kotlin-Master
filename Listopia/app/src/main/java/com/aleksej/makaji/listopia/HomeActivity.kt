@@ -275,6 +275,11 @@ class HomeActivity : BaseActivity() {
                 }
     }
 
+    fun signOutUiLogic() {
+        checkIfUserLoggedIn()
+        showToast(R.string.success_logout)
+    }
+
     fun showProgress(){
         progress_bar.visibility = View.VISIBLE
     }
