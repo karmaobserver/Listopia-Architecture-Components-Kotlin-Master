@@ -133,6 +133,9 @@ dependencies {
     //Crashlytics
     implementation "com.crashlytics.sdk.android:crashlytics:$rootProject.crashlyticsVersion"
 
+    //Preference
+    implementation "androidx.preference:preference-ktx:$rootProject.preferenceVersion"
+
 
     // Testing dependencies (not adding for rest components, since we will not write unit and integration tests)
     testImplementation "junit:junit:$rootProject.junitVersion"

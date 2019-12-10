@@ -5,6 +5,7 @@ import com.aleksej.makaji.listopia.view.friend.FriendListFragment
 import com.aleksej.makaji.listopia.view.product.ProductAddFragment
 import com.aleksej.makaji.listopia.view.product.ProductEditFragment
 import com.aleksej.makaji.listopia.view.product.ProductListFragment
+import com.aleksej.makaji.listopia.view.settings.SettingsFragment
 import com.aleksej.makaji.listopia.view.shoppinglist.ShoppingListFragment
 import com.aleksej.makaji.listopia.view.shoppinglist.ShoppingListAddFragment
 import com.aleksej.makaji.listopia.view.shoppinglist.ShoppingListEditFragment
@@ -40,4 +41,7 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeFriendAddFragment(): FriendAddFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeSettingsFragment(): SettingsFragment
 }

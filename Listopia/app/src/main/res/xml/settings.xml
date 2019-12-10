@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/preference_section_general">
+
+        <EditTextPreference
+            android:icon="@drawable/ic_settings_currency"
+            android:key="@string/key_currency"
+            android:title="@string/preference_currency_title"
+            android:dialogTitle="@string/preference_currency_dialog_edit"
+            android:defaultValue="@string/preference_currency_default_value"/>
+
+        <ListPreference
+            android:icon="@drawable/ic_settings_text_size"
+            android:defaultValue="@string/settings_text_medium_value"
+            android:entries="@array/text_size_label"
+            android:entryValues="@array/text_size_value"
+            android:key="@string/key_text_size"
+            android:title="@string/preference_text_size_title"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>

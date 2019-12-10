@@ -44,6 +44,8 @@ buildscript {
 
         crashlyticsPluginVersion = '1.31.2'
         crashlyticsVersion = '2.10.1'
+
+        preferenceVersion = '1.1.0'
     }
     repositories {
         google()

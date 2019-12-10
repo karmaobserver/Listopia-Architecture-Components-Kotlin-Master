@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_fragment_shopping_list_to_fragment_product_list"
             app:destination="@id/fragment_product_list" />
+        <action
+            android:id="@+id/action_fragment_shopping_list_to_fragment_settings"
+            app:destination="@id/fragment_settings" />
     </fragment>
     <fragment
         android:id="@+id/fragment_shopping_list_add"
@@ -82,4 +85,8 @@
         android:id="@+id/fragment_friend_add"
         android:name="com.aleksej.makaji.listopia.view.friend.FriendAddFragment"
         android:label="@string/title_friend_add" />
+    <fragment
+        android:id="@+id/fragment_settings"
+        android:name="com.aleksej.makaji.listopia.view.settings.SettingsFragment"
+        android:label="@string/title_settings" />
 </navigation>

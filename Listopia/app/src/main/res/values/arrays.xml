@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="text_size_label">
+        <item>@string/settings_text_small_label</item>
+        <item>@string/settings_text_medium_label</item>
+        <item>@string/settings_text_moderate_label</item>
+        <item>@string/settings_text_large_label</item>
+        <item>@string/settings_text_extra_label</item>
+    </string-array>
+
+    <string-array name="text_size_value">
+        <item>@string/settings_text_small_value</item>
+        <item>@string/settings_text_medium_value</item>
+        <item>@string/settings_text_moderate_value</item>
+        <item>@string/settings_text_large_value</item>
+        <item>@string/settings_text_extra_value</item>
+    </string-array>
+</resources>

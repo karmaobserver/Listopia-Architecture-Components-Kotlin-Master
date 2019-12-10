@@ -20,6 +20,7 @@
     <string name="title_product_edit">Edit Product</string>
     <string name="title_friend_share">List share</string>
     <string name="title_friend_add">Add friend</string>
+    <string name="title_settings">Settings</string>
 
     <!--Sub menu_options-->
     <string name="submenu_shopping_list_options_delete_all">Delete all shopping lists</string>
@@ -81,6 +82,7 @@
     <string name="action_edit">Edit</string>
     <string name="action_send">Send</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_ok">Ok</string>
 
     <!--Navigation labels-->
     <string name="label_trash">Trash</string>
@@ -94,11 +96,39 @@
     <!--Dialog-->
     <string name="dialog_title_friend_invitation">Friend invitation</string>
     <string name="dialog_message_friend_invitation">User does not exists in the system, do you want to send them an E-mail invitation?</string>
+    <string name="dialog_message_friend_not_signed">To use friend share function, you have to sign in first.</string>
 
     <!--Notifications -->
     <string name="notification_shopping_list_updated">Shopping list has been updated</string>
     <string name="notification_shopping_list_updated_name">With unknown name.</string>
     <string name="notification_no_internent_connection_title">No internet connection</string>
     <string name="notification_no_internent_connection_body">Your lists are not synchronize with our servers.</string>
+
+    <!-- Preference   -->
+    <string name="preference_section_general">General</string>
+    <string name="preference_currency_title">Currency</string>
+    <string name="preference_currency_dialog_edit">Currency value</string>
+    <string name="preference_currency_default_value">$</string>
+    <string name="preference_text_size_title">Text Size</string>
+
+    <string name="key_text_size" translatable="false">keyTextSize</string>
+    <string name="key_currency" translatable="false">keyCurrency</string>
+    <string name="key_token" translatable="false">keyToken</string>
+    <string name="key_user_id" translatable="false">keyUserId</string>
+
+
+    <!-- Preference text size -->
+    <string name="settings_text_small_label">Small</string>
+    <string name="settings_text_medium_label">Medium</string>
+    <string name="settings_text_moderate_label">Moderate</string>
+    <string name="settings_text_large_label">Large</string>
+    <string name="settings_text_extra_label">Extra Large</string>
+
+    <!-- Preference text size value-->
+    <string name="settings_text_small_value">15</string>
+    <string name="settings_text_medium_value">17</string>
+    <string name="settings_text_moderate_value">20</string>
+    <string name="settings_text_large_value">23</string>
+    <string name="settings_text_extra_value">26</string>
 
 </resources>

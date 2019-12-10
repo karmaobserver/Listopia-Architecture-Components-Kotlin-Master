@@ -34,6 +34,9 @@ class ProductListFragment: BaseFragment() {
     @Inject
     lateinit var mSharedPreferenceManager: SharedPreferenceManager
 
+    @Inject
+    lateinit var mDialogController: DialogController
+
     private lateinit var mProductViewModel: ProductViewModel
 
     private var binding by autoCleared<FragmentProductListBinding>()
@@ -71,8 +74,16 @@ class ProductListFragment: BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.friends -> {
-                mShoppingListId?.let {
-                    findNavController().navigate(ProductListFragmentDirections.actionFragmentProductListToFriendListFragment(it))
+                if (mSharedPreferenceManager.userId.isBlank()) {
+                    mDialogController.showDialog(
+                            getString(R.string.dialog_title_friend_invitation),
+                            getString(R.string.dialog_message_friend_not_signed),
+                            getString(R.string.action_ok),
+                            "",{}, {})
+                } else {
+                    mShoppingListId?.let {
+                        findNavController().navigate(ProductListFragmentDirections.actionFragmentProductListToFriendListFragment(it))
+                    }
                 }
                 true
             }

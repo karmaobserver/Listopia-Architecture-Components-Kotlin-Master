@@ -155,7 +155,7 @@ class HomeActivity : BaseActivity() {
                     true
                 }
                 R.id.navigation_settings -> {
-                    showToast(R.string.navigation_settings)
+                    mNavController.navigate(R.id.action_fragment_shopping_list_to_fragment_settings)
                     true
                 }
                 R.id.navigation_sign_out -> {
